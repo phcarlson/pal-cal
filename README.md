@@ -1,5 +1,5 @@
 # Team 19 Project
-    PalCal
+    App name = PalCal
 
 # Team Overview
 	Paige Carlson  = phcarlson
