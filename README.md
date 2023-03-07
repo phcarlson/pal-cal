@@ -20,18 +20,29 @@ As the application includes more nice-to-haves, we would allow for more flexibil
 
 # Functionality
 1. Create Account/your profile:
+
 	First, you will create an initial account which includes a basic profile of your name & avatar.
+
 2. Add Class Schedule:
+
 	You will input your weekly class schedule, either through inputting the times of each class on each day, or some kind of calendar import API.
+
 3. Add Friends:
+
 	Send and/or receive friend requests which can be accepted.
+
 4. Create Group:
+
 	You can create a (friend) group which you can add friends to.
 	The group pulls from each participant/friend’s schedule to generate an overlapping schedule to highlight free times across the friend group.
+
 5. Suggest/Add event on group calendar:
+	
 	RSVPs.
+	
 6. Possible movie schedule integration:
-	As a possible extra feature if time allows, we would like to integrate with e.g. fandango API to see what movie times all group members can make it to.
+	
+	As a possible extra feature, if time allows, we would like to integrate with e.g. fandango API to see what movie times all group members can make it to.
 
 # License
 MIT License: https://opensource.org/licenses/MIT
