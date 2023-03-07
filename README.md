@@ -19,18 +19,18 @@ As the application includes more nice-to-haves, we would allow for more flexibil
 4. Planned events - users can propose times to meet based on the free time determined by their respective calendars. Planning an event involves a date, time range, name, and description. Users can RSVP to a planned event, and it would display who is going
 
 # Functionality
-1. Create Account/your profile-
+1. Create Account/your profile:
 	First, you will create an initial account which includes a basic profile of your name & avatar.
-2. Add Class Schedule-
+2. Add Class Schedule:
 	You will input your weekly class schedule, either through inputting the times of each class on each day, or some kind of calendar import API.
-3. Add Friends-
+3. Add Friends:
 	Send and/or receive friend requests which can be accepted.
-4. Create Group-
+4. Create Group:
 	You can create a (friend) group which you can add friends to.
 	The group pulls from each participant/friend’s schedule to generate an overlapping schedule to highlight free times across the friend group.
-5. Suggest/Add event on group calendar-
+5. Suggest/Add event on group calendar:
 	RSVPs.
-6. Possible movie schedule integration-
+6. Possible movie schedule integration:
 	As a possible extra feature if time allows, we would like to integrate with e.g. fandango API to see what movie times all group members can make it to.
 
 # License
