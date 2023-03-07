@@ -30,7 +30,7 @@ As the application includes more nice-to-haves, we would allow for more flexibil
 	The group pulls from each participant/friend’s schedule to generate an overlapping schedule to highlight free times across the friend group.
 5. Suggest/Add event on group calendar
 	RSVPs.
-6. Possible movie schedule integration.
+6. Possible movie schedule integration
 	As a possible extra feature if time allows, we would like to integrate with e.g. fandango API to see what movie times all group members can make it to.
 
 # License
