@@ -1,5 +1,13 @@
-/* #groupRows {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-} */
+body, html {
+  overflow: hidden;
+}
+
+.groupCol,
+.friendCol {
+  height: 100vh;
+  overflow: hidden;
+  overflow-y: auto; 
+}
+
+
+/* Try to hide scrollbar after ? */
