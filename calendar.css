@@ -1,0 +1,11 @@
+div.calendar-weekday-header {
+    background-color: whitesmoke;
+}
+
+div.calendar-event {
+    background-color: pink;
+}
+
+div.calendar-no-event {
+    background-color: lightgray;
+}
