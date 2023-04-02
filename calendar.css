@@ -6,6 +6,12 @@ div.calendar-event {
     background-color: pink;
 }
 
+div.calendar-event:hover {
+    background-color: rgb(255, 107, 132);
+    transition-property: background-color;
+    transition: 0.3s
+}
+
 div.calendar-no-event {
     background-color: lightgray;
 }
