@@ -21,7 +21,6 @@ Qui commodi beatae. Quaerat saepe tempora nisi labore ducimus corporis adipisci 
 <div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f" id="9hmLmmSdAbAj"></iframe></div>
 
 link: https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f?invitationId=inv_66f7278b-0f2d-4a6a-9f66-7ac4d65e0cb5#
-[PalCal Storyboard.pdf](https://github.com/umass-cs-326-s23/326-project-repo-team-19/files/11133278/PalCal.Storyboard.pdf)
 
 
 ## HTML & CSS Mockup
