@@ -18,30 +18,9 @@ Qui commodi beatae. Quaerat saepe tempora nisi labore ducimus corporis adipisci 
 
 ## Stories
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;">
- <iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f" id="nz6KX3vGHIi1">
- </iframe>
-</div>
+<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f" id="9hmLmmSdAbAj"></iframe></div>
 
-### Story 1
-
-Omnis sed consequatur beatae laudantium voluptatem tenetur. Exercitationem omnis quisquam omnis. Tenetur vitae excepturi rerum quia corporis soluta qui iste necessitatibus. Aut quam autem cum et. Harum consequatur perspiciatis eum et temporibus nisi qui pariatur.
-
-### Story 2
-
-Blanditiis et esse ipsa soluta. Temporibus sunt possimus ut veritatis sint ut in quia eum. Omnis ea vel quae eligendi. Illo optio est doloremque autem. Sit ea dolorum architecto.
- 
-Fuga ea culpa eaque molestiae illo quod odio culpa. Et aut repellendus aut temporibus quae quia et. Quia consectetur quod est. Repellat animi amet quia velit.
- 
-Voluptatum accusantium dolores cumque sit accusamus. Eaque quia qui commodi rerum eos doloribus. Sint aliquam quae ut ut tempora pariatur qui.
-
-### Story 3
-
-Esse itaque quia est nam. Ut voluptate voluptatem tempora officia. Minus et repellendus ut aut. Aut sint sint distinctio perferendis voluptas. Aut libero qui reprehenderit. Quia dolor ratione dolore porro.
- 
-Est quod dolor natus. Nihil provident omnis. Exercitationem voluptate earum. Earum doloremque voluptates quia eos qui suscipit dicta.
- 
-Optio ea sit minima cum consequatur at ut incidunt. Ea voluptatem iure modi officiis. Distinctio eum nemo soluta nulla.
+https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f?invitationId=inv_66f7278b-0f2d-4a6a-9f66-7ac4d65e0cb5#
 
 ## HTML & CSS Mockup
 
