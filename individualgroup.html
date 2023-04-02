@@ -9,11 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="./custom.css">
 
 </head>
 
 <body>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
@@ -51,28 +54,40 @@
     </nav>
 
     <div class="container-fluid">
-
-        <div class="row vh-100 justify-content-evenly bg-dark">
+      
+        <div class="row vh-100 justify-content-evenly bg-light">
 
             <!-- 2/3 of view on the left -->
-            <div class="col-8 border justify-content-center bg-light">
+            <div class="col-8 d-flex flex-column h-100 border bg-light">
                 
-                <!-- Some sort of label for what we are viewing -->
-                <div class="row">
-                    <div class="col-11">
-                        <h1>Group Schedule</h1>
+                <!-- Group Schedule label -->
+                <div class="row d-flex">
+                    <div class="col d-flex flex-column justify-content-start">
+         
+                            <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">Group Schedule <div class="dropdown">
+                            </h1>
+                            <!-- <h1 class="d-flex align-items-stretch display-2">
+                                <div class="btn btn-primary">
+                                
+                                </div>
+                            </h1>                        -->
                     </div>
-                    <div class="col-1 d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                          </svg>
+
+                    <!-- Refresh -->
+                    <div class="col d-flex align-items-center justify-content-end">
+                        <button type="button" class="btn btn-outline-primary shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                            <!-- <i class="bi bi-arrow-clockwise"></i> -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+                                <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+                              </svg>
+                        </button>
                     </div>
                 </div>
 
                 <!-- Container for holding calendar updated dynamically -->
-                <div class="row v-100" style="background-color: pink;">
-                    <div class="col groupCol">
+                <div class="row d-flex h-100 shadow">
+                    <div class="col scrollIt" style="height: 90%">
                         <div class="timetable-img text-center">
                             <img src="img/content/timetable.png" alt="">
                         </div>
@@ -468,7 +483,7 @@
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="align-middle">01:00pm</td>
+                                        <td class="align-middle">12:00pm</td>
                                         <td>
                                             <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
                                             <div class="margin-10px-top font-size14">1:00-2:00</div>
@@ -507,24 +522,39 @@
         
             
             <!-- 1/3 of view on the right -->
-            <div class="col-3 h-100 d-flex flex-column bg-light">
+            <div class="col-3 h-100 d-flex flex-column bg-light shadow">
                 <!-- Some sort of label for what we are viewing -->
-                <div class="row">
+                <div class ="d-flex">
                     <div class="col">
-                        <h1>Members</h1>
-                    </div>
-                </div>
+                        <div class="row d-flex">
+                            <div class="col">
+                                <h1><span class="badge shadow" style="background-color: gray;">Members</span></h1>
+                            </div>
+                        </div>
+        
+                        <!-- Buttons for pushing a new group to the rows -->
+                        <div class="row d-flex">
+                            <div class="col d-flex flex-row justify-content-start">      
 
-                <!-- Buttons for pushing a new group to the rows -->
-                <div class="row d-flex justify-content-start">
-                    <div class="col col-md-auto" style="background-color: red;">
-                        Add member: 
-                        <button>+</button>
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group me-2" role="group" aria-label="First group">
+                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Add member <i class="bi bi-plus-circle"></i></button>
+
+                                    </div>
+                                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Deselect all members <i class="bi bi-dash-circle"></i></button>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
+             
+            
                    <!-- Container for holding groups added dynamically -->
-                <div class="row d-flex" style="background-color: pink; height:40%">
-                    <div class="col d-flex flex-column h-100 eventCol">
+                <div class="row d-flex" style="height:40%">
+                    <div class="col d-flex flex-column h-100 scrollIt">
                         <div class="card my-3">
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -743,291 +773,206 @@
                     </div>
                 </div>
 
+                <!-- Events Label -->
                 <div class="row d-flex">
                     <div class="col">
-                        <h1>Events</h1>
+                        <h1><span class="badge shadow" style="background-color: gray;">Planned Events</span></h1>
                     </div>
                 </div>
 
-                   <!-- Container for holding groups added dynamically -->
-                   <div class="row d-flex" style="background-color: magenta; height:40%">
-                    <div class="col d-flex flex-column h-100 eventCol">
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <!-- Row for holding scrollable group -->
+                <div class="row d-flex" style="height:40%">
+                    <!-- Column of groups that scroll -->
+                    <div class="col d-flex flex-column h-100 scrollIt">
+
+                        <!-- Example event -->
+
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+                            
+                                        This is an event description.This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description.
+                                        This is an event description.
+                                    
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-sm btn-flash-border-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+                            
+                                        This is an event description.This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description.
+                                        This is an event description.
+                                    
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-sm btn-flash-border-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        
+                    
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+                            
+                                        This is an event description.This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description.
+                                        This is an event description.
+                                    
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-sm btn-flash-border-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        
+                    
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+                            
+                                        This is an event description.This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description.
+                                        This is an event description.
+                                    
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-sm btn-flash-border-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                        
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+                            
+                                        This is an event description.This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description. This is an event description.
+                                        This is an event description.
+                                    
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-sm btn-flash-border-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
+                    
                     </div>
                 </div>
-            </div>
-            
+            </div>   
         </div>
     </div>
 </body>
