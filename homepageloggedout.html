@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pal Cal</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./custom.css">
+
+</head>
+
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
+
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <!--Image-->
+            <a class="navbar-brand" href="#">Image here!</a>
+
+            <!--Collapse Support-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Include this in the collapsed bar-->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+                <!--Navbar-->
+                <ul class="navbar-nav">
+
+                    <!--Login Button-->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-success me-1">Profile</button>
+                    </li>
+
+                    <!--Sign Up Button-->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-primary">Log Out</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container-fluid">
+        <div class="row vh-100 justify-content-evenly bg-dark">
+
+            <!-- 2/3 of view on the left -->
+            <div class="col-7 border justify-content-center bg-light">
+
+                <!-- Some sort of label for what we are viewing -->
+                <div class="row">
+                    <div class="col-1">
+                        <img src="https://images.freeimages.com/fic/images/icons/1963/colorcons_blue/128/questionmark.png" class="img-thumbnail" alt="Question mark image">
+                    </div>
+                    <div class="col">
+                        <h1>About PalCal</h1>
+                    </div>
+                </div>
+
+                <!-- Scrollable text -->
+                <div class="row v-100" style="background-color: pink;">
+                    <div class="col groupCol">
+                        <div class="overflow-y-auto w-100 h-100">
+                            Overflow Scrollable Text Here
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 1/3 of view on the right -->
+            <div class="col-4 border bg-light">
+                <!-- Calender example image -->
+                <div class="row v-100" style="background-color: pink;">
+                    <img class="img-fluid" src="https://clickup.com/blog/wp-content/uploads/2022/05/calendar-1-1.png" alt="Example screenshot of callender">
+                </div>
+                <!-- Caption for Image -->
+                <div class="row">
+                    <div class="col text-center">
+                        Calender example caption
+                    </div>
+                </div>
+
+                <!-- Calender usage example image -->
+                <div class="row v-100" style="background-color: pink;">
+                    <img class="img-fluid" src="https://images.ctfassets.net/lzny33ho1g45/5q4kc46PB8BTsCpK9MLp2Z/7a6d0c1c87abb22227e72fa5610ebae7/gogglecalendar.png?w=1400" alt="Example screenshot of callender">
+                </div>
+                <!-- Caption for Image -->
+                <div class="row">
+                    <div class="col text-center">
+                        RSVPing/Usage example caption
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
