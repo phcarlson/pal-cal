@@ -42,9 +42,3 @@ Viewing your profile
 
 The main home page after logging in
 ![Home page logged in](screenshots/html/home%20page%20logged%20in.png)
-
-## References
-
-- [Link 1](https://example.com)
-- [Link 2](https://example.com)
-- [Link 3](https://example.com)
