@@ -42,3 +42,6 @@ Viewing your profile
 
 The main home page after logging in
 ![Home page logged in](screenshots/html/home%20page%20logged%20in.png)
+
+Viewing the calendar for an individual group
+![Individual group](screenshots/html/individual%20group.png)
