@@ -4,22 +4,24 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pal Cal</title>
+  <title>My Profile</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
   <link rel="stylesheet" type="text/css" href="./custom.css">
+  <link rel="stylesheet" type="text/css" href="./calendar.css">
 
 
 </head>
 
 <body>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
     crossorigin="anonymous"></script>
-
 
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
@@ -52,260 +54,125 @@
     </div>
   </nav>
 
-
   <div class="container-fluid">
+
     <div class="row vh-100 justify-content-evenly bg-light">
 
       <!-- 2/3 of view on the left -->
-      <div class="col-8 border justify-content-center  align-items-stretch bg-light">
+      <div class="col-8 d-flex flex-column h-100 border bg-light">
 
-        <!-- Some sort of label for what we are viewing -->
-        <div class="row">
-          <div class="col">
-            <h1>My Schedule</h1>
+        <!-- Group Schedule label -->
+        <div class="row d-flex">
+          <div class="col d-flex flex-column justify-content-start">
+
+            <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">My Schedule
+                <div class="dropdown">
+            </h1>
+          </div>
+
+          <!-- Refresh -->
+          <div class="col d-flex align-items-center justify-content-end">
+            <button type="button"
+              class="btn btn-outline-primary shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+              <!-- <i class="bi bi-arrow-clockwise"></i> -->
+              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                <path
+                  d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+              </svg>
+            </button>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col calendarCol">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Sun</th>
-                  <th scope="col">Mon</th>
-                  <th scope="col">Tues</th>
-                  <th scope="col">Wed</th>
-                  <th scope="col">Thurs</th>
-                  <th scope="col">Fri</th>
-                  <th scope="col">Sat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">12:00 AM</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">1:00 AM</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">2:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">4:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">5:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">6:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">7:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">8:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">9:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">10:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">11:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">12:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">1:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">2:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">4:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">5:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">6:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">7:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">8:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">9:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">10:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">11:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
-            </table>
+        <!-- Container for holding schedule edited dynamically -->
+        <div class="row v-100" style="overflow-y: scroll;">
+          <div class="col groupCol">
+            <div class="timetable-img text-center">
+              <img src="img/content/timetable.png" alt="">
+            </div>
+          </div>
+
+          <div class="row d-flex">
+            <div class="col m-2">
+              hours
+              <div class="row border" style="height: calc(100%/12);">12:00am</div>
+              <div class="row border" style="height: calc(100%/12);">1:00am</div>
+              <div class="row border" style="height: calc(100%/12);">2:00am</div>
+              <div class="row border" style="height: calc(100%/12);">3:00am</div>
+              <div class="row border" style="height: calc(100%/12);">4:00am</div>
+              <div class="row border" style="height: calc(100%/12);">5:00am</div>
+              <div class="row border" style="height: calc(100%/12);">6:00am</div>
+              <div class="row border" style="height: calc(100%/12);">7:00am</div>
+              <div class="row border" style="height: calc(100%/12);">8:00am</div>
+              <div class="row border" style="height: calc(100%/12);">9:00am</div>
+              <div class="row border" style="height: calc(100%/12);">10:00am</div>
+              <div class="row border" style="height: calc(100%/12);">11:00am</div>
+              <div class="row border" style="height: calc(100%/12);">12:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">1:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">2:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">3:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">4:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">5:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">6:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">7:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">8:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">9:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">10:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">11:00pm</div>
+              <div class="row border" style="height: calc(100%/12);">12:00am</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">sunday</div>
+              <div class="row calendar-no-event" style="height: calc((100%/12) * 6);">
+                no event 12am-6am
+              </div>
+              <div class="row calendar-event" style="height: 10%; height: calc((100%/12) * 2.5);">First event 6am-8:30am
+              </div>
+              <div class="row calendar-no-event" style="height: calc(100%/12 * 1.5);">no event 8:30am-10:00am</div>
+              <div class="row calendar-event" style="height: calc(100%/12 * 1.75);">second event 10am-11:45am</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">monday</div>
+              <div class="row calendar-no-event" style="height: calc(100%/12 * 10);">no event 12am-10am</div>
+              <div class="row calendar-event" style="height: calc(100%/12 * 2.5)">another event 10-12:30</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">tuesday</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">wednesday</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">thursday</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">friday</div>
+            </div>
+            <div class="col m-2">
+              <div class="sticky-top calendar-weekday-header">saturday</div>
+            </div>
           </div>
         </div>
       </div>
 
       <!-- 1/3 of view on the right -->
-      <div class="col-3 border bg-light">
+
+      <div class="col-3 h-100 d-flex flex-column bg-light shadow">
         <!-- Some sort of label for what we are viewing -->
-        <div class="row">
+        <div class="d-flex">
           <div class="col">
-            <h1>My Info</h1>
+            <div class="row d-flex">
+              <div class="col">
+                <h1><span class="badge shadow" style="background-color: gray;">My Info</span></h1>
+              </div>
+            </div>
           </div>
         </div>
 
-        <!-- Container for profile info that should be editable -->
-        <!-- <div class="row v-100" ">
-                <div class="col profileCol">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">Full Name</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">Johnatan Smith</p>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">Email</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">example@example.com</p>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">Phone</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">(097) 234-5678</p>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
-                                        alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-4 d-flex align-items-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-
-                                        <button type="button"
-                                            class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-check2"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
-                                        alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-4 d-flex align-items-center">
-                                    <div class="card-body">
-                                        <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 d-flex align-items-center justify-content-center">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-
-                                        <button type="button"
-                                            class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-check2"></i>
-                                        </button>
-                                        <button type="button"
-                                            class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
-                                            <i class="bi bi-x-lg"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                      </div>
-                </div> -->
-
-        <div class="row h-100">
-          <div class="col">
+        <!-- Container for holding groups added dynamically -->
+        <div class="row d-flex" style="height:40%">
+          <div class="col d-flex flex-column h-100 scrollIt">
             <!-- Screen Name CARD -->
             <div class="card my-3">
               <div class="row g-0">
@@ -333,85 +200,182 @@
                 </div>
               </div>
             </div>
-              <!-- First and Last Name CARD -->
-              <div class="card my-3">
-                <div class="row g-0">
-                  <!-- Screen Name Title -->
-                  <div class="col-md-3">
-                    <div class="card-body">
-                      <h6 class="card-title">Name</h6>
-                    </div>
+            <!-- First and Last Name CARD -->
+            <div class="card my-3">
+              <div class="row g-0">
+                <!-- Screen Name Title -->
+                <div class="col-md-3">
+                  <div class="card-body">
+                    <h6 class="card-title">Name</h6>
                   </div>
-                  <!-- Form input and edit/save buttons -->
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="First Name (Optional)">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="Last Name (Optional)">
-                    <div class="btn-group" role="group" aria-label="edit_save">
-                      <button type="button" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                          class="bi bi-pencil" viewBox="0 0 16 16">
-                          <path
-                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        Edit
-                      </button>
-                      <button type="button" class="btn btn-success" disabled>Save</button>
-                      </button>
-                    </div>
+                </div>
+                <!-- Form input and edit/save buttons -->
+                <div class="col-md-9">
+                  <input type="text" class="form-control" id="screeNameInput" placeholder="First Name (Optional)">
+                  <input type="text" class="form-control" id="screeNameInput" placeholder="Last Name (Optional)">
+                  <div class="btn-group" role="group" aria-label="edit_save">
+                    <button type="button" class="btn btn-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path
+                          d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                      </svg>
+                      Edit
+                    </button>
+                    <button type="button" class="btn btn-success" disabled>Save</button>
+                    </button>
                   </div>
                 </div>
               </div>
-              <!-- College CARD -->
-              <div class="card my-3">
-                <div class="row g-0">
-                  <!-- Screen Name Title -->
-                  <div class="col-md-3">
-                    <div class="card-body">
-                      <h6 class="card-title">College</h6>
-                    </div>
+            </div>
+            <!-- College CARD -->
+            <div class="card my-3">
+              <div class="row g-0">
+                <!-- Screen Name Title -->
+                <div class="col-md-3">
+                  <div class="card-body">
+                    <h6 class="card-title">College</h6>
                   </div>
-                  <!-- Form input and edit/save buttons -->
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="Current College">
-                    <div class="btn-group" role="group" aria-label="edit_save">
-                      <button type="button" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                          class="bi bi-pencil" viewBox="0 0 16 16">
-                          <path
-                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        Edit
-                      </button>
-                      <button type="button" class="btn btn-success" disabled>Save</button>
-                      </button>
-                    </div>
+                </div>
+                <!-- Form input and edit/save buttons -->
+                <div class="col-md-9">
+                  <input type="text" class="form-control" id="screeNameInput" placeholder="Current College">
+                  <div class="btn-group" role="group" aria-label="edit_save">
+                    <button type="button" class="btn btn-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path
+                          d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                      </svg>
+                      Edit
+                    </button>
+                    <button type="button" class="btn btn-success" disabled>Save</button>
+                    </button>
                   </div>
                 </div>
               </div>
-              <!-- Major CARD -->
-              <div class="card my-3">
-                <div class="row g-0">
-                  <!-- Screen Name Title -->
-                  <div class="col-md-3">
-                    <div class="card-body">
-                      <h6 class="card-title">Major</h6>
-                    </div>
+            </div>
+            <!-- Major CARD -->
+            <div class="card my-3">
+              <div class="row g-0">
+                <!-- Screen Name Title -->
+                <div class="col-md-3">
+                  <div class="card-body">
+                    <h6 class="card-title">Major</h6>
                   </div>
-                  <!-- Form input and edit/save buttons -->
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="Current Major">
-                    <div class="btn-group" role="group" aria-label="edit_save">
-                      <button type="button" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                          class="bi bi-pencil" viewBox="0 0 16 16">
-                          <path
-                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        Edit
-                      </button>
-                      <button type="button" class="btn btn-success" disabled>Save</button>
-                      </button>
-                    </div>
+                </div>
+                <!-- Form input and edit/save buttons -->
+                <div class="col-md-9">
+                  <input type="text" class="form-control" id="screeNameInput" placeholder="Current Major">
+                  <div class="btn-group" role="group" aria-label="edit_save">
+                    <button type="button" class="btn btn-primary">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-pencil" viewBox="0 0 16 16">
+                        <path
+                          d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
+                      </svg>
+                      Edit
+                    </button>
+                    <button type="button" class="btn btn-success" disabled>Save</button>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Requests label -->
+        <div class="row d-flex">
+          <div class="col">
+            <h1><span class="badge shadow" style="background-color: gray;">Requests</span></h1>
+          </div>
+        </div>
+        <!-- Row for holding scrollable requests -->
+        <div class="row d-flex" style="height:40%">
+          <!-- Column of requests that scroll -->
+          <div class="col d-flex flex-column h-100 scrollIt">
+
+            <!-- Example request -->
+            <div class="card my-3">
+              <div class="row g-0">
+                <div class="col-md-2 d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    alt="generic profile pic" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-start">Screen Name</h5>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+
+                    <button type="button"
+                      class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-check2"></i>
+                    </button>
+                    <button type="button"
+                      class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="card my-3">
+              <div class="row g-0">
+                <div class="col-md-2 d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    alt="generic profile pic" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-start">Screen Name</h5>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+
+                    <button type="button"
+                      class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-check2"></i>
+                    </button>
+                    <button type="button"
+                      class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card my-3">
+              <div class="row g-0">
+                <div class="col-md-2 d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    alt="generic profile pic" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-start">Screen Name</h5>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+
+                    <button type="button"
+                      class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-check2"></i>
+                    </button>
+                    <button type="button"
+                      class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
                   </div>
                 </div>
               </div>
@@ -421,4 +385,5 @@
       </div>
     </div>
 </body>
+
 </html>
