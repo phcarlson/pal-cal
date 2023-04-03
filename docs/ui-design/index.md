@@ -31,15 +31,17 @@ link: https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f?
 
 ## HTML & CSS Mockup
 
-Reiciendis velit dolorum voluptas earum. Rerum nobis accusantium laudantium minima incidunt. Magnam aut minus minus. Cumque unde voluptatibus soluta molestias perspiciatis aperiam accusantium laborum quo.
+The initial screen when logged out
+![Home page](screenshots/html/home%20page%20logged%20out.png)
 
-![HTML & CSS Mockup 1](mockup-1.png)
+The login or sign up screen
+![Sign up](screenshots/html/login.png)
 
-Natus est molestias est et autem non in. Laudantium consequatur facilis perferendis. Saepe similique sapiente rem ut. Laudantium natus voluptas delectus molestiae ab omnis quidem. Maxime cumque porro ea deleniti incidunt nihil cupiditate sunt. Nihil eaque porro nemo veritatis.
+Viewing your profile
+![My profile](screenshots/html/my%20profile.png)
 
-![HTML & CSS Mockup 2](mockup-2.png)
-
-Ipsam architecto nulla ut dolor dolor sit mollitia deleniti minus. Velit quia iste.
+The main home page after logging in
+![Home page logged in](screenshots/html/home%20page%20logged%20in.png)
 
 ## References
 
