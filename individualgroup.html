@@ -9,29 +9,32 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="./custom.css">
 
 </head>
 
 <body>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
-    
+
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <!--Image-->
-            <a class="navbar-brand" href="#">Image here!</a> 
-            
+            <a class="navbar-brand" href="#">Image here!</a>
+
             <!--Collapse Support-->
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" 
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
                 aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            
+
             <!--Include this in the collapsed bar-->
-            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent"> 
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
 
                 <!--Navbar-->
                 <ul class="navbar-nav">
@@ -40,7 +43,7 @@
                     <li class="nav-item">
                         <button type="button" class="btn btn-outline-success me-1">Profile</button>
                     </li>
-                    
+
                     <!--Sign Up Button-->
                     <li class="nav-item">
                         <button type="button" class="btn btn-outline-primary">Log Out</button>
@@ -52,982 +55,597 @@
 
     <div class="container-fluid">
 
-        <div class="row vh-100 justify-content-evenly bg-dark">
+        <div class="row vh-100 justify-content-evenly bg-light">
 
             <!-- 2/3 of view on the left -->
-            <div class="col-8 border justify-content-center bg-light">
-                
-                <!-- Some sort of label for what we are viewing -->
-                <div class="row">
-                    <div class="col-11">
-                        <h1>Group Schedule</h1>
+            <div class="col-8 d-flex flex-column h-100 border shadow bg-light">
+
+                <!-- Group Schedule label -->
+                <div class="row d-flex">
+                    <div class="col d-flex flex-column justify-content-start">
+
+                        <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">Group Schedule
+                                <div class="dropdown">
+                        </h1>
                     </div>
-                    <div class="col-1 d-flex align-items-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
-                            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
-                          </svg>
+
+                    <!-- Refresh -->
+                    <div class="col d-flex align-items-center justify-content-end">
+                        <button type="button"
+                            class="btn btn-outline-primary shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                            <!-- <i class="bi bi-arrow-clockwise"></i> -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
+                                class="bi bi-arrow-clockwise" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd"
+                                    d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z" />
+                                <path
+                                    d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
+                            </svg>
+                        </button>
                     </div>
                 </div>
-
-                <!-- Container for holding calendar updated dynamically -->
-                <div class="row v-100" style="background-color: pink;">
+                <!-- Container for holding groups added dynamically -->
+                <div class="row v-100" style="overflow-y: scroll;">
                     <div class="col groupCol">
                         <div class="timetable-img text-center">
                             <img src="img/content/timetable.png" alt="">
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered text-center">
-                                <thead>
-                                    <tr class="bg-light-gray">
-                                        <th>
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
-                                                <path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-                                                <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-                                                </svg>
-                                        </th>
-                                        <th class="text-uppercase">Sunday</th>
-                                        <th class="text-uppercase">Monday</th>
-                                        <th class="text-uppercase">Tuesday</th>
-                                        <th class="text-uppercase">Wednesday</th>
-                                        <th class="text-uppercase">Thursday</th>
-                                        <th class="text-uppercase">Friday</th>
-                                        <th class="text-uppercase">Saturday</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td class="align-middle">09:00am</td>
-                                        <td>
-                                            <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16 xs-font-size13">Dance</span>
-                                            <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-        
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Dance</span>
-                                            <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Art</span>
-                                            <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                            <div class="font-size13 text-light-gray">Kate Alley</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">9:00-10:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                    </tr>
-        
-                                    <tr>
-                                        <td class="align-middle">10:00am</td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">10:00-11:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Art</span>
-                                            <div class="margin-10px-top font-size14">10:00-11:00</div>
-                                            <div class="font-size13 text-light-gray">Kate Alley</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">10:00-11:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">10:00-11:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                    </tr>
-        
-                                    <tr>
-                                        <td class="align-middle">11:00am</td>
-                                        <td>
-                                            <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                                            <div class="margin-10px-top font-size14">11:00-12:00</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                                            <div class="margin-10px-top font-size14">11:00-12:00</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                                            <div class="margin-10px-top font-size14">11:00-12:00</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                                            <div class="margin-10px-top font-size14">11:00-12:00</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                                            <div class="margin-10px-top font-size14">11:00-12:00</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-lightred padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Break</span>
-                                            <div class="margin-10px-top font-size14">11:00-12:00</div>
-                                        </td>
-                                    </tr>
-        
-                                    <tr>
-                                        <td class="align-middle">12:00pm</td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-purple padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Art</span>
-                                            <div class="margin-10px-top font-size14">12:00-1:00</div>
-                                            <div class="font-size13 text-light-gray">Kate Alley</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-sky padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Dance</span>
-                                            <div class="margin-10px-top font-size14">12:00-1:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">12:00-1:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">12:00-1:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                    </tr>
-        
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="align-middle">01:00pm</td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                        <td class="bg-light-gray">
-        
-                                        </td>
-                                        <td>
-                                            <span class="bg-pink padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">English</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">James Smith</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-green padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Yoga</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Marta Healy</div>
-                                        </td>
-                                        <td>
-                                            <span class="bg-yellow padding-5px-tb padding-15px-lr border-radius-5 margin-10px-bottom text-white font-size16  xs-font-size13">Music</span>
-                                            <div class="margin-10px-top font-size14">1:00-2:00</div>
-                                            <div class="font-size13 text-light-gray">Ivana Wong</div>
-                                        </td>
-                                    </tr>                                        
-                                </tbody>
-                            </table>
+                    </div>
+
+                    <div class="row d-flex">
+                        <div class="col m-2">
+                            hours
+                            <div class="row border" style="height: calc(100%/12);">12:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">1:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">2:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">3:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">4:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">5:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">6:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">7:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">8:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">9:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">10:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">11:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">12:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">1:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">2:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">3:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">4:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">5:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">6:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">7:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">8:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">9:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">10:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">11:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">12:00am</div>
                         </div>
-                    </div> 
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">sunday</div>
+                            <div class="row" style="background-color: grey; height: calc((100%/12) * 6);">
+                                no event 12am-6am
+                            </div>
+                            <div class="row"
+                                style="background-color: pink; height: 10%; height: calc((100%/12) * 2.5);">First event
+                                6am-8:30am</div>
+                            <div class="row" style="background-color: grey; height: calc(100%/12 * 1.5);">no event
+                                8:30am-10:00am</div>
+                            <div class="row" style="background-color: pink; height: calc(100%/12 * 1.75);">second event
+                                10am-11:45am</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">monday</div>
+                            <div class="row" style="background-color: grey; height: calc(100%/12 * 10);">no event
+                                12am-10am</div>
+                            <div class="row" style="background-color: pink; height: calc(100%/12 * 2.5)">another event
+                                10-12:30</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">tuesday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">wednesday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">thursday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">friday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top" style="background-color: whitesmoke;">saturday</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        
-            
+
+
             <!-- 1/3 of view on the right -->
-            <div class="col-3 h-100 d-flex flex-column bg-light">
+            <div class="col-3 h-100 d-flex flex-column bg-light shadow">
                 <!-- Some sort of label for what we are viewing -->
-                <div class="row">
+                <div class="d-flex">
                     <div class="col">
-                        <h1>Members</h1>
-                    </div>
-                </div>
+                        <div class="row d-flex">
+                            <div class="col">
+                                <h1><span class="badge shadow" style="background-color: gray;">Members</span></h1>
+                            </div>
+                        </div>
 
-                <!-- Buttons for pushing a new group to the rows -->
-                <div class="row d-flex justify-content-start">
-                    <div class="col col-md-auto" style="background-color: red;">
-                        Add member: 
-                        <button>+</button>
-                    </div>
-                </div>
-                   <!-- Container for holding groups added dynamically -->
-                <div class="row d-flex" style="background-color: pink; height:40%">
-                    <div class="col d-flex flex-column h-100 eventCol">
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
+                        <!-- Buttons for pushing a new member to the rows -->
+                        <div class="row d-flex">
+                            <div class="col d-flex flex-row justify-content-start">
+
+                                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                                    <div class="btn-group me-2" role="group" aria-label="First group">
+                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Add member
+                                            <i class="bi bi-plus-circle"></i></button>
+
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+                                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Deselect
+                                            all members <i class="bi bi-dash-circle"></i></button>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                       
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Container for holding groups added dynamically -->
+                <div class="row d-flex" style="height:40%">
+                    <div class="col d-flex flex-column h-100 scrollIt">
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">Screen Name</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Events Label -->
                 <div class="row d-flex">
                     <div class="col">
-                        <h1>Events</h1>
+                        <h1><span class="badge shadow" style="background-color: gray;">Planned Events</span></h1>
                     </div>
                 </div>
 
-                   <!-- Container for holding groups added dynamically -->
-                   <div class="row d-flex" style="background-color: magenta; height:40%">
-                    <div class="col d-flex flex-column h-100 eventCol">
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                <!-- Row for holding scrollable group -->
+                <div class="row d-flex" style="height:40%">
+                    <!-- Column of groups that scroll -->
+                    <div class="col d-flex flex-column h-100 scrollIt">
+
+                        <!-- Example event -->
+
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+
+                                    This is an event description.This is an event description. This is an event
+                                    description. This is an event description. This is an event description. This is an
+                                    event description. This is an event description. This is an event description.
+                                    This is an event description.
+
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+
+                                    This is an event description.This is an event description. This is an event
+                                    description. This is an event description. This is an event description. This is an
+                                    event description. This is an event description. This is an event description.
+                                    This is an event description.
+
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+
+                                    This is an event description.This is an event description. This is an event
+                                    description. This is an event description. This is an event description. This is an
+                                    event description. This is an event description. This is an event description.
+                                    This is an event description.
+
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+
+                                    This is an event description.This is an event description. This is an event
+                                    description. This is an event description. This is an event description. This is an
+                                    event description. This is an event description. This is an event description.
+                                    This is an event description.
+
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+
+                        <div class="card card-margin">
+                            <div class="card-header no-border">
+                                <h5 class="card-title">Event 1</h5>
+                            </div>
+                            <div class="card-body pt-0">
+                                <div class="widget-49">
+                                    <div class="widget-49-title-wrapper">
+                                        <div class="widget-49-date-primary">
+                                            <span class="widget-49-date-day">03</span>
+                                            <span class="widget-49-date-month">mar</span>
+                                        </div>
+                                        <div class="widget-49-meeting-info">
+                                            <span class="widget-49-pro-title">Location</span>
+                                            <span class="widget-49-meeting-time">Start time to End Time</span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
+
+                                    This is an event description.This is an event description. This is an event
+                                    description. This is an event description. This is an event description. This is an
+                                    event description. This is an event description. This is an event description.
+                                    This is an event description.
+
+                                    <div class="widget-49-meeting-action">
+                                        <div class="dropdown">
+                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                aria-expanded="false">
+                                                RSVP
+                                            </button>
+                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
+                                                <li><a class="dropdown-item" href="#">Yes</a></li>
+                                                <li><a class="dropdown-item" href="#">No</a></li>
+                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                            </ul>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card my-3">
-                            <div class="row g-0">
-                                <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                    <div class="form-check checkbox-xl">
-                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    </div>
-                                </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
-                                <div class="col-md-8 d-flex align-items-center">
-                                    <div class="card-body">
-                                    <h5 class="card-title text-start">Screen Name</h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 </body>
