@@ -2,40 +2,46 @@
 
 ## Wireframe
 
-Facilis quas ut iste nam et. Doloribus ut nostrum nobis ut ut eos quia vel soluta. Minus dolorem error neque voluptas ex.
+When accessing the page for the first time while logged out, information about the app is displayed
+![Home page logged out](screenshots/wireframe/Home%20Page%20Logged%20Out.png)
 
-![Wireframe 1](wireframe-1.png)
-
-Consequuntur reiciendis illo non suscipit necessitatibus dolores doloribus sed atque. Quos rem excepturi ut eum et eaque facere et. Illo quos voluptatem ratione sint numquam dolor assumenda. Ea et et sapiente distinctio et aut aspernatur necessitatibus est.
+You sign up or log in to Pal Cal with a username and password
+![Sign up screen](screenshots/wireframe/%20Sign%20Up%20Page.png)
+![Login screen](screenshots/wireframe/%20Log%20In%20Page.png)
  
-Est velit debitis enim. Esse et et quos animi animi. Quibusdam et porro et praesentium maiores dolores facilis. Voluptas molestias sapiente aperiam culpa. Et doloribus maiores omnis quisquam dolores.
- 
-Esse est et ut rem et praesentium quibusdam eaque. Aut consectetur illum placeat repellendus nam. Exercitationem dolorem tempora.
+On logging in, a main view displays all of your groups and friends
+![Home page](screenshots/wireframe/%20Home%20Page%20Logged%20In.png)
 
-![Wireframe 2](wireframe-2.png)
+From the home page, you can access your profile to view and edit your schedule and profile data like username and biographical info
+![Your profile](screenshots/wireframe/%20Our%20Profile.png)
 
-Qui commodi beatae. Quaerat saepe tempora nisi labore ducimus corporis adipisci repellat nihil. Dolores est sed ratione consequatur est magnam cupiditate. Repellendus molestias qui doloribus. Deserunt quidem temporibus. Sunt hic laudantium vitae natus est.
+Selecting someone else's profile will display their information only if they are a friend
+![Friend profile](screenshots/wireframe/%20Friend%20Profile.png)
+![Non-friend profile](screenshots/wireframe/%20Non-Friend%20Profile.png)
+
+Clicking through from the home page to a group shows the overlapping free time of all group members, and has interfaces to filter group members and propose events
+![Group page](screenshots/wireframe/%20Individual%20Group.png)
+![Creating an event](screenshots/wireframe/%20Individual%20Group%20In%20Action.png)
 
 ## Stories
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f" id="9hmLmmSdAbAj"></iframe></div>
 
-link: https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f?invitationId=inv_66f7278b-0f2d-4a6a-9f66-7ac4d65e0cb5#
+[Click to view](https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f)
+![Storyboard](screenshots/storyboard.png)
 
 ## HTML & CSS Mockup
 
-Reiciendis velit dolorum voluptas earum. Rerum nobis accusantium laudantium minima incidunt. Magnam aut minus minus. Cumque unde voluptatibus soluta molestias perspiciatis aperiam accusantium laborum quo.
+The initial screen when logged out
+![Home page](screenshots/html/home%20page%20logged%20out.png)
 
-![HTML & CSS Mockup 1](mockup-1.png)
+The login or sign up screen
+![Sign up](screenshots/html/login.png)
 
-Natus est molestias est et autem non in. Laudantium consequatur facilis perferendis. Saepe similique sapiente rem ut. Laudantium natus voluptas delectus molestiae ab omnis quidem. Maxime cumque porro ea deleniti incidunt nihil cupiditate sunt. Nihil eaque porro nemo veritatis.
+Viewing your profile
+![My profile](screenshots/html/my%20profile.png)
 
-![HTML & CSS Mockup 2](mockup-2.png)
+The main home page after logging in
+![Home page logged in](screenshots/html/home%20page%20logged%20in.png)
 
-Ipsam architecto nulla ut dolor dolor sit mollitia deleniti minus. Velit quia iste.
-
-## References
-
-- [Link 1](https://example.com)
-- [Link 2](https://example.com)
-- [Link 3](https://example.com)
+Viewing the calendar for an individual group
+![Individual group](screenshots/html/individual%20group.png)
