@@ -25,9 +25,9 @@ Clicking through from the home page to a group shows the overlapping free time o
 
 ## Stories
 
-<div style="width: 640px; height: 480px; margin: 10px; position: relative;"><iframe allowfullscreen frameborder="0" style="width:640px; height:480px" src="https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f" id="9hmLmmSdAbAj"></iframe></div>
 
-link: https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f?invitationId=inv_66f7278b-0f2d-4a6a-9f66-7ac4d65e0cb5#
+[Click to view](https://lucid.app/documents/embedded/d1f67a46-46cb-4135-924e-3ee4e8815a8f)
+![Storyboard](screenshots/storyboard.png)
 
 ## HTML & CSS Mockup
 
