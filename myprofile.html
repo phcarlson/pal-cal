@@ -2,378 +2,240 @@
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Pal Cal</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
-  <link rel="stylesheet" type="text/css" href="./custom.css">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Pal Cal Home</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" type="text/css" href="./custom.css">
 
 </head>
 
 <body>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
-    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
+        crossorigin="anonymous"></script>
 
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <!--Image-->
+            <a class="navbar-brand" href="#">Image here!</a>
+
+            <!--Collapse Support-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Include this in the collapsed bar-->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+                <!--Navbar-->
+                <ul class="navbar-nav">
+
+                    <!--Login Button-->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-success me-1">Log In</button>
+                    </li>
+
+                    <!--Sign Up Button-->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-primary">Sign Up</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+
     <div class="container-fluid">
-      <!--Image-->
-      <a class="navbar-brand" href="#">Image here!</a>
+        <div class="row vh-100 justify-content-evenly bg-light">
 
-      <!--Collapse Support-->
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
+            <!-- 2/3 of view on the left -->
+            <div class="col-7 border justify-content-center bg-light">
 
-      <!--Include this in the collapsed bar-->
-      <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
-
-        <!--Navbar-->
-        <ul class="navbar-nav">
-
-          <!--Login Button-->
-          <li class="nav-item">
-            <button type="button" class="btn btn-outline-success me-1">Login</button>
-          </li>
-
-          <!--Sign Up Button-->
-          <li class="nav-item">
-            <button type="button" class="btn btn-outline-primary">Sign Up</button>
-          </li>
-        </ul>
-      </div>
-    </div>
-  </nav>
-
-
-  <div class="container-fluid">
-    <div class="row vh-100 justify-content-evenly bg-dark">
-
-      <!-- 2/3 of view on the left -->
-      <div class="col-8 border justify-content-center  align-items-stretch bg-light">
-
-        <!-- Some sort of label for what we are viewing -->
-        <div class="row">
-          <div class="col">
-            <h1>Schedule</h1>
-          </div>
-        </div>
-
-        <div class="row" style="background-color: pink;">
-          <div class="col calendarCol">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Sun</th>
-                  <th scope="col">Mon</th>
-                  <th scope="col">Tues</th>
-                  <th scope="col">Wed</th>
-                  <th scope="col">Thurs</th>
-                  <th scope="col">Fri</th>
-                  <th scope="col">Sat</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row">12:00 AM</th>
-                  <td>Mark</td>
-                  <td>Otto</td>
-                  <td>@mdo</td>
-                </tr>
-                <tr>
-                  <th scope="row">1:00 AM</th>
-                  <td>Jacob</td>
-                  <td>Thornton</td>
-                  <td>@fat</td>
-                </tr>
-                <tr>
-                  <th scope="row">2:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">4:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">5:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">6:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">7:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">8:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">9:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">10:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">11:00 AM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">12:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">1:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">2:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">3:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">4:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">5:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">6:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">7:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">8:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">9:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">10:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-                <tr>
-                  <th scope="row">11:00 PM</th>
-                  <td colspan="2">Larry the Bird</td>
-                  <td>@twitter</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- 1/3 of view on the right -->
-      <div class="col-3 border bg-light">
-        <!-- Some sort of label for what we are viewing -->
-        <div class="row">
-          <div class="col">
-            <h1>My Info</h1>
-          </div>
-        </div>
-
-        <!-- Container for profile info that should be editable -->
-        <!-- <div class="row v-100" style="background-color: pink;">
-                <div class="col profileCol">
-                    <div class="card mb-4">
-                        <div class="card-body">
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">Full Name</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">Johnatan Smith</p>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">Email</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">example@example.com</p>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">Phone</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">(097) 234-5678</p>
-                            </div>
-                          </div>
-                          <hr>
-                          <div class="row">
-                            <div class="col-sm-3">
-                              <p class="mb-0">University</p>
-                            </div>
-                            <div class="col-sm-9">
-                              <p class="text-muted mb-0">UMass Amherst</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                </div> -->
-
-        <div class="row h-100" style="background-color: pink;">
-          <div class="col">
-            <!-- Screen Name CARD -->
-            <div class="card my-3">
-              <div class="row g-0">
-                <!-- Screen Name Title -->
-                <div class="col-md-3">
-                  <div class="card-body">
-                    <h6 class="card-title">Screen Name</h6>
-                  </div>
+                <!-- Some sort of label for what we are viewing -->
+                <div class="row d-flex justify-content-start align-items-center">
+                    <div class="col-1 d-flex flex-column">
+                        <h1 class="display-2" style="color: gray;"><i class="bi bi-question-circle"></i></h1>
+                        <!-- <img src="https://images.freeimages.com/fic/images/icons/1963/colorcons_blue/128/questionmark.png" class="img-thumbnail" alt="Question mark image"> -->
+                    </div>
+                    <div class="col-11 d-flex flex-column">
+                        <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">About PalCal
+                                <div class="dropdown">
+                        </h1>
+                    </div>
                 </div>
-                <!-- Form input and edit/save buttons -->
-                <div class="col-md-9">
-                  <input type="text" class="form-control" id="screeNameInput" placeholder="Current Screen Name">
-                  <div class="btn-group" role="group" aria-label="edit_save">
-                    <button type="button" class="btn btn-primary">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                        class="bi bi-pencil" viewBox="0 0 16 16">
-                        <path
-                          d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                      </svg>
-                      Edit
-                    </button>
-                    <button type="button" class="btn btn-success" disabled>Save</button>
-                    </button>
-                  </div>
+
+                <!-- Scrollable text -->
+                <div class="row v-100">
+                    <div class="col groupCol shadow">
+                        <div class="w-100 h-100">
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur mollis
+                            metus eu aliquam. Aliquam sed iaculis elit. Proin sit amet leo eros. Duis iaculis mi at
+                            lorem imperdiet aliquet. Aliquam at urna sodales, dapibus ipsum quis, ullamcorper nulla.
+                            Suspendisse potenti. Suspendisse elit libero, vestibulum in consectetur sit amet, congue sed
+                            orci. Aliquam ultricies molestie mi, vel aliquam nisl ornare nec. Mauris convallis vulputate
+                            orci. Etiam ut dolor nec tellus tristique feugiat. Pellentesque nec laoreet nunc. Ut
+                            ultricies molestie lacus in imperdiet. Vestibulum porta urna a felis scelerisque cursus.
+                            Aliquam et condimentum felis. Ut vestibulum quis eros eget congue. Aliquam tristique erat
+                            sit amet tincidunt efficitur.
+
+                            Morbi nec enim vitae leo ultricies pharetra. Praesent dapibus aliquet eros, id fringilla
+                            ipsum ornare sit amet. Duis condimentum, metus at efficitur condimentum, sapien sapien
+                            eleifend urna, sed tempor nunc leo quis augue. Quisque diam felis, lobortis consequat
+                            interdum nec, faucibus eu arcu. Aenean nec felis pulvinar, venenatis metus vel, pellentesque
+                            lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+                            himenaeos. Pellentesque turpis sem, semper ac massa nec, tristique malesuada lectus. Fusce
+                            consequat odio id suscipit ultricies. Duis lacinia in nisl vitae feugiat. Fusce ut imperdiet
+                            velit. In porta ex auctor urna finibus, vel dictum purus fermentum.
+
+                            Donec euismod nisi a eros condimentum, ac blandit sem venenatis. Maecenas tincidunt sem ac
+                            pretium gravida. Aliquam erat volutpat. Nulla imperdiet nisi eleifend neque interdum cursus.
+                            Cras sodales metus non nisl faucibus, eu lacinia metus lacinia. Integer vitae faucibus arcu.
+                            Donec imperdiet neque erat. Donec tristique nulla vel enim vestibulum consequat. Class
+                            aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean
+                            cursus nunc vitae congue aliquet. Proin vestibulum posuere nisl quis congue. Vestibulum at
+                            nisi interdum, laoreet enim ut, iaculis urna. Quisque orci magna, gravida eu scelerisque
+                            semper, tristique eget dui. Ut vel gravida neque.
+
+                            Aliquam venenatis, dolor in dapibus pulvinar, augue lacus vestibulum sem, ac scelerisque
+                            sapien massa ac velit. Ut pellentesque libero magna, vitae fermentum lectus aliquet vitae.
+                            In vehicula sagittis egestas. Pellentesque cursus euismod ex eget convallis. Nullam
+                            fermentum orci et ante egestas ultricies. Phasellus feugiat pharetra elit, ut ullamcorper
+                            lorem dictum bibendum. Aliquam lacinia fringilla lorem, ut luctus augue placerat id. Sed et
+                            tempor odio. Aenean justo libero, congue eget ullamcorper sed, pharetra et nibh. Nulla
+                            facilisis consequat lectus, nec pulvinar massa congue ut. Etiam ac rutrum lorem. Donec
+                            dapibus lacinia leo sit amet lobortis.
+
+                            Nulla facilisi. Aenean nec dignissim nisl. Lorem ipsum dolor sit amet, consectetur
+                            adipiscing elit. Praesent quis tincidunt est, ut sodales elit. Cras sollicitudin justo quis
+                            ex tempus vestibulum. Nulla eros nulla, cursus et leo sit amet, commodo mattis ex.
+                            Suspendisse ut nibh ante. Vestibulum congue non eros a facilisis. Aliquam tempor eros
+                            hendrerit ante ullamcorper maximus. Mauris ac risus id elit posuere gravida. Sed vestibulum
+                            tellus non est feugiat placerat.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur mollis
+                            metus eu aliquam. Aliquam sed iaculis elit. Proin sit amet leo eros. Duis iaculis mi at
+                            lorem imperdiet aliquet. Aliquam at urna sodales, dapibus ipsum quis, ullamcorper nulla.
+                            Suspendisse potenti. Suspendisse elit libero, vestibulum in consectetur sit amet, congue sed
+                            orci. Aliquam ultricies molestie mi, vel aliquam nisl ornare nec. Mauris convallis vulputate
+                            orci. Etiam ut dolor nec tellus tristique feugiat. Pellentesque nec laoreet nunc. Ut
+                            ultricies molestie lacus in imperdiet. Vestibulum porta urna a felis scelerisque cursus.
+                            Aliquam et condimentum felis. Ut vestibulum quis eros eget congue. Aliquam tristique erat
+                            sit amet tincidunt efficitur.
+
+                            Morbi nec enim vitae leo ultricies pharetra. Praesent dapibus aliquet eros, id fringilla
+                            ipsum ornare sit amet. Duis condimentum, metus at efficitur condimentum, sapien sapien
+                            eleifend urna, sed tempor nunc leo quis augue. Quisque diam felis, lobortis consequat
+                            interdum nec, faucibus eu arcu. Aenean nec felis pulvinar, venenatis metus vel, pellentesque
+                            lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+                            himenaeos. Pellentesque turpis sem, semper ac massa nec, tristique malesuada lectus. Fusce
+                            consequat odio id suscipit ultricies. Duis lacinia in nisl vitae feugiat. Fusce ut imperdiet
+                            velit. In porta ex auctor urna finibus, vel dictum purus fermentum.
+
+                            Donec euismod nisi a eros condimentum, ac blandit sem venenatis. Maecenas tincidunt sem ac
+                            pretium gravida. Aliquam erat volutpat. Nulla imperdiet nisi eleifend neque interdum cursus.
+                            Cras sodales metus non nisl faucibus, eu lacinia metus lacinia. Integer vitae faucibus arcu.
+                            Donec imperdiet neque erat. Donec tristique nulla vel enim vestibulum consequat. Class
+                            aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean
+                            cursus nunc vitae congue aliquet. Proin vestibulum posuere nisl quis congue. Vestibulum at
+                            nisi interdum, laoreet enim ut, iaculis urna. Quisque orci magna, gravida eu scelerisque
+                            semper, tristique eget dui. Ut vel gravida neque.
+
+                            Aliquam venenatis, dolor in dapibus pulvinar, augue lacus vestibulum sem, ac scelerisque
+                            sapien massa ac velit. Ut pellentesque libero magna, vitae fermentum lectus aliquet vitae.
+                            In vehicula sagittis egestas. Pellentesque cursus euismod ex eget convallis. Nullam
+                            fermentum orci et ante egestas ultricies. Phasellus feugiat pharetra elit, ut ullamcorper
+                            lorem dictum bibendum. Aliquam lacinia fringilla lorem, ut luctus augue placerat id. Sed et
+                            tempor odio. Aenean justo libero, congue eget ullamcorper sed, pharetra et nibh. Nulla
+                            facilisis consequat lectus, nec pulvinar massa congue ut. Etiam ac rutrum lorem. Donec
+                            dapibus lacinia leo sit amet lobortis.
+
+                            Nulla facilisi. Aenean nec dignissim nisl. Lorem ipsum dolor sit amet, consectetur
+                            adipiscing elit. Praesent quis tincidunt est, ut sodales elit. Cras sollicitudin justo quis
+                            ex tempus vestibulum. Nulla eros nulla, cursus et leo sit amet, commodo mattis ex.
+                            Suspendisse ut nibh ante. Vestibulum congue non eros a facilisis. Aliquam tempor eros
+                            hendrerit ante ullamcorper maximus. Mauris ac risus id elit posuere gravida. Sed vestibulum
+                            tellus non est feugiat placerat.
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse consectetur mollis
+                            metus eu aliquam. Aliquam sed iaculis elit. Proin sit amet leo eros. Duis iaculis mi at
+                            lorem imperdiet aliquet. Aliquam at urna sodales, dapibus ipsum quis, ullamcorper nulla.
+                            Suspendisse potenti. Suspendisse elit libero, vestibulum in consectetur sit amet, congue sed
+                            orci. Aliquam ultricies molestie mi, vel aliquam nisl ornare nec. Mauris convallis vulputate
+                            orci. Etiam ut dolor nec tellus tristique feugiat. Pellentesque nec laoreet nunc. Ut
+                            ultricies molestie lacus in imperdiet. Vestibulum porta urna a felis scelerisque cursus.
+                            Aliquam et condimentum felis. Ut vestibulum quis eros eget congue. Aliquam tristique erat
+                            sit amet tincidunt efficitur.
+
+                            Morbi nec enim vitae leo ultricies pharetra. Praesent dapibus aliquet eros, id fringilla
+                            ipsum ornare sit amet. Duis condimentum, metus at efficitur condimentum, sapien sapien
+                            eleifend urna, sed tempor nunc leo quis augue. Quisque diam felis, lobortis consequat
+                            interdum nec, faucibus eu arcu. Aenean nec felis pulvinar, venenatis metus vel, pellentesque
+                            lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos
+                            himenaeos. Pellentesque turpis sem, semper ac massa nec, tristique malesuada lectus. Fusce
+                            consequat odio id suscipit ultricies. Duis lacinia in nisl vitae feugiat. Fusce ut imperdiet
+                            velit. In porta ex auctor urna finibus, vel dictum purus fermentum.
+
+                            Donec euismod nisi a eros condimentum, ac blandit sem venenatis. Maecenas tincidunt sem ac
+                            pretium gravida. Aliquam erat volutpat. Nulla imperdiet nisi eleifend neque interdum cursus.
+                            Cras sodales metus non nisl faucibus, eu lacinia metus lacinia. Integer vitae faucibus arcu.
+                            Donec imperdiet neque erat. Donec tristique nulla vel enim vestibulum consequat. Class
+                            aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Aenean
+                            cursus nunc vitae congue aliquet. Proin vestibulum posuere nisl quis congue. Vestibulum at
+                            nisi interdum, laoreet enim ut, iaculis urna. Quisque orci magna, gravida eu scelerisque
+                            semper, tristique eget dui. Ut vel gravida neque.
+
+                            Aliquam venenatis, dolor in dapibus pulvinar, augue lacus vestibulum sem, ac scelerisque
+                            sapien massa ac velit. Ut pellentesque libero magna, vitae fermentum lectus aliquet vitae.
+                            In vehicula sagittis egestas. Pellentesque cursus euismod ex eget convallis. Nullam
+                            fermentum orci et ante egestas ultricies. Phasellus feugiat pharetra elit, ut ullamcorper
+                            lorem dictum bibendum. Aliquam lacinia fringilla lorem, ut luctus augue placerat id. Sed et
+                            tempor odio. Aenean justo libero, congue eget ullamcorper sed, pharetra et nibh. Nulla
+                            facilisis consequat lectus, nec pulvinar massa congue ut. Etiam ac rutrum lorem. Donec
+                            dapibus lacinia leo sit amet lobortis.
+
+                            Nulla facilisi. Aenean nec dignissim nisl. Lorem ipsum dolor sit amet, consectetur
+                            adipiscing elit. Praesent quis tincidunt est, ut sodales elit. Cras sollicitudin justo quis
+                            ex tempus vestibulum. Nulla eros nulla, cursus et leo sit amet, commodo mattis ex.
+                            Suspendisse ut nibh ante. Vestibulum congue non eros a facilisis. Aliquam tempor eros
+                            hendrerit ante ullamcorper maximus. Mauris ac risus id elit posuere gravida. Sed vestibulum
+                            tellus non est feugiat placerat. </div>
+                    </div>
                 </div>
-              </div>
             </div>
-              <!-- First and Last Name CARD -->
-              <div class="card my-3">
-                <div class="row g-0">
-                  <!-- Screen Name Title -->
-                  <div class="col-md-3">
-                    <div class="card-body">
-                      <h6 class="card-title">Name</h6>
-                    </div>
-                  </div>
-                  <!-- Form input and edit/save buttons -->
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="First Name (Optional)">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="Last Name (Optional)">
-                    <div class="btn-group" role="group" aria-label="edit_save">
-                      <button type="button" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                          class="bi bi-pencil" viewBox="0 0 16 16">
-                          <path
-                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        Edit
-                      </button>
-                      <button type="button" class="btn btn-success" disabled>Save</button>
-                      </button>
-                    </div>
-                  </div>
+
+            <!-- 1/3 of view on the right -->
+            <div class="col-4 border bg-light shadow">
+                <!-- Calender example image -->
+                <div class="row v-100">
+                    <img class="img-fluid" src="https://clickup.com/blog/wp-content/uploads/2022/05/calendar-1-1.png"
+                        alt="Example screenshot of callender">
                 </div>
-              </div>
-              <!-- College CARD -->
-              <div class="card my-3">
-                <div class="row g-0">
-                  <!-- Screen Name Title -->
-                  <div class="col-md-3">
-                    <div class="card-body">
-                      <h6 class="card-title">College</h6>
+                <!-- Caption for Image -->
+                <div class="row">
+                    <div class="col text-center">
+                        Calendar example caption
                     </div>
-                  </div>
-                  <!-- Form input and edit/save buttons -->
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="Current College">
-                    <div class="btn-group" role="group" aria-label="edit_save">
-                      <button type="button" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                          class="bi bi-pencil" viewBox="0 0 16 16">
-                          <path
-                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        Edit
-                      </button>
-                      <button type="button" class="btn btn-success" disabled>Save</button>
-                      </button>
-                    </div>
-                  </div>
                 </div>
-              </div>
-              <!-- Major CARD -->
-              <div class="card my-3">
-                <div class="row g-0">
-                  <!-- Screen Name Title -->
-                  <div class="col-md-3">
-                    <div class="card-body">
-                      <h6 class="card-title">Major</h6>
-                    </div>
-                  </div>
-                  <!-- Form input and edit/save buttons -->
-                  <div class="col-md-9">
-                    <input type="text" class="form-control" id="screeNameInput" placeholder="Current Major">
-                    <div class="btn-group" role="group" aria-label="edit_save">
-                      <button type="button" class="btn btn-primary">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                          class="bi bi-pencil" viewBox="0 0 16 16">
-                          <path
-                            d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z" />
-                        </svg>
-                        Edit
-                      </button>
-                      <button type="button" class="btn btn-success" disabled>Save</button>
-                      </button>
-                    </div>
-                  </div>
+
+                <!-- Calender usage example image -->
+                <div class="row v-100">
+                    <img class="img-fluid"
+                        src="https://images.ctfassets.net/lzny33ho1g45/5q4kc46PB8BTsCpK9MLp2Z/7a6d0c1c87abb22227e72fa5610ebae7/gogglecalendar.png?w=1400"
+                        alt="Example screenshot of callender">
                 </div>
-              </div>
+                <!-- Caption for Image -->
+                <div class="row">
+                    <div class="col text-center">
+                        RSVPing/Usage example caption
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
-      </div>
     </div>
 </body>
 
