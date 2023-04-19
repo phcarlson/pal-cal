@@ -10,6 +10,7 @@ class User {
         this.college = college;
         this.bio = bio;
         this.image = image;
+        this.requestsList = requestsList;
     }
 }
 
