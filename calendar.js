@@ -1,3 +1,5 @@
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 function initializeCalendar(calendarDiv) {
     const hoursCol = document.createElement("div");
     hoursCol.innerText = "hours";
@@ -11,8 +13,19 @@ function initializeCalendar(calendarDiv) {
         hourDiv.innerText = toTwelveHour(hour, 0);
         hoursCol.appendChild(hourDiv);
     }
-    // TODO: change to append once other columns are created in JS too
-    calendarDiv.prepend(hoursCol);
+    calendarDiv.appendChild(hoursCol);
+
+    // Create weekday columns
+    for (let day of days) {
+        const dayDiv = document.createElement("div");
+        dayDiv.classList.add("col", "m-2");
+        dayDiv.id = `column-${day.toLowerCase()}`
+        const dayHeader = document.createElement("div");
+        dayHeader.classList.add("sticky-top", "calendar-weekday-header");
+        dayHeader.innerText = day;
+        dayDiv.appendChild(dayHeader);
+        calendarDiv.appendChild(dayDiv);
+    }
 }
 
 /**
