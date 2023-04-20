@@ -8,7 +8,7 @@ body, html {
 .friendCol,
 .profileCol,
 .calendarCol {
-  height: calc(100vh - 100px);
+  /* height: calc(100% - 30px); */
   overflow-x: hidden;
   overflow-y: auto; 
 }
@@ -19,8 +19,6 @@ body, html {
 }
 
 /* Try to hide scrollbar after ? */
-
-
 
 /* Temp calendar */
 
