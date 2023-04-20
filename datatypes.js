@@ -98,7 +98,7 @@ class BusyEvent {
  */
 class PlannedEvent extends BusyEvent {
     constructor(title, startHour, endHour, startMinute, endMinute, startDay, endDay, 
-        creatorUsername, location, description, yesList, noList, maybeList) {
+        creatorUsername, location, description, yesDict, noDict, maybeDict) {
 
         super(title, startHour, endHour, startMinute, endMinute, startDay, endDay);
 
@@ -107,9 +107,9 @@ class PlannedEvent extends BusyEvent {
         this.location = location;
         this.description = description;
 
-        this.yesList = yesList;
-        this.noList = noList;
-        this.maybeList = maybeList;
+        this.yesDict = yesDict;
+        this.noDict = noDict;
+        this.maybeDict = maybeDict;
     }
 }
 
