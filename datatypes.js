@@ -5,20 +5,20 @@
  * A User has a uniquely identifying username, name, profile info, friends, 
  * groups they're in, a profile photo, and booked time slots in their personal schedule that they set
  * 
- * userName = unique String
- * firstName = String
- * lastName = String
+ * username = unique string
+ * firstName = string
+ * lastName = string
  * eventsList = List of BusyEvent objects
  * friendsList = List of User objects
  * groupsList = List of Group objects
- * college = String 
- * bio = String
+ * college = string 
+ * bio = string
  * image = ?
  */
 class User {
-    constructor(userName, firstName, lastName, eventsList, friendsList, groupsList, college, bio, image, requestsList) {
+    constructor(username, firstName, lastName, eventsList, friendsList, groupsList, college, bio, image, requestsList) {
 
-        this.userName = userName;
+        this.username = username;
 
         this.firstName = firstName;
         this.lastName = lastName;
@@ -40,8 +40,8 @@ class User {
  * A Group has an identifying unique id, name, image, 
  * list of members joined, and list of booked/planned events
  * 
- * id = unique Integer
- * groupName = String
+ * id = unique int
+ * groupName = string
  * memberList = List of User objects
  * plannedList = List of PlannedEvent objects
  * image = ?
@@ -61,20 +61,23 @@ class Group {
 /**
  * The BusyEvent class is made to represent a generic event
  * 
- * A BusyEvent has a title, start/end times and days in a standardized date/time format that can be parsed easily
+ * A BusyEvent has a title, start/end times 
+ * and days in a standardized date/time format that can be parsed easily
  * 
- * startTime = String of standard time format: 00:00:00
- * endTime = String of standard time format: 00:00:00
- * startDay = String of standard date format: 2019-08-09
- * endDay = String of standard date format: 2019-08-10
- * title = String
+ * title = string
+ * startHour, endHour = int in range 0-23 for hours in military time
+ * startMinute, endMinute = int in range 0-59 for minute of the hour
+ * startDay, endDay = int in range of 0-6, where 0 = Sunday, 1 = Monday... 9 = Saturday
  */
 class BusyEvent {
-    constructor(title, startTime, endTime, startDay, endDay) {
+    constructor(title, startHour, endHour, startMinute, endMinute, startDay, endDay) {
         this.title = title;
 
-        this.startTime = startTime;
-        this.endTime = endTime;
+        this.startHour = startHour;
+        this.endHour = endHour;
+        
+        this.startMinute = startMinute;
+        this.endMinute = endMinute;
 
         this.startDay = startDay;
         this.endDay = endDay;
@@ -87,18 +90,20 @@ class BusyEvent {
  * A PlannedEvent has everything that a BusyEvent has, in addition to location, description so members can learn more, 
  * lists of RSVP responses, and the username of the User who created the PlannedEvent
  * 
- * location = String
- * description = String
- * yesList = List of Users
- * noList = List of Users
- * maybeList = List of Users
- * creatorUsername = unique String
+ * location = string
+ * description = string
+ * yesList = Map of Users where key is a User's username and value is arbitrary/''
+ * noList = Map of Users where key is a User's username and value is arbitrary/''
+ * maybeList = Map of Users where key is a User's username and value is arbitrary/''
+ * creatorUsername = unique string
  */
 class PlannedEvent extends BusyEvent {
-    constructor(title, startTime, endTime, startDay, endDay, creatorUsername, location, description, yesList, noList, maybeList) {
-        super(startTime, startDay, endTime, endDay, title);
+    constructor(title, startHour, endHour, startMinute, endMinute, startDay, endDay, 
+        creatorUsername, location, description, yesList, noList, maybeList) {
 
-        this.creatorUserName = creatorUserName;
+        super(title, startHour, endHour, startMinute, endMinute, startDay, endDay);
+
+        this.creatorUsername = creatorUsername;
 
         this.location = location;
         this.description = description;
