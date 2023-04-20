@@ -13,6 +13,8 @@
     <link rel="stylesheet" type="text/css" href="./custom.css">
     <link rel="stylesheet" type="text/css" href="./calendar.css">
 
+    <script type="module" src="individualgroup.js"></script>
+
 </head>
 
 <body>
@@ -86,71 +88,76 @@
                     </div>
                 </div>
                 <!-- Container for holding groups added dynamically -->
-                    <div class="row v-100" style="overflow-y: scroll;">
-                        <div class="col groupCol">
-                            <div class="timetable-img text-center">
-                                <img src="img/content/timetable.png" alt="">
+                <div class="row v-100" style="overflow-y: scroll;">
+                    <div class="col groupCol">
+                        <div class="timetable-img text-center">
+                            <img src="img/content/timetable.png" alt="">
+                        </div>
+                    </div>
+
+                    <div class="row d-flex">
+                        <div class="col m-2">
+                            hours
+                            <div class="row border" style="height: calc(100%/12);">12:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">1:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">2:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">3:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">4:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">5:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">6:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">7:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">8:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">9:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">10:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">11:00am</div>
+                            <div class="row border" style="height: calc(100%/12);">12:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">1:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">2:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">3:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">4:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">5:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">6:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">7:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">8:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">9:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">10:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">11:00pm</div>
+                            <div class="row border" style="height: calc(100%/12);">12:00am</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">sunday</div>
+                            <div class="row calendar-no-event" style="height: calc((100%/12) * 6);">
+                                no event 12am-6am
+                            </div>
+                            <div class="row calendar-event" style="height: 10%; height: calc((100%/12) * 2.5);">First
+                                event 6am-8:30am</div>
+                            <div class="row calendar-no-event" style="height: calc(100%/12 * 1.5);">no event
+                                8:30am-10:00am</div>
+                            <div class="row calendar-event" style="height: calc(100%/12 * 1.75);">second event
+                                10am-11:45am</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">monday</div>
+                            <div class="row calendar-no-event" style="height: calc(100%/12 * 10);">no event 12am-10am
+                            </div>
+                            <div class="row calendar-event" style="height: calc(100%/12 * 2.5)">another event 10-12:30
                             </div>
                         </div>
-                        
-                        <div class="row d-flex">
-                            <div class="col m-2">
-                              hours
-                              <div class="row border" style="height: calc(100%/12);">12:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">1:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">2:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">3:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">4:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">5:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">6:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">7:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">8:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">9:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">10:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">11:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">12:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">1:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">2:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">3:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">4:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">5:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">6:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">7:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">8:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">9:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">10:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">11:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">12:00am</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">sunday</div>
-                              <div class="row calendar-no-event" style="height: calc((100%/12) * 6);">
-                                  no event 12am-6am
-                              </div>
-                              <div class="row calendar-event" style="height: 10%; height: calc((100%/12) * 2.5);">First event 6am-8:30am</div>
-                              <div class="row calendar-no-event" style="height: calc(100%/12 * 1.5);">no event 8:30am-10:00am</div>
-                              <div class="row calendar-event" style="height: calc(100%/12 * 1.75);">second event 10am-11:45am</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">monday</div>
-                              <div class="row calendar-no-event" style="height: calc(100%/12 * 10);">no event 12am-10am</div>
-                              <div class="row calendar-event" style="height: calc(100%/12 * 2.5)">another event 10-12:30</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">tuesday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">wednesday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">thursday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">friday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">saturday</div>
-                            </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">tuesday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">wednesday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">thursday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">friday</div>
+                        </div>
+                        <div class="col m-2">
+                            <div class="sticky-top calendar-weekday-header">saturday</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -190,7 +197,7 @@
 
                 <!-- Container for holding groups added dynamically -->
                 <div class="row d-flex" style="height:40%">
-                    <div class="col d-flex flex-column h-100 scrollIt">
+                    <div id="members-container" class="col d-flex flex-column h-100 scrollIt">
                         <div class="card my-3">
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -431,7 +438,7 @@
                 <!-- Row for holding scrollable group -->
                 <div class="row d-flex" style="height:40%">
                     <!-- Column of groups that scroll -->
-                    <div class="col d-flex flex-column h-100 scrollIt">
+                    <div id="plannedEventsContainer" class="col d-flex flex-column h-100 scrollIt">
 
                         <!-- Example event -->
 
