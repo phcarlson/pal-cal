@@ -89,11 +89,11 @@ class BusyEvent {
  * The PlannedEvent class inherits BusyEvent, made to represent a planned event in a Group object's plannedList
  * 
  * A PlannedEvent has everything that a BusyEvent has, in addition to location, description so members can learn more, 
- * lists of RSVP responses, and the username of the User who created the PlannedEvent
+ * dictionaries of RSVP responses to easily access whether a specific User responded, and the username of the User who created the PlannedEvent
  * 
  * location = string
  * description = string
- * yesList, noList, maybeList = Map of Users where key is a User's username and value is ''
+ * yesDict, noDict, maybeDict = Generic object AKA dictionary of Users where key is a User's username and value is ''
  * creatorUsername = unique string
  */
 class PlannedEvent extends BusyEvent {
