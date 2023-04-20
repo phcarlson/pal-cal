@@ -98,7 +98,7 @@ class PlannedEvent extends BusyEvent {
     constructor(title, startTime, endTime, startDay, endDay, creatorUsername, location, description, yesList, noList, maybeList) {
         super(startTime, startDay, endTime, endDay, title);
 
-        this.creatorUsername = creatorUsername;
+        this.creatorUserName = creatorUserName;
 
         this.location = location;
         this.description = description;
