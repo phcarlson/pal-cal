@@ -3,16 +3,17 @@
  * Users that belong to a group as members, or Users that are in another User's friendList
  * 
  * A User has a uniquely identifying username, name, profile info, friends, 
- * groups they're in, a profile photo, and booked time slots in their personal schedule that they set
+ * groups they're in, a profile photo, and booked time slots in their personal schedule that they set. 
+ * They also have a list of pending requests that have yet to be answered
  * 
  * username = unique string
- * firstName = string
- * lastName = string
+ * firstName, lastName = string
  * eventsList = List of BusyEvent objects
  * friendsList = List of User objects
  * groupsList = List of Group objects
  * college = string 
  * bio = string
+ * requestsList = List of User objects
  * image = ?
  */
 class User {
@@ -75,7 +76,7 @@ class BusyEvent {
 
         this.startHour = startHour;
         this.endHour = endHour;
-        
+
         this.startMinute = startMinute;
         this.endMinute = endMinute;
 
@@ -92,9 +93,7 @@ class BusyEvent {
  * 
  * location = string
  * description = string
- * yesList = Map of Users where key is a User's username and value is arbitrary/''
- * noList = Map of Users where key is a User's username and value is arbitrary/''
- * maybeList = Map of Users where key is a User's username and value is arbitrary/''
+ * yesList, noList, maybeList = Map of Users where key is a User's username and value is ''
  * creatorUsername = unique string
  */
 class PlannedEvent extends BusyEvent {
