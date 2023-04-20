@@ -68,7 +68,7 @@ class Group {
  * title = string
  * startHour, endHour = int in range 0-23 for hours in military time
  * startMinute, endMinute = int in range 0-59 for minute of the hour
- * startDay, endDay = int in range of 0-6, where 0 = Sunday, 1 = Monday... 9 = Saturday
+ * startDay, endDay = int in range of 0-6, where 0 = Sunday, 1 = Monday... 6 = Saturday
  */
 class BusyEvent {
     constructor(title, startHour, endHour, startMinute, endMinute, startDay, endDay) {
@@ -91,10 +91,10 @@ class BusyEvent {
  * A PlannedEvent has everything that a BusyEvent has, in addition to location, description so members can learn more, 
  * dictionaries of RSVP responses to easily access whether a specific User responded, and the username of the User who created the PlannedEvent
  * 
+ * creatorUsername = unique string
  * location = string
  * description = string
  * yesDict, noDict, maybeDict = Generic object AKA dictionary of Users where key is a User's username and value is ''
- * creatorUsername = unique string
  */
 class PlannedEvent extends BusyEvent {
     constructor(title, startHour, endHour, startMinute, endMinute, startDay, endDay, 
