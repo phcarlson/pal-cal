@@ -28,7 +28,7 @@ function addMember(screenName) {
                                     </div>`;
 }
 
-function addPlannedEvent(startTime, endTime, startDay, title, location, description, yesList, noList, maybeList, creatorID) {
+function addPlannedEvent(startTime, endTime, startDay, title, location, description, yesDict, noDict, maybeDict, creatorID) {
     plannedEventsContainer.innerHTML += `<div class="card card-margin">
                                             <div class="card-header no-border">
                                                 <h5 class="card-title">${title}</h5>
@@ -65,6 +65,43 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                                 </div>
                                             </div>
                                         </div>`;
+}
+
+function renderGroupMembers() {
+    const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const groupMemberIDs = currentGroup.getMemberList(); // get list of IDs in Group
+
+    for (const id of groupMemberIDs) { // for each ID, look up the member and add it to the display
+        addMember(getUser(id).getUsername());
+    }
+}
+
+function renderPlannedEvents() {
+    const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const plannedEventList = currentGroup.getPlannedList(); // list of PlannedEvent objects
+
+    for (const event of groupMemberIDs) { // for each PlannedEvent object in list
+        addPlannedEvent(getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description, event.yesDict, event.noDict, event.maybeDict, WHAAAAAAAAA);
+    }
+}
+
+function getTime(hour, minute) {
+    let suffix = 'am';
+
+    if (hour == 12) {
+        suffix = 'pm';
+    }
+    else if (hour >= 13) {
+        hour -= 12;
+        suffix = 'pm';
+    }
+
+    return hour + ':' + minute + suffix;
+}
+
+function getDay(dayNum) {
+    const dayArr = ["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"];
+    return dayArr[dayNum];
 }
 
 addMember("Screen Name");
