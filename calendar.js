@@ -43,6 +43,20 @@ function toTwelveHour(hour, minute=0) {
 }
 
 /**
+ * Add a div to the calendar representing an event or lack thereof
+ * @param {number} day The day of the week to add the event. 0-6 for sunday-saturday
+ * @param {number} duration The length of the event in hours
+ * @param {boolean} event True if this represents an event, false if this is a "filler" div representing time without an event
+ */
+function addEventBlock(day, duration, busy) {
+    const weekdayCol = document.getElementById(`column-${days[day]}`);
+    const cssClass = busy ? "calendar-event" : "calendar-no-event";
+    const eventDiv = document.createElement("div");
+    eventDiv.classList.add("row", cssClass);
+    eventDiv.style.height = `calc((100%/12) * ${duration})`
+}
+
+/**
  * Get the length of a timespan in (fractional) hours
  * @param {number} startHour The start hour, in 24-hour time
  * @param {number} startMinute The minute of the start hour
