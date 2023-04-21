@@ -117,19 +117,24 @@
                             <div class="modal-body">
                                 <form>
                                     <!-- Take in group name input  -->
-                                    <div class="form-group mb-2">
+                                    <div class="form-group mb-3">
                                         <label for="exampleInputEmail1">Group name</label>
                                         <input type="text" class="form-control" id="groupNameInput"
                                             placeholder="Catchy group name">
                                     </div>
 
+                                    <div class="mb-3">
+                                        <label for="groupPhotoUpload" class="form-label">Upload group photo</label>
+                                        <input class="form-control form-control-sm" id="groupPhotoUpload" type="file">
+                                      </div>
+
                                     <!-- Take in selected members to add input  -->
                                     <div class="form-group">
                                         <!-- Collapsible friends list -->
-                                        <div class="accordion accordion-flush" id="accordionFriends">
-                                            <div class="accordion-item">
+                                        <div class="accordion accordion-flush">
+                                            <div id="accordionFriends" class="accordion-item">
                                                 <h2 class="accordion-header" id="flush-headingOne">
-                                                    <!-- Instructs to add memebrs when collapsed -->
+                                                    <!-- Instructs to add members when collapsed -->
                                                     <button class="accordion-button collapsed" type="button"
                                                         data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
                                                         aria-expanded="false" aria-controls="flush-collapseOne">
@@ -156,7 +161,7 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Changed my
                                     mind</button>
-                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">This is the group
+                                <button id="makeGroupButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">This is the group
                                     I want to make!</button>
                             </div>
                         </div>

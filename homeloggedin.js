@@ -4,6 +4,9 @@
 
 let friendsCol = document.getElementById('scrollableFriendsList');
 let groupsCol = document.getElementById('scrollableGroupList');
+let potentialMembers = document.getElementById('potentialMembers');
+
+let selectedMembers = [];
 let mockusername = "Me";
 
 function renderFriends(username) {
@@ -62,44 +65,47 @@ function renderGroups(username) {
     groupsList: [{id:1, groupName: 'Team 19'}, {id:2, groupName: 'Team 20'}, {id:3, groupName: 'Team 21'},  {id:4, groupName: 'Team 22'},
     {id:5, groupName: 'Team 2000'},  {id:6, groupName: 'Team 22222'}]}
 
-    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+  
     user.groupsList.forEach((group) => {
         // let groupObj = CRUD.getGroup(group);
-        let groupToInsert =
-        `<div id=${group.id}GroupCard class="card my-3">` +
-            '<div class="row g-0">' +
-                '<div class="col-md-2 d-flex">' +
-                    `<img src=${image}` +
-                        'alt="generic profile pic" class="img-fluid rounded-start">' +
-                '</div>' +
-                '<div class="col-md-8 d-flex align-items-center">' +
-                    '<div class="card-body">' +
-                        `<h5 class="card-title text-start">${group.groupName}</h5>` +
-                    '</div>' +
-                '</div>' +
-                '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">' +
-                    '<div class="dropdown">' +
-                        '<button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"' +
-                            'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
-                            'aria-expanded="false"></button>' +
-                        '<ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">' +
-                        `<li><a id=${group.id}RemoveCard class="dropdown-item" href="#">Leave group<i ` +
-                                    'class="bi bi-trash"></i></a></li></ul>'+
-                        '</ul></div></div></div></div>';
+        renderGroup(group);
+    });
+}
 
-        groupsCol.insertAdjacentHTML("beforeend", groupToInsert);
+function renderGroup(group){
+    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let groupToInsert =
+    `<div id=${group.id}GroupCard class="card my-3">` +
+        '<div class="row g-0">' +
+            '<div class="col-md-2 d-flex">' +
+                `<img src=${image}` +
+                    'alt="generic profile pic" class="img-fluid rounded-start">' +
+            '</div>' +
+            '<div class="col-md-8 d-flex align-items-center">' +
+                '<div class="card-body">' +
+                    `<h5 class="card-title text-start">${group.groupName}</h5>` +
+                '</div>' +
+            '</div>' +
+            '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">' +
+                '<div class="dropdown">' +
+                    '<button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"' +
+                        'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
+                        'aria-expanded="false"></button>' +
+                    '<ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">' +
+                    `<li><a id=${group.id}RemoveCard class="dropdown-item" href="#">Leave group<i ` +
+                                'class="bi bi-trash"></i></a></li></ul>'+
+                    '</ul></div></div></div></div>';
 
-        let groupDeleteButton = document.getElementById(group.id + 'RemoveCard');
-        groupDeleteButton.addEventListener('click', (event) => {
-            removeGroupFromUser(group.id);
-        });
+    groupsCol.insertAdjacentHTML("afterbegin", groupToInsert);
+
+    let groupDeleteButton = document.getElementById(group.id + 'RemoveCard');
+    groupDeleteButton.addEventListener('click', (event) => {
+        removeGroupFromUser(group.id);
     });
 }
 
 function renderPotentialMembers(username){
       // let user = CRUD.getUser(username);
-      let potentialMembers = document.getElementById('potentialMembers');
-
       let user = {friendsList: [{username: 'Amana22'}, {username: 'koba'}, {username: 'ananya'},
       {username: 'adin'}, {username: 'amey'}, {username: 'anotheruser'}, {username: 'anotheruser2'}, {username: 'another3'}],
       groupsList: [{id:1, groupName: 'Team 19'}, {id:2, groupName: 'Team 20'}, {id:3, groupName: 'Team 21'},  {id:4, groupName: 'Team 22'},
@@ -140,11 +146,22 @@ function renderPotentialMembers(username){
                 '</div>'+
             '</div>';
         potentialMembers.insertAdjacentHTML("beforeend", potentialMemberToInsert);
+
+        let checkFriend = document.getElementById(`${friend.username}Checkbox`);
+        checkFriend.addEventListener('click', (event) => {
+            if (checkFriend.checked == true){ 
+                selectedMembers.push(friend.username);
+            }
+            else if (checkFriend.checked == false){ 
+                let index = selectedMembers.indexOf(friend.username);
+                selectedMembers.splice(index, 1); 
+            }
+        });
       });
 }
 
 function addSelectedFriendsToGroup(){
-    
+
 }
 
 function removeGroupFromUser(id, username){
@@ -165,6 +182,35 @@ function removeFriendFromUser(friendUsername, username){
     let friendToDelete = document.getElementById(friendUsername + 'FriendCard');
     friendsCol.removeChild(friendToDelete);
 }
+
+
+// Listens for group creation, deselects boxes and wipes those that are selected
+let makeGroupButton = document.getElementById("makeGroupButton");
+makeGroupButton.addEventListener('click', (event) => {
+    let groupName = document.getElementById('groupNameInput').value;
+    let accordionFriends = document.getElementById('flush-collapseOne');
+
+    // let groupObj = CRUD.createGroup(groupName);
+
+    selectedMembers.forEach((member)=>{
+        let box = document.getElementById(`${member}Checkbox`);
+        box.checked = false;
+    });
+
+    // Add ourselves, the group creator, to the members list
+    selectedMembers.push(mockusername);
+
+    // let groupObj = CRUD.getGroup(groupName).setMembers(selectedMembers);
+    let groupObj =  {id:5, groupName: groupName, membersList: selectedMembers}
+
+    // Wipe selected members for next creation and collapse accordion
+    selectedMembers = [];
+    accordionFriends.collapse('hide');
+
+    // Render new group made
+    renderGroup(groupObj);
+    
+});
 
 renderFriends(mockusername);
 
