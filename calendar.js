@@ -42,4 +42,16 @@ function toTwelveHour(hour, minute=0) {
     return `${hourStr}:${minuteStr} ${ampm}`
 }
 
+/**
+ * Get the length of a timespan in (fractional) hours
+ * @param {number} startHour The start hour, in 24-hour time
+ * @param {number} startMinute The minute of the start hour
+ * @param {number} endHour The end hour, in 24-hour time
+ * @param {number} endMinute The minute of the end hour
+ * @returns Returns the difference between the two times in hours. e.g. getDurationHours(10, 0, 15, 30) -> 5.5
+ */
+function getDurationHours(startHour, startMinute, endHour, endMinute) {
+    return (endHour + 1/60 * endMinute) - (startHour + 1/60 * startMinute);
+}
+
 initializeCalendar(document.getElementById("calendar"));
