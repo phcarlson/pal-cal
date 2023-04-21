@@ -9,11 +9,11 @@
  * username = unique string
  * firstName, lastName = string
  * eventsList = List of BusyEvent objects
- * friendsList = List of User objects
- * groupsList = List of Group objects
+ * friendsList = List of User unique usernames
+ * groupsList = List of Group unique ids
  * college = string 
  * bio = string
- * requestsList = List of User objects
+ * requestsList = List of User unique usernames
  * image = ?
  */
 class User {
@@ -43,7 +43,7 @@ class User {
  * 
  * id = unique int
  * groupName = string
- * memberList = List of User objects
+ * memberList = List of User unique usernames
  * plannedList = List of PlannedEvent objects
  * image = ?
  */
