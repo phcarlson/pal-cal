@@ -1,7 +1,7 @@
 import PouchDB from 'pouchdb';
 
-const userDb = new PouchDB("users");
-const groupDb = new PouchDB("groups");
+const userDb = new PouchDB("users.pouchdb");
+const groupDb = new PouchDB("groups.pouchdb");
 
 
 function _makeGetter(db, key, property) {
