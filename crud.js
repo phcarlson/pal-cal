@@ -54,7 +54,7 @@ function getUser(username, db=userDb) {
     const user = {
         setImage: async function(image) {
             try {
-                const data = await db.get(userId);
+                const data = await db.get(username);
                 db.putAttachment(data._id, imageId, data._rev, image);
             }
             catch (err) {
@@ -64,7 +64,7 @@ function getUser(username, db=userDb) {
 
         getImage: async function() {
             try {
-                return db.getAttachment(userId, imageId);
+                return db.getAttachment(username, imageId);
             }
             catch (err) {
                 throw (err);
@@ -188,24 +188,24 @@ function getGroup(groupId, db=groupDb) {
             }
         },
 
-        addMember: async function(userId, userDb=userDb) {
+        addMember: async function(username, userDb=userDb) {
             // TODO: verify user exists?
             // TODO: verify user not already in group
             const group = await db.get(groupId);
-            group.memberDict[userId] = 1;
+            group.memberDict[username] = 1;
             await db.put(group);
         },
 
-        removeMember: async function(userId) {
+        removeMember: async function(username) {
             // TODO: verify user is in group
             const group = await db.get(groupId);
-            delete group.memberDict[userId];
+            delete group.memberDict[username];
             await db.put(group);
         },
 
-        hasMember: async function(userId) {
+        hasMember: async function(username) {
             const group = await db.get(groupId);
-            return (userId in group.memberDict);
+            return (username in group.memberDict);
         },
 
         getAllMemberIds: async function() {
