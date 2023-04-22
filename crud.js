@@ -173,6 +173,11 @@ async function userExists(username, db=userDb) {
     }
 }
 
+async function getAllUsernames(db=userDb) {
+    const docs = await db.allDocs();
+    return docs.rows.map(row => row.id);
+}
+
 async function createGroup(db=groupDb) {
     try {
         const group = {
