@@ -198,7 +198,7 @@ function getGroup(groupId, db=groupDb) {
             }
         },
 
-        addMember: async function(username, userDb=userDb) {
+        addMember: async function(username, localUserDb=userDb) {
             // TODO: verify user exists?
             // TODO: verify user not already in group
             const group = await db.get(groupId);
@@ -234,7 +234,7 @@ function getGroup(groupId, db=groupDb) {
             const data = await db.get(groupId);
             return data.eventsList;
         }
-    }
+    };
     ["groupName"].forEach(
         property => _addProperty(group, db, groupId, property)
     );
