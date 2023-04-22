@@ -127,6 +127,8 @@ function getUser(username, db=userDb) {
         },
 
         getAllGroups: async function(localGroupDb=groupDb) {
+            // This linear scan is a pretty inefficient way to do it!
+            // Ideally I'd like to figure out PouchDB indexing but haven't gotten there yet
             const allGroups = await localGroupDb.allDocs({include_docs: true});
             return allGroups.rows.reduce((acc, row) => {
                 if (username in row.doc.memberDict) {
