@@ -6,6 +6,8 @@ const plannedEventsContainer = document.getElementById("plannedEventsContainer")
 membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
 
+let eventsAdded = 0;
+
 function addMember(screenName) {
     membersContainer.innerHTML += `<div class="card my-3">
                                         <div class="row g-0">
@@ -56,15 +58,33 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                                                 RSVP
                                                             </button>
                                                             <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
-                                                                <li><a class="dropdown-item" href="#">Yes</a></li>
-                                                                <li><a class="dropdown-item" href="#">No</a></li>
-                                                                <li><a class="dropdown-item" href="#">Maybe</a></li>
+                                                                <li><a id="yes-${eventsAdded}" class="dropdown-item event-${eventsAdded}" href="#">Yes</a></li>
+                                                                <li><a id="no-${eventsAdded}" class="dropdown-item event-${eventsAdded}" href="#">No</a></li>
+                                                                <li><a id="maybe-${eventsAdded}" class="dropdown-item event-${eventsAdded}" href="#">Maybe</a></li>
                                                             </ul>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>`;
+                                        
+                                        const yesButton = document.getElementById(`yes-${eventsAdded}`);
+                                        const noButton = document.getElementById(`no-${eventsAdded}`);
+                                        const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
+
+                                        const plannedEvents = getGroup(__currentGroupID__).getPlannedEvents();
+
+                                        yesButton.addEventListener("click", () => {
+                                            plannedEvents[eventsAdded].yesDict[__currentUserID__] = '';
+                                        });
+                                        noButton.addEventListener("click", () => {
+                                            plannedEvents[eventsAdded].noDict[__currentUserID__] = '';
+                                        });
+                                        maybeButton.addEventListener("click", () => {
+                                            plannedEvents[eventsAdded].maybeDict[__currentUserID__] = '';
+                                        });
+
+                                        eventsAdded += 1;
 }
 
 function renderGroupMembers() {
@@ -105,4 +125,5 @@ function getDay(dayNum) {
 }
 
 addMember("Screen Name");
+addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
 addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
