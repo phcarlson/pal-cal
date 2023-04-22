@@ -249,3 +249,13 @@ await createUser("user1");
 const user1 = getUser("user1");
 await user1.setFirstName("Foo");
 console.log(await user1.getFirstName());
+// Checking if getAllGroups works
+const group1id = await createGroup();
+const group2id = await createGroup();
+const group1 = getGroup(group1id);
+const group2 = getGroup(group2id);
+console.log(`Group 1 id: ${group1id}`)
+console.log(`Group 2 id: ${group2id}`)
+await group1.addMember("user1");
+await group2.addMember("user1");
+console.log(await user1.getAllGroups());
