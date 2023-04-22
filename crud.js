@@ -124,6 +124,16 @@ function getUser(username, db=userDb) {
             const data = await db.get(username);
             delete data.requestsDict[friendUsername];
             await db.put(data);
+        },
+
+        getAllGroups: async function(localGroupDb=groupDb) {
+            const allGroups = await localGroupDb.allDocs({include_docs: true});
+            return allGroups.rows.reduce((acc, row) => {
+                if (username in row.doc.memberDict) {
+                    acc.push(row.id);
+                    return acc;
+                }
+            }, []);
         }
     };
     ["firstName", "lastName", "college", "bio"].forEach(
