@@ -1,9 +1,17 @@
 import PouchDB from 'pouchdb';
+import { BusyEvent, PlannedEvent } from './datatypes';
 
 const userDb = new PouchDB("users.pouchdb");
 const groupDb = new PouchDB("groups.pouchdb");
 
 
+/**
+ * Wrapper around getting a property of a document in a PouchDB store
+ * @param {PouchDB} db The database to access
+ * @param {string} _id The id of the document
+ * @param {string} property The name of the property to access
+ * @returns The current value of the given property of the given document
+ */
 async function _getProperty(db, _id, property) {
     try {
         const data = await db.get(_id);
@@ -14,6 +22,13 @@ async function _getProperty(db, _id, property) {
     }
 }
 
+/**
+ * Wrapper around setting a property of a document in a PouchDB store
+ * @param {PouchDB} db The database to access
+ * @param {string} _id The id of the document
+ * @param {string} property The name of the property to access
+ * @param {*} value New value to set the property to
+ */
 async function _setProperty(db, _id, property, value) {
     try {
         const data = await db.get(_id);
@@ -27,10 +42,26 @@ async function _setProperty(db, _id, property, value) {
 
 // TODO: abstract dictionary/hashset getAll/add/remove functions
 
+/**
+ * Returns an object allowing querying and modifying a given user
+ * @param {string} username The unique username identifying the user
+ * @param {PouchDB} db The database holding users. OPTIONAL - defaults to the main user
+ * database, a different database can be provided for test purposes
+ * @returns A closure holding a bunch of crud functions for the given user
+ */
 function getUser(username, db=userDb) {
     const imageId = "userImage";
 
     const user = {
+        /**
+         * Set the user's profile picture
+         * How this is actually typed is still tbd, image types seem a little
+         * complicated
+         * See https://pouchdb.com/guides/attachments.html#allow-the-user-to-store-an-attachment
+         * for info on blob vs buffer vs base64 etc
+         * How we actually handle this will depend on how we do image uploads
+         * @param {Buffer} image The new image
+         */
         setImage: async function(image) {
             try {
                 const data = await db.get(username);
@@ -41,6 +72,10 @@ function getUser(username, db=userDb) {
             }
         },
 
+        /**
+         * Get the user's profile picture
+         * @returns A Buffer representing the image
+         */
         getImage: async function() {
             try {
                 return db.getAttachment(username, imageId);
@@ -50,6 +85,10 @@ function getUser(username, db=userDb) {
             }
         },
 
+        /**
+         * Add a time the user is busy to their calendar
+         * @param {BusyEvent} busyEvent 
+         */
         addBusyEvent: async function(busyEvent) {
             const data = await db.get(username);
             // TODO: verify user doesn't have a conflicting event?
@@ -57,14 +96,26 @@ function getUser(username, db=userDb) {
             await db.put(data);
         },
 
+        /**
+         * Get all of this user's recurring busy events
+         * @returns An array of BusyEvent objects
+         */
         getBusyEvents: async function() {
             const data = await db.get(username);
             return data.eventsList;
         },
 
-        // TODO: delete busy event
+        // TODO: delete busy event, edit busy event
         // How to identify the event to delete? Do events need IDs too?
 
+        /**
+         * Add another user to this user's friends list, by username
+         * Note this is not reciprocal - adding A to B's friends does not
+         * add B to A's friends, so make sure to do both
+         * Also note: does not currently validate that friendUsername refers to
+         * an actual user, just naively adds whatever name you give it
+         * @param {string} friendUsername Username of the friend to add
+         */
         addFriend: async function(friendUsername) {
             const data = await db.get(username);
             // TODO: verify friend ID exists
@@ -73,22 +124,45 @@ function getUser(username, db=userDb) {
             await db.put(username);
         },
 
+        /**
+         * Remove a user from this user's friends list, by username
+         * @param {string} friendUsername Username of the friend to remove
+         */
         removeFriend: async function(friendUsername) {
             // TODO: verify users are friends
             const data = await db.get(username);
             delete data.friendsDict[friendUsername];
         },
 
+        /**
+         * Check if this user has the given user in their friends list
+         * @param {string} friendUsername Username of the friend to check
+         * @returns True iff user friendUsername is in this user's friends
+         */
         hasFriend: async function(friendUsername) {
             const data = await db.get(username);
             return (friendUsername in data.friendsDict);
         },
 
+        /**
+         * Get a list of this user's friends
+         * Note - if you just want to check if this user has a specific friend,
+         * hasFriend will be more efficient
+         * @returns An Array of the usernames of everybody in this user's
+         * friends list
+         */
         getAllFriends: async function() {
             const data = await db.get(username);
             return Object.keys(data.friendsDict);
         },
 
+        /**
+         * Record that this user has a pending friend request from the given user
+         * Note: does not currently verify that the other user exists, that they
+         * are not already friends, or that there is not already a request from
+         * them.
+         * @param {username} friendUsername 
+         */
         addFriendRequestFrom: async function(friendUsername) {
             // TODO:
             //   - verify friend exists
@@ -99,12 +173,24 @@ function getUser(username, db=userDb) {
             await db.put(data);
         },
 
+        /**
+         * Remove any friend request from the given user, indicating it has
+         * been accepted or rejected
+         * @param {string} friendUsername Username of the friend who sent the request
+         */
         removeFriendRequestFrom: async function(friendUsername) {
             const data = await db.get(username);
             delete data.requestsDict[friendUsername];
             await db.put(data);
         },
 
+        /**
+         * Get the id of every group this user is a member of
+         * @param {PouchDB} localGroupDb The PouchDB database storing groups.
+         * Optional - defaults to the main group database, a different db can be
+         * provided e.g. for testing purposes
+         * @returns An Array of group IDs
+         */
         getAllGroups: async function(localGroupDb=groupDb) {
             // This linear scan is a pretty inefficient way to do it!
             // Ideally I'd like to figure out PouchDB indexing but haven't gotten there yet
@@ -130,6 +216,16 @@ function getUser(username, db=userDb) {
     return user;
 }
 
+/**
+ * Create a new user with the given username
+ * All other user fields default to empty
+ * Note: username must be unique! There is not yet proper error handling, so
+ * this will just crash if you provide a username that is taken.
+ * In the future, this should throw a custom exception you can catch and handle
+ * @param {string} username 
+ * @param {PouchDB} db The database holding users. OPTIONAL - defaults to the main user
+ * database, a different database can be provided for test purposes
+ */
 async function createUser(username, db=userDb) {
     try {
         const user = {
@@ -149,6 +245,13 @@ async function createUser(username, db=userDb) {
     }
 }
 
+/**
+ * Check if there is a user with the given username
+ * @param {string} username 
+ * @param {*} db The database holding users. OPTIONAL - defaults to the main user
+ * database, a different database can be provided for test purposes
+ * @returns True iff a user called `username` exists in the database
+ */
 async function userExists(username, db=userDb) {
     try {
         await db.get(username);
@@ -159,11 +262,26 @@ async function userExists(username, db=userDb) {
     }
 }
 
+/**
+ * Get the username of every user in the system
+ * Note: if you just want to use this list to check if a user exists, use
+ * userExists instead, it's more efficient
+ * @param {*} db The database holding users. OPTIONAL - defaults to the main user
+ * database, a different database can be provided for test purposes
+ * @returns An Array of strings representing all users' usernames
+ */
 async function getAllUsernames(db=userDb) {
     const docs = await db.allDocs();
     return docs.rows.map(row => row.id);
 }
 
+/**
+ * Create a new group. All group fields default to empty.
+ * @param {PouchDB} db The database holding groups. OPTIONAL - defaults to the main group
+ * database, a different database can be provided for test purposes
+ * @returns The unique ID of the new group. Make sure to save if you want to
+ * refer to the group after!
+ */
 async function createGroup(db=groupDb) {
     try {
         const group = {
@@ -179,9 +297,26 @@ async function createGroup(db=groupDb) {
     }
 }
 
+/**
+ * Returns an object allowing querying and modifying a given group
+ * @param {string} groupId The unique ID identifying the group, as returned by
+ * createGroup
+ * @param {PouchDB} db The database holding groups. OPTIONAL - defaults to the main group
+ * database, a different database can be provided for test purposes
+ * @returns A closure holding a bunch of crud functions for the given group
+ */
 function getGroup(groupId, db=groupDb) {
     const imageId = "groupImage";
     const group = {
+        /**
+         * Set the group image
+         * How this is actually typed is still tbd, image types seem a little
+         * complicated
+         * See https://pouchdb.com/guides/attachments.html#allow-the-user-to-store-an-attachment
+         * for info on blob vs buffer vs base64 etc
+         * How we actually handle this will depend on how we do image uploads
+         * @param {Buffer} image The new image
+         */
         setImage: async function(image) {
             try {
                 const data = await db.get(groupId);
@@ -192,6 +327,10 @@ function getGroup(groupId, db=groupDb) {
             }
         },
 
+        /**
+         * Get the group image
+         * @returns A Buffer object representing the image
+         */
         getImage: async function() {
             try {
                 return db.getAttachment(groupId, imageId);
@@ -201,6 +340,14 @@ function getGroup(groupId, db=groupDb) {
             }
         },
 
+        /**
+         * Add the given user to this group, if not already a member
+         * Note: does not currently validate that the given user exists!
+         * @param {string} username The unique username of the user to add
+         * @param {*} localUserDb The database holding users. OPTIONAL - 
+         * defaults to the main user database, a different database can be 
+         * provided for test purposes
+         */
         addMember: async function(username, localUserDb=userDb) {
             // TODO: verify user exists?
             // TODO: verify user not already in group
@@ -209,6 +356,10 @@ function getGroup(groupId, db=groupDb) {
             await db.put(group);
         },
 
+        /**
+         * Remove the given user from this group, if they are a member
+         * @param {string} username Username of the user to remove
+         */
         removeMember: async function(username) {
             // TODO: verify user is in group
             const group = await db.get(groupId);
@@ -216,16 +367,29 @@ function getGroup(groupId, db=groupDb) {
             await db.put(group);
         },
 
+        /**
+         * Check if the given user is in this group
+         * @param {string} username 
+         * @returns True iff there is a user with the given username in this group
+         */
         hasMember: async function(username) {
             const group = await db.get(groupId);
             return (username in group.memberDict);
         },
 
+        /**
+         * Get a list of all group members
+         * @returns An Array of the usernames of everybody in the group
+         */
         getAllMemberIds: async function() {
             const group = await db.get(groupId);
             return Object.keys(group.memberDict);
         },
 
+        /**
+         * Add a planned event to the group calendar
+         * @param {PlannedEvent} plannedEvent 
+         */
         addPlannedEvent: async function(plannedEvent) {
             const data = await db.get(groupId);
             // TODO: verify user doesn't have a conflicting event?
@@ -233,6 +397,10 @@ function getGroup(groupId, db=groupDb) {
             await db.put(data);
         },
 
+        /**
+         * Get a list of all planned events on the group calendar
+         * @returns An Array of PlannedEvent objects
+         */
         getPlannedEvents: async function() {
             const data = await db.get(groupId);
             return data.eventsList;
