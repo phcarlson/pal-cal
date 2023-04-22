@@ -4,49 +4,28 @@ const userDb = new PouchDB("users.pouchdb");
 const groupDb = new PouchDB("groups.pouchdb");
 
 
-function _makeGetter(db, key, property) {
-    return async function() {
-        try {
-            const data = await db.get(key);
-            return data[property];
-        }
-        catch (err) {
-            console.log(err);
-        }
+async function _getProperty(db, _id, property) {
+    try {
+        const data = await db.get(_id);
+        return data[property];
+    }
+    catch (err) {
+        console.log(err);
     }
 }
 
-function _makeSetter(db, key, property) {
-    return async function(value) {
-        try {
-            const data = await db.get(key);
-            data[property] = value;
-            db.put(data);
-        }
-        catch (err) {
-            console.log(err);
-        }
+async function _setProperty(db, _id, property, value) {
+    try {
+        const data = await db.get(_id);
+        data[property] = value;
+        db.put(data);
+    }
+    catch (err) {
+        console.log(err);
     }
 }
 
 // TODO: abstract dictionary/hashset getAll/add/remove functions
-
-/**
- * Adds PouchDB getter and setter methods to an object
- * For property "foo", creates functions obj.getFoo() and obj.setFoo(value),
- * which are wrappers around getting/setting the given properties
- * on a document in a PouchDB database
- * This is an internal function used to speed up creating crud methods
- * @param {Object} obj The object to modify
- * @param {PouchDB} db The PouchDb database to interface with
- * @param {string} key The _id of the document in the database
- * @param {string} property The name of the property to add getter/setters
- */
-function _addProperty(obj, db, key, property) {
-    const propertyCaps = property[0].toUpperCase() + property.slice(1);
-    obj[`get${propertyCaps}`] = _makeGetter(db, key, property);
-    obj[`set${propertyCaps}`] = _makeSetter(db, key, property);
-}
 
 function getUser(username, db=userDb) {
     const imageId = "userImage";
@@ -136,11 +115,18 @@ function getUser(username, db=userDb) {
                     return acc;
                 }
             }, []);
-        }
+        },
+
+        getFirstName: async () => await _getProperty(db, username, "firstName"),
+        getLastName:  async () => await _getProperty(db, username, "lastName"),
+        getCollege:   async () => await _getProperty(db, username, "college"),
+        getBio:       async () => await _getProperty(db, username, "bio"),
+
+        setFirstName: async value => await _setProperty(db, username, "firstName", value),
+        setLastName:  async value => await _setProperty(db, username, "lastName", value),
+        setCollege:   async value => await _setProperty(db, username, "college", value),
+        setBio:       async value => await _setProperty(db, username, "bio", value),
     };
-    ["firstName", "lastName", "college", "bio"].forEach(
-        property => _addProperty(user, db, username, property)
-    );
     return user;
 }
 
@@ -250,11 +236,11 @@ function getGroup(groupId, db=groupDb) {
         getPlannedEvents: async function() {
             const data = await db.get(groupId);
             return data.eventsList;
-        }
-    };
-    ["groupName"].forEach(
-        property => _addProperty(group, db, groupId, property)
-    );
+        },
+        
+        getGroupName: async ()    => await _getProperty(db, groupId, "groupName"),
+        setGroupName: async value => await _setProperty(db, groupId, "groupName", value)
+    }
     return group;
 }
 
