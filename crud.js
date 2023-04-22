@@ -38,9 +38,9 @@ function _makeSetter(db, key, property) {
  * on a document in a PouchDB database
  * This is an internal function used to speed up creating crud methods
  * @param {Object} obj The object to modify
- * @param {*} db The PouchDb database to interface with
- * @param {*} key The _id of the document in the database
- * @param {*} property The name of the property to add getter/setters
+ * @param {PouchDB} db The PouchDb database to interface with
+ * @param {string} key The _id of the document in the database
+ * @param {string} property The name of the property to add getter/setters
  */
 function _addProperty(obj, db, key, property) {
     const propertyCaps = property[0].toUpperCase() + property.slice(1);
