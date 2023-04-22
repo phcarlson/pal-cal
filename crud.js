@@ -163,6 +163,16 @@ async function createUser(username, db=userDb) {
     }
 }
 
+async function userExists(username, db=userDb) {
+    try {
+        await db.get(username);
+        return true;
+    }
+    catch(err) {
+        return false;
+    }
+}
+
 async function createGroup(db=groupDb) {
     try {
         const group = {
