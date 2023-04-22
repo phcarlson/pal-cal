@@ -11,7 +11,7 @@ function _makeGetter(db, key, property) {
             return data[property];
         }
         catch (err) {
-            throw err;
+            console.log(err);
         }
     }
 }
@@ -24,7 +24,7 @@ function _makeSetter(db, key, property) {
             db.put(data);
         }
         catch (err) {
-            throw err;
+            console.log(err);
         }
     }
 }
@@ -58,7 +58,7 @@ function getUser(username, db=userDb) {
                 db.putAttachment(data._id, imageId, data._rev, image);
             }
             catch (err) {
-                throw (err);
+                console.log(err);
             }
         },
 
@@ -67,7 +67,7 @@ function getUser(username, db=userDb) {
                 return db.getAttachment(username, imageId);
             }
             catch (err) {
-                throw (err);
+                console.log(err);
             }
         },
 
@@ -146,8 +146,8 @@ async function createUser(username, db=userDb) {
         };
         await db.put(user);
     }
-    catch {
-        throw (err);
+    catch (err){
+        console.log(err);
     }
 }
 
@@ -162,7 +162,7 @@ async function createGroup(db=groupDb) {
         return response.id;
     }
     catch(err) {
-        throw (err);
+        console.log(err);
     }
 }
 
@@ -175,7 +175,7 @@ function getGroup(groupId, db=groupDb) {
                 db.putAttachment(data._id, imageId, data._rev, image);
             }
             catch (err) {
-                throw (err);
+                console.log(err);
             }
         },
 
@@ -184,7 +184,7 @@ function getGroup(groupId, db=groupDb) {
                 return db.getAttachment(groupId, imageId);
             }
             catch (err) {
-                throw (err);
+                console.log(err);
             }
         },
 
