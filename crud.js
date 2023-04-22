@@ -258,7 +258,7 @@ function getGroup(groupId, db=groupDb) {
     return group;
 }
 
-export { getUser, getGroup }
+export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
 
 // Just a little test
 // TODO: make a real unit test suite
