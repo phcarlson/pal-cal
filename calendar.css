@@ -4,6 +4,7 @@ div.calendar-weekday-header {
 
 div.calendar-event {
     background-color: pink;
+    border-radius: 10px;
 }
 
 div.calendar-event:hover {
@@ -13,5 +14,5 @@ div.calendar-event:hover {
 }
 
 div.calendar-no-event {
-    background-color: lightgray;
+    background-color: #00000000;
 }
