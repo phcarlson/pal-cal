@@ -147,7 +147,7 @@ function consolidateEvents(events) {
         compareTimes(a.startDay, a.startHour, a.startMinute, b.startDay, b.startHour, b.startMinute)
     );
 
-    for (let event of events) {
+    for (let event of eventsSorted) {
         if (consolidated.length === 0) {
             consolidated.push(event);
         }
@@ -171,8 +171,8 @@ initializeCalendar(document.getElementById("calendar"));
 
 // Some random test events
 const events = [
-    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute: 0},
     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
+    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute: 0},
     {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute: 0},
     {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
     {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
