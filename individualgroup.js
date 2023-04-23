@@ -1,7 +1,13 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
+import * as crud from './crud.js';
 
+// containers
 const membersContainer = document.getElementById("members-container");
-const plannedEventsContainer = document.getElementById("plannedEventsContainer");
+const plannedEventsContainer = document.getElementById("planned-events-container");
+
+// buttons
+const selectAllButton = document.getElementById("select-all-button");
+const deselectAllButton = document.getElementById("deselect-all-button");
 
 membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
@@ -13,7 +19,7 @@ function addMember(screenName) {
                                         <div class="row g-0">
                                             <div class="col-md-2 d-flex justify-content-center align-items-center">
                                                 <div class="form-check checkbox-xl">
-                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                    <input class="form-check-input member-checkbox" type="checkbox" value="" id="flexCheckDefault">
 
                                                 </div>
                                             </div>
@@ -28,6 +34,8 @@ function addMember(screenName) {
                                             </div>
                                         </div>
                                     </div>`;
+
+    //document.getElementById("flexCheckDefault").checked = true;
 }
 
 function addPlannedEvent(startTime, endTime, startDay, title, location, description, yesDict, noDict, maybeDict, creatorID) {
@@ -87,6 +95,22 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                         eventsAdded += 1;
 }
 
+function selectAllMembers() {
+    const checkBoxes = document.getElementsByClassName("member-checkbox");
+    
+    for (const box of checkBoxes) {
+        box.checked = true;
+    }
+}
+
+function deselectAllMembers() {
+    const checkBoxes = document.getElementsByClassName("member-checkbox");
+    
+    for (const box of checkBoxes) {
+        box.checked = false;
+    }
+}
+
 function renderGroupMembers() {
     const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
     const groupMemberIDs = currentGroup.getMemberList(); // get list of IDs in Group
@@ -124,6 +148,11 @@ function getDay(dayNum) {
     return dayArr[dayNum];
 }
 
+// event listeners
+selectAllButton.addEventListener("click", selectAllMembers);
+deselectAllButton.addEventListener("click", deselectAllMembers);
+
 addMember("Screen Name");
-addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
-addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
+addMember("NAH");
+//addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
+//addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
