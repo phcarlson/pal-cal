@@ -154,10 +154,10 @@ function consolidateEvents(events) {
         else {
             let lastEvent = consolidated.at(-1);
             // If this new event starts before the last event ends, merge them
-            if (compareTimes(lastEvent.startDay, lastEvent.startHour, lastEvent.startMinute, event.startDay, event.startHour, event.startMinute) >= 0) {
+            if (compareTimes(lastEvent.endDay, lastEvent.endHour, lastEvent.endMinute, event.startDay, event.startHour, event.startMinute) >= 0) {
                 lastEvent.endDay = event.endDay;
-                lastEvent.endHour = event.startDay;
-                lastEvent.endMinute = event.startMinute;
+                lastEvent.endHour = event.endHour;
+                lastEvent.endMinute = event.endMinute;
             }
             else {
                 consolidated.push(event);
@@ -173,8 +173,9 @@ initializeCalendar(document.getElementById("calendar"));
 const events = [
     {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute: 0},
     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
+    {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute: 0},
     {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
     {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
 ]
 
-addEvents(events);
+addEvents(consolidateEvents(events));
