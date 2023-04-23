@@ -133,6 +133,40 @@ function compareTimes(dayA, hourA, minuteA, dayB, hourB, minuteB) {
     }
 }
 
+/**
+ * Combines any busy events that overlap into a single event
+ * Ex: if A is busy from 1-3 and B is busy from 2-4, then there is *someone*
+ * busy from 1-4, so this should show as a single busy block on the group calendar
+ * @param {Array[BusyEvent]} events 
+ */
+function consolidateEvents(events) {
+    let consolidated = [];
+    const eventsSorted = events.slice(0);
+    // Sort events by increasing start time
+    eventsSorted.sort((a, b) => 
+        compareTimes(a.startDay, a.startHour, a.startMinute, b.startDay, b.startHour, b.startMinute)
+    );
+
+    for (let event of events) {
+        if (consolidated.length === 0) {
+            consolidated.push(event);
+        }
+        else {
+            let lastEvent = consolidated.at(-1);
+            // If this new event starts before the last event ends, merge them
+            if (compareTimes(lastEvent.startDay, lastEvent.startHour, lastEvent.startMinute, event.startDay, event.startHour, event.startMinute) >= 0) {
+                lastEvent.endDay = event.endDay;
+                lastEvent.endHour = event.startDay;
+                lastEvent.endMinute = event.startMinute;
+            }
+            else {
+                consolidated.push(event);
+            }
+        }
+    }
+    return consolidated;
+}
+
 initializeCalendar(document.getElementById("calendar"));
 
 // Some random test events
