@@ -3,14 +3,18 @@ div.calendar-weekday-header {
 }
 
 div.calendar-event {
-    background-color: pink;
+    background-color: forestgreen;
+    transition-property: background-color box-shadow transform;
+    transition: 0.3s;
+    color: white;
+    padding: 0.5em;
     border-radius: 10px;
 }
 
 div.calendar-event:hover {
-    background-color: rgb(255, 107, 132);
-    transition-property: background-color;
-    transition: 0.3s
+    background-color: rgb(41, 169, 41);
+    transform: scale(1.01) ;
+    box-shadow: 7px 5px 5px rgba(0, 0, 0, 0.171);
 }
 
 div.calendar-no-event {
