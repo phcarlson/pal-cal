@@ -14,6 +14,8 @@
     <link rel="stylesheet" type="text/css" href="./calendar.css">
     <script src="calendar.js" type="module"></script>
 
+    <script type="module" src="individualgroup.js"></script>
+
 </head>
 
 <body>
@@ -87,17 +89,17 @@
                     </div>
                 </div>
                 <!-- Container for holding groups added dynamically -->
-                    <div class="row v-100" style="overflow-y: scroll;">
-                        <div class="col groupCol">
-                            <div class="timetable-img text-center">
-                                <img src="img/content/timetable.png" alt="">
-                            </div>
+                <div class="row v-100" style="overflow-y: scroll;">
+                    <div class="col groupCol">
+                        <div class="timetable-img text-center">
+                            <img src="img/content/timetable.png" alt="">
                         </div>
-                        
-                        <div class="row d-flex" id="calendar">
-                    </div>
-                </div>
-            </div>
+                    </div>  
+                  
+                    <div class="row d-flex" id="calendar">
+                  </div>
+              </div>
+          </div>
 
 
             <!-- 1/3 of view on the right -->
@@ -134,7 +136,7 @@
 
                 <!-- Container for holding groups added dynamically -->
                 <div class="row d-flex" style="height:40%">
-                    <div class="col d-flex flex-column h-100 scrollIt">
+                    <div id="members-container" class="col d-flex flex-column h-100 scrollIt">
                         <div class="card my-3">
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -375,7 +377,7 @@
                 <!-- Row for holding scrollable group -->
                 <div class="row d-flex" style="height:40%">
                     <!-- Column of groups that scroll -->
-                    <div class="col d-flex flex-column h-100 scrollIt">
+                    <div id="plannedEventsContainer" class="col d-flex flex-column h-100 scrollIt">
 
                         <!-- Example event -->
 
