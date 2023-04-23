@@ -23,9 +23,6 @@
     integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
     crossorigin="anonymous"></script>
 
-  <script type="module" src="./myprofile.js"></script>
-
-
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <!--Image-->
@@ -91,9 +88,9 @@
         <!-- Container for holding schedule edited dynamically -->
         <div class="row v-100" style="overflow-y: scroll;">
           <div class="col groupCol">
-            <!-- <div class="timetable-img text-center">
+            <div class="timetable-img text-center">
               <img src="img/content/timetable.png" alt="">
-            </div> -->
+            </div>
           </div>
 
           <div class="row d-flex">
@@ -169,40 +166,49 @@
               <div class="col d-flex">
                 <h1><span class="badge shadow" style="background-color: gray;">My Info</span></h1>
               </div>
-              <div class="col d-flex">
+            
+            <div class="col d-flex">
 
-                <h1> <button id="editProfileButton" class="btn btn-outline-secondary m-0" type="button"><i
-                      class="bi bi-pencil-square"></i></button>
-                </h1>
+              <h1>  <button class="btn btn-outline-secondary m-0" type="button"><i class="bi bi-pencil-square"></i></button>
+              </h1>
+            
+            </div>
 
-              </div>
+
+
             </div>
           </div>
         </div>
 
+
+        <!-- <button class="btn btn-outline-secondary btn-sm" type="button"><i class="bi bi-pencil-square"></i></button> -->
+
         <!-- Container for holding groups added dynamically -->
         <div class="row d-flex" style="height:40%">
           <div class="col d-flex flex-column h-100 scrollIt">
+            <!-- Screen Name CARD -->
             <div class="card my-3">
               <div class="card-body">
                 <div class="input-group">
                   <span class="input-group-text">Screen Name</span>
                   <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
-                  <input id="screenNameInput" type="text" readonly class="form-control" value="">
+                  <input type="text" readonly class="form-control" id="staticEmail" value="Amana222222222222222222222222222222222222222222222222222222222222222222">
 
                 </div>
               </div>
             </div>
-
+             
             <div class="card my-3">
               <div class="card-body">
                 <div class="input-group  mb-3">
                   <span class="input-group-text">First Name</span>
-                  <input id="firstNameInput" type="text" readonly class="form-control" value="" placeholder="Optional...">
+                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
+                  <input type="text" readonly class="form-control" id="staticEmail" value="Amana222222222222222222222222222222222222222222222222222222222222222222">
                 </div>
                 <div class="input-group">
                   <span class="input-group-text">Last Name</span>
-                  <input id="lastNameInput" type="text" readonly class="form-control"  value="" placeholder="Optional...">
+                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
+                  <input type="text" readonly class="form-control" id="staticEmail" value="Amana222222222222222222222222222222222222222222222222222222222222222222">
 
                 </div>
               </div>
@@ -212,11 +218,13 @@
               <div class="card-body">
                 <div class="input-group  mb-3">
                   <span class="input-group-text">College</span>
-                  <input id="collegeInput" type="text" readonly class="form-control" value="" placeholder="Optional...">
+                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
+                  <input type="text" readonly class="form-control" id="staticEmail" value="Amana222222222222222222222222222222222222222222222222222222222222222222">
                 </div>
                 <div class="input-group">
                   <span class="input-group-text">Major</span>
-                  <input id="majorInput" type="text" readonly class="form-control" value="" placeholder="Optional...">
+                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
+                  <input type="text" class="form-control" id="staticEmail" value="Amana222222222222222222222222222222222222222222222222222222222222222222">
 
                 </div>
               </div>
@@ -226,9 +234,10 @@
               <div class="card-body">
                 <div class="input-group  mb-3">
                   <span class="input-group-text">Bio</span>
-                  <textarea id="bioInput" readonly class="form-control" rows="3"></textarea>
+                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
+                  <textarea  class="form-control" id="staticEmail" rows="3"></textarea>
                 </div>
-
+    
               </div>
             </div>
 
@@ -244,10 +253,92 @@
         </div>
         <!-- Row for holding scrollable requests -->
         <div class="row d-flex" style="height:40%">
-          <!-- Column of requests populated dynamically that scroll -->
-          <div id="requestListCol" class="col d-flex flex-column h-100 scrollIt">
+          <!-- Column of requests that scroll -->
+          <div class="col d-flex flex-column h-100 scrollIt">
 
+            <!-- Example request -->
+            <div class="card my-3">
+              <div class="row g-0">
+                <div class="col-md-2 d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    alt="generic profile pic" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-start">Screen Name</h5>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
 
+                    <button type="button"
+                      class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-check2"></i>
+                    </button>
+                    <button type="button"
+                      class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <div class="card my-3">
+              <div class="row g-0">
+                <div class="col-md-2 d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    alt="generic profile pic" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-start">Screen Name</h5>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+
+                    <button type="button"
+                      class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-check2"></i>
+                    </button>
+                    <button type="button"
+                      class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card my-3">
+              <div class="row g-0">
+                <div class="col-md-2 d-flex">
+                  <img
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    alt="generic profile pic" class="img-fluid rounded-start">
+                </div>
+                <div class="col-md-4 d-flex align-items-center">
+                  <div class="card-body">
+                    <h5 class="card-title text-start">Screen Name</h5>
+                  </div>
+                </div>
+                <div class="col-md-4 d-flex align-items-center justify-content-center">
+                  <div class="btn-group" role="group" aria-label="Basic example">
+
+                    <button type="button"
+                      class="btn btn-outline-success shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-check2"></i>
+                    </button>
+                    <button type="button"
+                      class="btn btn-outline-danger shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
+                      <i class="bi bi-x-lg"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
