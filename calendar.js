@@ -48,12 +48,13 @@ function toTwelveHour(hour, minute=0) {
  * @param {number} duration The length of the event in hours
  * @param {boolean} event True if this represents an event, false if this is a "filler" div representing time without an event
  */
-function addEventBlock(day, duration, busy) {
+function addEventBlock(day, duration, busy, text="") {
     const weekdayCol = document.getElementById(`column-${days[day]}`);
     const cssClass = busy ? "calendar-event" : "calendar-no-event";
     const eventDiv = document.createElement("div");
     eventDiv.classList.add("row", cssClass);
     eventDiv.style.height = `calc((100%/12) * ${duration})`
+    eventDiv.innerText = text;
     weekdayCol.appendChild(eventDiv);
 }
 
@@ -71,7 +72,10 @@ function addEvents(events) {
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 addEventBlock(event.startDay, fillerDuration, false);
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
-                addEventBlock(event.startDay, eventDuration, true);
+                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
+                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
+                const label = `Event ${eventStartTime}-${eventEndTime}`;
+                addEventBlock(event.startDay, eventDuration, true, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -82,7 +86,10 @@ function addEvents(events) {
                     addEventBlock(event.startDay, fillerDuration, false);
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
-                addEventBlock(event.startDay, eventDuration, true);
+                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
+                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
+                const label = `Event ${eventStartTime}-${eventEndTime}`;
+                addEventBlock(event.startDay, eventDuration, true, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -110,7 +117,7 @@ const events = [
     {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute: 0},
     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
     {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
-    {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 3, endMinute: 30},
+    {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
 ]
 
 addEvents(events);
