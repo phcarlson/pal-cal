@@ -1,4 +1,4 @@
-const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 
 function initializeCalendar(calendarDiv) {
     const hoursCol = document.createElement("div");
@@ -22,7 +22,7 @@ function initializeCalendar(calendarDiv) {
         dayDiv.id = `column-${day.toLowerCase()}`
         const dayHeader = document.createElement("div");
         dayHeader.classList.add("sticky-top", "calendar-weekday-header");
-        dayHeader.innerText = day;
+        dayHeader.innerText = day[0].toUpperCase() + day.slice(1);
         dayDiv.appendChild(dayHeader);
         calendarDiv.appendChild(dayDiv);
     }
@@ -54,6 +54,41 @@ function addEventBlock(day, duration, busy) {
     const eventDiv = document.createElement("div");
     eventDiv.classList.add("row", cssClass);
     eventDiv.style.height = `calc((100%/12) * ${duration})`
+    weekdayCol.appendChild(eventDiv);
+}
+
+function addEvents(events) {
+    let prevEventEndDay = -1;
+    let prevEventEndHour = -1;
+    let prevEventEndMinute = -1;
+
+    for (let event of events) {
+        // TODO: also handle events spanning multiple days
+        if (event.startDay === event.endDay) {
+            if (event.startDay === prevEventEndDay) {
+                // If this is not the first event of the day, add padding after
+                // the last event
+                const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
+                addEventBlock(event.startDay, fillerDuration, false);
+                const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
+                addEventBlock(event.startDay, eventDuration, true);
+                prevEventEndDay = event.endDay;
+                prevEventEndHour = event.endHour;
+                prevEventEndMinute = event.endMinute;
+            }
+            else {
+                if (!(event.startHour === 0 && event.startMinute === 0)) {
+                    const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
+                    addEventBlock(event.startDay, fillerDuration, false);
+                }
+                const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
+                addEventBlock(event.startDay, eventDuration, true);
+                prevEventEndDay = event.endDay;
+                prevEventEndHour = event.endHour;
+                prevEventEndMinute = event.endMinute;
+            }
+        }
+    }
 }
 
 /**
@@ -69,3 +104,13 @@ function getDurationHours(startHour, startMinute, endHour, endMinute) {
 }
 
 initializeCalendar(document.getElementById("calendar"));
+
+// Some random test events
+const events = [
+    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute: 0},
+    {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
+    {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
+    {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 3, endMinute: 30},
+]
+
+addEvents(events);
