@@ -110,6 +110,29 @@ function getDurationHours(startHour, startMinute, endHour, endMinute) {
     return (endHour + 1/60 * endMinute) - (startHour + 1/60 * startMinute);
 }
 
+/**
+ * Takes two times and checks if time A is before, equal, or after time B
+ * @param {number} dayA 
+ * @param {number} hourA 
+ * @param {number} minuteA 
+ * @param {number} dayB 
+ * @param {number} hourB 
+ * @param {number} minuteB 
+ * @returns Positive number if A is after B, negative if B is after A, 0 if
+ * they are the same
+ */
+function compareTimes(dayA, hourA, minuteA, dayB, hourB, minuteB) {
+    if (dayA !== dayB) {
+        return dayA - dayB;
+    }
+    else if (hourA !== hourB) {
+        return hourA - hourB;
+    }
+    else {
+        return minuteA - minuteB;
+    }
+}
+
 initializeCalendar(document.getElementById("calendar"));
 
 // Some random test events
