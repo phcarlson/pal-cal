@@ -2,7 +2,7 @@ div.calendar-weekday-header {
     background-color: whitesmoke;
 }
 
-div.calendar-event {
+div.calendar-free-time {
     background-color: forestgreen;
     transition-property: background-color box-shadow transform;
     transition: 0.3s;
@@ -11,12 +11,12 @@ div.calendar-event {
     border-radius: 10px;
 }
 
-div.calendar-event:hover {
+div.calendar-free-time:hover {
     background-color: rgb(41, 169, 41);
     transform: scale(1.01) ;
     box-shadow: 7px 5px 5px rgba(0, 0, 0, 0.171);
 }
 
-div.calendar-no-event {
+div.calendar-filler {
     background-color: #00000000;
 }
