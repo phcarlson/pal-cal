@@ -140,18 +140,11 @@ function saveProfile(mockCurrUsername){
     editProfileButton.innerHTML = '<i class="bi bi-pencil-square"></i>';
 
 
-    // Once values are set in stone, perform CRUD updates
+    // Once values are set in stone, perform CRUD updates:
     
     //crud.setFirstName(firstNameInput.value);
-    //crud.setFirstName(firstNameInput.value)...
-
-    //screenNameInput.value = user.username;
-    //firstNameInput.value = user.fN;
-    //lastNameInput.value = user.lN;
-    //collegeInput.value = user.college;
-    //majorInput.value = user.major;
-    //bioInput.value = user.bio;
-
+    //crud.setLastName(lastNameInput.value);
+    //crud.setCollege(collegeInput.value);
+    //crud.setMajor(majorInput.value); //--> not currently a property in crud
+    //crud.setBio(bioInput.value);
 }
-
-/* <i class="bi bi-check-square-fill"></i> */
