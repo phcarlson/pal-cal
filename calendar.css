@@ -28,3 +28,11 @@ div.calendar-planned {
 div.calendar-filler {
     background-color: #00000000;
 }
+
+#start-time-input:invalid {
+    color: red;
+}
+
+#end-time-input:invalid {
+    color: red;
+}

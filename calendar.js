@@ -276,6 +276,11 @@ function rerender() {
             const endTimeInput = document.getElementById("end-time-input");
             endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
 
+            startTimeInput.min = startTimeInput.value;
+            startTimeInput.max = endTimeInput.value;
+            endTimeInput.min = startTimeInput.value;
+            endTimeInput.max = endTimeInput.value;
+
             modal.show();
         });
     }
