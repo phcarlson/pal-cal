@@ -111,7 +111,7 @@ function renderEvents(events) {
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
                 const label = `Busy ${eventStartTime}-${eventEndTime}`;
-                renderEventBlock(event.startDay, eventDuration, "filler", label);
+                renderEventBlock(event.startDay, eventDuration, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
