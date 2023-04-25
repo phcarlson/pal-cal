@@ -30,7 +30,28 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    ...
+                    <form>
+                        <div class="mb-3">
+                            <label for="title-input" class="form-label">Title</label>
+                            <input type="email" class="form-control" id="title-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="start-time-input" class="form-label">Start time</label>
+                            <input type="time" class="form-control" id="start-time-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end-time-input" class="form-label">End time</label>
+                            <input type="time" class="form-control" id="end-time-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description-input" class="form-label">Description</label>
+                            <textarea id=description-input></textarea>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </div>
+                    </form>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
