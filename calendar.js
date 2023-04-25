@@ -254,11 +254,15 @@ function rerender() {
 
 rerender();
 
-function showModal() {
-    const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
-    modal.show();
-}
+const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
 
 for (let element of document.getElementsByClassName("calendar-free")) {
-    element.addEventListener("click", showModal);
+    element.addEventListener("click", () => modal.show());
 }
+
+
+document.getElementById("modal-close").addEventListener("click", () => modal.hide());
+document.getElementById("modal-save").addEventListener("click", () => {
+    // todo: add new planned event
+    modal.hide();
+});
