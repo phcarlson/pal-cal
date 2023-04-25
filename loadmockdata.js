@@ -175,3 +175,70 @@ await testGroup.addPlannedEvent(planned);
 console.log(await testGroup.getPlannedEvents());
 
 //add busy events to testuser
+let busy = new BusyEvent(
+    title = "BusyEvent1",
+    startHour = 16, 
+    endHour = 17, 
+    startMinute = 15, 
+    endMinute = 0, 
+    startDay = 1, 
+    endDay = 1
+);
+await testuser.addBusyEvent(busy);
+
+busy = new BusyEvent(
+    title = "BusyEvent2",
+    startHour = 12, 
+    endHour = 17, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 2, 
+    endDay = 2
+    );
+await testuser.addBusyEvent(busy);
+
+busy = new BusyEvent(
+    title = "BusyEvent3",
+    startHour = 10, 
+    endHour = 13, 
+    startMinute = 30, 
+    endMinute = 0, 
+    startDay = 3, 
+    endDay = 3
+    );
+await testuser.addBusyEvent(busy);
+
+busy = new BusyEvent(
+    title = "BusyEvent4",
+    startHour = 9, 
+    endHour = 10, 
+    startMinute = 30, 
+    endMinute = 30, 
+    startDay = 4, 
+    endDay = 4
+    );
+await testuser.addBusyEvent(busy);
+
+busy = new BusyEvent(
+    title = "BusyEvent5",
+    startHour = 14, 
+    endHour = 15, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 4, 
+    endDay = 4
+    );
+await testuser.addBusyEvent(busy);
+
+busy = new BusyEvent(
+    title = "BusyEvent6",
+    startHour = 10, 
+    endHour = 11, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 5, 
+    endDay = 5
+    );
+await testuser.addBusyEvent(busy);
+
+console.log(await testuser.getBusyEvents());
