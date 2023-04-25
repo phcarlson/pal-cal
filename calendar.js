@@ -69,6 +69,7 @@ function renderEventBlock(day, duration, type, text="", startHour, startMinute, 
             break;
     }
     eventDiv.style.height = `calc((100%/12) * ${duration})`;
+    eventDiv.dataset.day = day;
     eventDiv.dataset.startHour = startHour;
     eventDiv.dataset.startMinute = startMinute;
     eventDiv.dataset.endHour = endHour;
@@ -263,14 +264,18 @@ function rerender() {
 rerender();
 
 const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
+let modalTime = {};
 
 for (let element of document.getElementsByClassName("calendar-free")) {
-    element.addEventListener("click", () => {
+    element.addEventListener("click", (event) => {
         const clickedBlock     = event.target;
+        const blockDay = clickedBlock.dataset.day;
         const blockStartHour   = clickedBlock.dataset.startHour;
         const blockStartMinute = clickedBlock.dataset.startMinute;
         const blockEndHour     = clickedBlock.dataset.endHour;
         const blockEndMinute   = clickedBlock.dataset.endMinute;
+
+        modalTime = {day: blockDay, startHour: blockStartHour, startMinute: blockStartMinute, endHour: blockEndHour, endMinute: blockEndMinute};
 
         const startTimeInput = document.getElementById("start-time-input");
         startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
@@ -284,31 +289,34 @@ for (let element of document.getElementsByClassName("calendar-free")) {
 
 document.getElementById("modal-close").addEventListener("click", () => modal.hide());
 
-document.getElementById("modal-save").addEventListener("click", (event) => {
-    const clickedBlock     = event.target;
-    const blockStartHour   = clickedBlock.dataset.startHour;
-    const blockStartMinute = clickedBlock.dataset.startMinute;
-    const blockEndHour     = clickedBlock.dataset.endHour;
-    const blockEndMinute   = clickedBlock.dataset.endMinute;
-
+document.getElementById("modal-save").addEventListener("click", () => {
     const startTimeInput = document.getElementById("start-time-input");
-    startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
-    // TODO: set day based on selected block
-    let startDay = 1;
-    let endDay = 1;
+    // TODO: support spanning multiple days
+    let startDay = Number(modalTime.day);
+    let endDay = Number(modalTime.day);
     let [ startHour, startMinute ] = startTimeInput.value.split(":");
     startHour = Number(startHour);
     startMinute = Number(startMinute);
 
     const endTimeInput = document.getElementById("end-time-input");
-    endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
     let [ endHour, endMinute ] = endTimeInput.value.split(":");
     endHour = Number(endHour);
     endMinute = Number(endMinute);
+    
+    if ( compareTimes(0, endHour, endMinute, 0, modalTime.endHour, modalTime.endMinute) > 0 ||
+         compareTimes(0, endHour, endMinute, 0, modalTime.startHour, modalTime.startMinute) < 0 ||
+         compareTimes(0, startHour, startMinute, 0, modalTime.startHour, modalTime.startMinute) < 0 ||
+         compareTimes(0, startHour, startMinute, 0, modalTime.endHour, modalTime.endMinute) > 0
+    ) {
+        // If the start and end time aren't within this block
+        alert(`Select a time between ${toTwelveHour(modalTime.startHour, modalTime.startMinute)} and ${toTwelveHour(modalTime.endHour, modalTime.endMinute)} or select another block of free time`);
+        return;
+    }
+
     const title = document.getElementById("title-input").value;
     const description = document.getElementById("description-input").value;
     const location = ""; // TODO
 
-    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
     modal.hide();
+    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
 });
