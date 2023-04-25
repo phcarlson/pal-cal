@@ -259,6 +259,26 @@ function rerender() {
     }));
 
     renderEvents(consolidateEvents(events));
+
+    for (let element of document.getElementsByClassName("calendar-free")) {
+        element.addEventListener("click", (event) => {
+            const clickedBlock = event.target;
+            const blockDay = clickedBlock.dataset.day;
+            const blockStartHour = clickedBlock.dataset.startHour;
+            const blockStartMinute = clickedBlock.dataset.startMinute;
+            const blockEndHour = clickedBlock.dataset.endHour;
+            const blockEndMinute = clickedBlock.dataset.endMinute;
+
+            modalTime = { day: blockDay, startHour: blockStartHour, startMinute: blockStartMinute, endHour: blockEndHour, endMinute: blockEndMinute };
+
+            const startTimeInput = document.getElementById("start-time-input");
+            startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
+            const endTimeInput = document.getElementById("end-time-input");
+            endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
+
+            modal.show();
+        });
+    }
 }
 
 rerender();
@@ -266,25 +286,6 @@ rerender();
 const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
 let modalTime = {};
 
-for (let element of document.getElementsByClassName("calendar-free")) {
-    element.addEventListener("click", (event) => {
-        const clickedBlock     = event.target;
-        const blockDay = clickedBlock.dataset.day;
-        const blockStartHour   = clickedBlock.dataset.startHour;
-        const blockStartMinute = clickedBlock.dataset.startMinute;
-        const blockEndHour     = clickedBlock.dataset.endHour;
-        const blockEndMinute   = clickedBlock.dataset.endMinute;
-
-        modalTime = {day: blockDay, startHour: blockStartHour, startMinute: blockStartMinute, endHour: blockEndHour, endMinute: blockEndMinute};
-
-        const startTimeInput = document.getElementById("start-time-input");
-        startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
-        const endTimeInput = document.getElementById("end-time-input");
-        endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
-
-        modal.show();
-    });
-}
 
 
 document.getElementById("modal-close").addEventListener("click", () => modal.hide());
