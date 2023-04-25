@@ -3,6 +3,7 @@ import { PlannedEvent } from "./datatypes.js";
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
 const username = "user1";
+let modalTime = {};
 
 function initializeCalendar(calendarDiv) {
     const hoursCol = document.createElement("div");
@@ -246,6 +247,7 @@ function removeElementsByClass(className){
     }
 }
 
+
 function rerender() {
     removeElementsByClass("calendar-element");
     let events = busyEvents.map(event => {
@@ -269,7 +271,7 @@ function rerender() {
             const blockEndHour = clickedBlock.dataset.endHour;
             const blockEndMinute = clickedBlock.dataset.endMinute;
 
-            modalTime = { day: blockDay, startHour: blockStartHour, startMinute: blockStartMinute, endHour: blockEndHour, endMinute: blockEndMinute };
+            modalTime = { day: Number(blockDay), startHour: Number(blockStartHour), startMinute: Number(blockStartMinute), endHour: Number(blockEndHour), endMinute: Number(blockEndMinute) };
 
             const startTimeInput = document.getElementById("start-time-input");
             startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
@@ -289,17 +291,12 @@ function rerender() {
 rerender();
 
 const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
-let modalTime = {};
-
-
-
 document.getElementById("modal-close").addEventListener("click", () => modal.hide());
-
 document.getElementById("modal-save").addEventListener("click", () => {
     const startTimeInput = document.getElementById("start-time-input");
     // TODO: support spanning multiple days
-    let startDay = Number(modalTime.day);
-    let endDay = Number(modalTime.day);
+    let startDay = modalTime.day;
+    let endDay = modalTime.day;
     let [ startHour, startMinute ] = startTimeInput.value.split(":");
     startHour = Number(startHour);
     startMinute = Number(startMinute);
