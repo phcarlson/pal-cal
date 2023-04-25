@@ -1,4 +1,8 @@
+import { PlannedEvent } from "./datatypes.js";
+
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+// TODO: get username dynamically
+const username = "user1";
 
 function initializeCalendar(calendarDiv) {
     const hoursCol = document.createElement("div");
@@ -262,7 +266,24 @@ for (let element of document.getElementsByClassName("calendar-free")) {
 
 
 document.getElementById("modal-close").addEventListener("click", () => modal.hide());
+
 document.getElementById("modal-save").addEventListener("click", () => {
-    // todo: add new planned event
+    const startTimeInput = document.getElementById("start-time-input");
+    // TODO: set day based on selected block
+    let startDay = 1;
+    let endDay = 1;
+    let [ startHour, startMinute ] = startTimeInput.value.split(":");
+    startHour = Number(startHour);
+    startMinute = Number(startMinute);
+
+    const endTimeInput = document.getElementById("end-time-input");
+    let [ endHour, endMinute ] = endTimeInput.value.split(":");
+    endHour = Number(endHour);
+    endMinute = Number(endMinute);
+    const title = document.getElementById("title-input").value;
+    const description = document.getElementById("description-input").value;
+    const location = ""; // TODO
+
+    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, {}, {}, {}));
     modal.hide();
 });
