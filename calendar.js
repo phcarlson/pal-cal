@@ -49,7 +49,7 @@ function toTwelveHour(hour, minute=0) {
  * @param {string} type One of "busy", "planned", or "filler"
  * @param {string} text Text to display on the event block
  */
-function addEventBlock(day, duration, type, text="") {
+function renderEventBlock(day, duration, type, text="") {
     const weekdayCol = document.getElementById(`column-${days[day]}`);
     const eventDiv = document.createElement("div");
     eventDiv.classList.add("row");
@@ -69,7 +69,7 @@ function addEventBlock(day, duration, type, text="") {
     weekdayCol.appendChild(eventDiv);
 }
 
-function addEvents(events) {
+function renderEvents(events) {
     let prevEventEndDay = -1;
     let prevEventEndHour = -1;
     let prevEventEndMinute = -1;
@@ -82,13 +82,13 @@ function addEvents(events) {
                 // the last event
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 if (fillerDuration > 0.25) {
-                    addEventBlock(event.startDay, fillerDuration, "free");
+                    renderEventBlock(event.startDay, fillerDuration, "free");
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
                 const label = `${eventStartTime}-${eventEndTime}`;
-                addEventBlock(event.startDay, eventDuration, event.type, label);
+                renderEventBlock(event.startDay, eventDuration, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -97,21 +97,21 @@ function addEvents(events) {
                 if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
                     // Fill in free time at the end of the day
                     const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-                    addEventBlock(prevEventEndDay, eventDuration, "free");
+                    renderEventBlock(prevEventEndDay, eventDuration, "free");
                 }
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
                     const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
-                    addEventBlock(event.startDay, fillerDuration, "free");
+                    renderEventBlock(event.startDay, fillerDuration, "free");
                 }
                 for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
                     // Fill in free time on days in between
-                    addEventBlock(day, 24, "free");
+                    renderEventBlock(day, 24, "free");
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
                 const label = `Busy ${eventStartTime}-${eventEndTime}`;
-                addEventBlock(event.startDay, eventDuration, "filler", label);
+                renderEventBlock(event.startDay, eventDuration, "filler", label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -121,11 +121,11 @@ function addEvents(events) {
     if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
         // Fill in free time at the end of the day
         const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-        addEventBlock(prevEventEndDay, eventDuration, "free");
+        renderEventBlock(prevEventEndDay, eventDuration, "free");
     }
     for (let day = prevEventEndDay + 1; day <= 6; ++day) {
         // Fill in free time on days after the last busy time
-        addEventBlock(day, 24, "free");
+        renderEventBlock(day, 24, "free");
     }
 
 }
@@ -227,4 +227,4 @@ let events = busyEvents.map(event => {
     return newEvent;
 }));
 
-addEvents(consolidateEvents(events));
+renderEvents(consolidateEvents(events));
