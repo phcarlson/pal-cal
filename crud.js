@@ -1,5 +1,5 @@
-import PouchDB from 'pouchdb';
-import { BusyEvent, PlannedEvent } from './datatypes';
+//import PouchDB from 'pouchdb';
+import { BusyEvent, PlannedEvent } from './datatypes.js';
 
 const userDb = new PouchDB("users.pouchdb");
 const groupDb = new PouchDB("groups.pouchdb");

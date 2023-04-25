@@ -38,7 +38,7 @@ function addMember(screenName) {
     //document.getElementById("flexCheckDefault").checked = true;
 }
 
-function addPlannedEvent(startTime, endTime, startDay, title, location, description, yesDict, noDict, maybeDict, creatorID) {
+function addPlannedEvent(startTime, endTime, startDay, title, location, description) {
     plannedEventsContainer.innerHTML += `<div class="card card-margin">
                                             <div class="card-header no-border">
                                                 <h5 class="card-title">${title}</h5>
@@ -80,7 +80,7 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                         const noButton = document.getElementById(`no-${eventsAdded}`);
                                         const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-                                        const plannedEvents = getGroup(__currentGroupID__).getPlannedEvents();
+                                        const plannedEvents = crud.getGroup(__currentGroupID__).getPlannedEvents();
 
                                         yesButton.addEventListener("click", () => {
                                             plannedEvents[eventsAdded].yesDict[__currentUserID__] = '';
@@ -111,20 +111,21 @@ function deselectAllMembers() {
     }
 }
 
-function renderGroupMembers() {
-    const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
-    const groupMemberIDs = currentGroup.getMemberList(); // get list of IDs in Group
+async function renderGroupMembers() {
+    const currentGroup = crud.getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const groupMemberIDs = await currentGroup.getMemberList(); // get list of IDs in Group
 
     for (const id of groupMemberIDs) { // for each ID, look up the member and add it to the display
-        addMember(getUser(id).getUsername());
+        const user = crud.getUser(id);
+        addMember(await user.getFirstName());
     }
 }
 
-function renderPlannedEvents() {
-    const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
-    const plannedEventList = currentGroup.getPlannedList(); // list of PlannedEvent objects
+async function renderPlannedEvents() {
+    const currentGroup = crud.getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const plannedEventList = await currentGroup.getPlannedList(); // list of PlannedEvent objects
 
-    for (const event of groupMemberIDs) { // for each PlannedEvent object in list
+    for (const event of plannedEventList) { // for each PlannedEvent object in list
         addPlannedEvent(getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description, event.yesDict, event.noDict, event.maybeDict, WHAAAAAAAAA);
     }
 }
@@ -152,7 +153,7 @@ function getDay(dayNum) {
 selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
 
-addMember("Screen Name");
-addMember("NAH");
+await addMember("Screen Name");
+await addMember("NAH");
 //addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
 //addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
