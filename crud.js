@@ -1,8 +1,15 @@
-import PouchDB from 'pouchdb';
+// import PouchDB from 'pouchdb';
 import { BusyEvent, PlannedEvent } from './datatypes.js';
 
-const userDb = new PouchDB("users.pouchdb");
-const groupDb = new PouchDB("groups.pouchdb");
+// let userDb = new PouchDB("users.pouchdb");
+// let groupDb = new PouchDB("groups.pouchdb");
+let userDb = new PouchDB("users.pouchdb");
+let groupDb = new PouchDB("groups.pouchdb");
+// await userDb.destroy();
+// await groupDb.destroy();
+
+// userDb = new PouchDB("users.pouchdb");
+// groupDb = new PouchDB("groups.pouchdb");
 
 
 /**
@@ -121,7 +128,7 @@ function getUser(username, db=userDb) {
             // TODO: verify friend ID exists
             // TODO: verify not already a friend?
             data.friendsDict[friendUsername] = 1;
-            await db.put(username);
+            await db.put(data);
         },
 
         /**
@@ -184,6 +191,16 @@ function getUser(username, db=userDb) {
             await db.put(data);
         },
 
+                /**
+         * Get a list of this user's friends requests
+         * @returns An Array of the usernames of everybody in this user's
+         * friends request list
+         */
+        getAllFriendRequests: async function() {
+            const data = await db.get(username);
+            return Object.keys(data.requestsDict);
+        },
+
         /**
          * Get the id of every group this user is a member of
          * @param {PouchDB} localGroupDb The PouchDB database storing groups.
@@ -200,6 +217,7 @@ function getUser(username, db=userDb) {
                     acc.push(row.id);
                     return acc;
                 }
+                return acc;
             }, []);
         },
 
@@ -412,21 +430,21 @@ function getGroup(groupId, db=groupDb) {
     return group;
 }
 
-export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
+export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser, userDb, groupDb }
 
-// Just a little test
-// TODO: make a real unit test suite
-await createUser("user1");
-const user1 = getUser("user1");
-await user1.setFirstName("Foo");
-console.log(await user1.getFirstName());
-// Checking if getAllGroups works
-const group1id = await createGroup();
-const group2id = await createGroup();
-const group1 = getGroup(group1id);
-const group2 = getGroup(group2id);
-console.log(`Group 1 id: ${group1id}`)
-console.log(`Group 2 id: ${group2id}`)
-await group1.addMember("user1");
-await group2.addMember("user1");
-console.log(await user1.getAllGroups());
+// // // Just a little test
+// // // TODO: make a real unit test suite
+// await createUser("user1");
+// const user1 = getUser("user1");
+// await user1.setFirstName("Foo");
+// console.log(await user1.getFirstName());
+// // Checking if getAllGroups works
+// const group1id = await createGroup();
+// const group2id = await createGroup();
+// const group1 = getGroup(group1id);
+// const group2 = getGroup(group2id);
+// console.log(`Group 1 id: ${group1id}`)
+// console.log(`Group 2 id: ${group2id}`)
+// await group1.addMember("user1");
+// await group2.addMember("user1");
+// console.log(await user1.getAllGroups());
