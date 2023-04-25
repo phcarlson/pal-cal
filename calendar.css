@@ -5,6 +5,7 @@ div.calendar-weekday-header {
 div.calendar-block {
     padding: 0.5em;
     border-radius: 10px;
+    cursor: pointer;
 }
 
 div.calendar-free {

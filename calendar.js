@@ -201,10 +201,21 @@ function consolidateEvents(events) {
     return consolidated;
 }
 
+let plannedEvents = [
+    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute:  0}
+]
+
+function addPlannedEvent(event) {
+    // For now, just add to this list
+    // Once CRUD is working, will add to the group's planned events database
+    plannedEvents.push(event);
+}
+
+
 initializeCalendar(document.getElementById("calendar"));
 
 // Some random test events
-const busyEvents = [
+let busyEvents = [
     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
     {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute:  0},
     {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute:  0},
@@ -212,10 +223,6 @@ const busyEvents = [
     {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
     {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
 ];
-
-const plannedEvents = [
-    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute:  0}
-]
 
 let events = busyEvents.map(event => {
     let newEvent = structuredClone(event);
@@ -228,3 +235,12 @@ let events = busyEvents.map(event => {
 }));
 
 renderEvents(consolidateEvents(events));
+
+function showModal() {
+    const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
+    modal.show();
+}
+
+for (let element of document.getElementsByClassName("calendar-free")) {
+    element.addEventListener("click", showModal);
+}
