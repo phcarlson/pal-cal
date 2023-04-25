@@ -139,7 +139,7 @@ planned = new PlannedEvent(
 await testGroup.addPlannedEvent(planned);
 
 planned = new PlannedEvent(
-    title = "TitleEvent4"
+    title = "TitleEvent4",
     startHour = 14,
     endHour = 16, 
     startMinute = 30,
@@ -156,7 +156,7 @@ planned = new PlannedEvent(
 await testGroup.addPlannedEvent(planned);
 
 planned = new PlannedEvent(
-    title = "TitleEvent5"
+    title = "TitleEvent5",
     startHour = 12,
     endHour = 12, 
     startMinute = 0,
