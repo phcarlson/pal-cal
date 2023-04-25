@@ -12,11 +12,15 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="./custom.css">
     <link rel="stylesheet" type="text/css" href="./calendar.css">
+    <script src="calendar.js" type="module"></script>
+
+    <script type="module" src="individualgroup.js"></script>
 
 </head>
 
 <body>
     <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
+    <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
@@ -86,74 +90,17 @@
                     </div>
                 </div>
                 <!-- Container for holding groups added dynamically -->
-                    <div class="row v-100" style="overflow-y: scroll;">
-                        <div class="col groupCol">
-                            <div class="timetable-img text-center">
-                                <img src="img/content/timetable.png" alt="">
-                            </div>
+                <div class="row v-100" style="overflow-y: scroll;">
+                    <div class="col groupCol">
+                        <div class="timetable-img text-center">
+                            <img src="img/content/timetable.png" alt="">
                         </div>
-                        
-                        <div class="row d-flex">
-                            <div class="col m-2">
-                              hours
-                              <div class="row border" style="height: calc(100%/12);">12:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">1:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">2:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">3:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">4:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">5:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">6:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">7:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">8:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">9:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">10:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">11:00am</div>
-                              <div class="row border" style="height: calc(100%/12);">12:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">1:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">2:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">3:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">4:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">5:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">6:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">7:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">8:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">9:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">10:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">11:00pm</div>
-                              <div class="row border" style="height: calc(100%/12);">12:00am</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">sunday</div>
-                              <div class="row calendar-no-event" style="height: calc((100%/12) * 6);">
-                                  no event 12am-6am
-                              </div>
-                              <div class="row calendar-event" style="height: 10%; height: calc((100%/12) * 2.5);">First event 6am-8:30am</div>
-                              <div class="row calendar-no-event" style="height: calc(100%/12 * 1.5);">no event 8:30am-10:00am</div>
-                              <div class="row calendar-event" style="height: calc(100%/12 * 1.75);">second event 10am-11:45am</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">monday</div>
-                              <div class="row calendar-no-event" style="height: calc(100%/12 * 10);">no event 12am-10am</div>
-                              <div class="row calendar-event" style="height: calc(100%/12 * 2.5)">another event 10-12:30</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">tuesday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">wednesday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">thursday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">friday</div>
-                            </div>
-                            <div class="col m-2">
-                              <div class="sticky-top calendar-weekday-header">saturday</div>
-                            </div>
-                    </div>
-                </div>
-            </div>
+                    </div>  
+                  
+                    <div class="row d-flex" id="calendar">
+                  </div>
+              </div>
+          </div>
 
 
             <!-- 1/3 of view on the right -->
@@ -173,13 +120,17 @@
 
                                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group me-2" role="group" aria-label="First group">
-                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Add member
+                                        <button id="add-member-button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Add member
                                             <i class="bi bi-plus-circle"></i></button>
 
                                     </div>
                                     <div class="btn-group me-2" role="group" aria-label="Second group">
-                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Deselect
-                                            all members <i class="bi bi-dash-circle"></i></button>
+                                        <button id="select-all-button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Select
+                                            all <i class="bi bi-check-circle"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                                        <button id="deselect-all-button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Deselect
+                                            all <i class="bi bi-dash-circle"></i></button>
                                     </div>
 
                                 </div>
@@ -190,7 +141,7 @@
 
                 <!-- Container for holding groups added dynamically -->
                 <div class="row d-flex" style="height:40%">
-                    <div class="col d-flex flex-column h-100 scrollIt">
+                    <div id="members-container" class="col d-flex flex-column h-100 scrollIt">
                         <div class="card my-3">
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -431,7 +382,7 @@
                 <!-- Row for holding scrollable group -->
                 <div class="row d-flex" style="height:40%">
                     <!-- Column of groups that scroll -->
-                    <div class="col d-flex flex-column h-100 scrollIt">
+                    <div id="planned-events-container" class="col d-flex flex-column h-100 scrollIt">
 
                         <!-- Example event -->
 
