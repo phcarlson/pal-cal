@@ -1,4 +1,3 @@
-import PouchDB from 'pouchdb';
 import { BusyEvent, PlannedEvent } from './datatypes.js';
 
 const userDb = new PouchDB("users.pouchdb");
@@ -417,16 +416,21 @@ export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser
 // Just a little test
 // TODO: make a real unit test suite
 await createUser("user1");
+await createUser("user2");
 const user1 = getUser("user1");
+const user2 = getUser("user2");
 await user1.setFirstName("Foo");
 console.log(await user1.getFirstName());
 // Checking if getAllGroups works
 const group1id = await createGroup();
 const group2id = await createGroup();
+const group3id = await createGroup();
 const group1 = getGroup(group1id);
 const group2 = getGroup(group2id);
 console.log(`Group 1 id: ${group1id}`)
 console.log(`Group 2 id: ${group2id}`)
 await group1.addMember("user1");
+await group1.addMember("user2");
 await group2.addMember("user1");
 console.log(await user1.getAllGroups());
+console.log(await group1.getAllMemberIds());
