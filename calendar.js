@@ -18,7 +18,7 @@ function initializeCalendar(calendarDiv) {
     // Create weekday columns
     for (let day of days) {
         const dayDiv = document.createElement("div");
-        dayDiv.classList.add("col", "m-2");
+        dayDiv.classList.add("col", "m-2", "weekday-column");
         dayDiv.id = `column-${day.toLowerCase()}`
         const dayHeader = document.createElement("div");
         dayHeader.classList.add("sticky-top", "calendar-weekday-header");
@@ -52,7 +52,7 @@ function toTwelveHour(hour, minute=0) {
 function renderEventBlock(day, duration, type, text="") {
     const weekdayCol = document.getElementById(`column-${days[day]}`);
     const eventDiv = document.createElement("div");
-    eventDiv.classList.add("row");
+    eventDiv.classList.add("row", "calendar-element");
     switch (type) {
         case "filler":
             eventDiv.classList.add("calendar-filler");
@@ -209,6 +209,7 @@ function addPlannedEvent(event) {
     // For now, just add to this list
     // Once CRUD is working, will add to the group's planned events database
     plannedEvents.push(event);
+    rerender();
 }
 
 
@@ -224,17 +225,34 @@ let busyEvents = [
     {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
 ];
 
-let events = busyEvents.map(event => {
-    let newEvent = structuredClone(event);
-    newEvent.type = "filler";
-    return newEvent;
-}).concat(plannedEvents.map(event => {
-    let newEvent = structuredClone(event);
-    newEvent.type = "planned";
-    return newEvent;
-}));
+/**
+ * Delete every element with the given classname
+ * Credit: https://stackoverflow.com/a/14066534
+ * @param {string} className 
+ */
+function removeElementsByClass(className){
+    const elements = document.getElementsByClassName(className);
+    while(elements.length > 0){
+        elements[0].parentNode.removeChild(elements[0]);
+    }
+}
 
-renderEvents(consolidateEvents(events));
+function rerender() {
+    removeElementsByClass("calendar-element");
+    let events = busyEvents.map(event => {
+        let newEvent = structuredClone(event);
+        newEvent.type = "filler";
+        return newEvent;
+    }).concat(plannedEvents.map(event => {
+        let newEvent = structuredClone(event);
+        newEvent.type = "planned";
+        return newEvent;
+    }));
+
+    renderEvents(consolidateEvents(events));
+}
+
+rerender();
 
 function showModal() {
     const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
