@@ -121,7 +121,7 @@ function getUser(username, db=userDb) {
             // TODO: verify friend ID exists
             // TODO: verify not already a friend?
             data.friendsDict[friendUsername] = 1;
-            await db.put(username);
+            await db.put(data);
         },
 
         /**
@@ -198,8 +198,8 @@ function getUser(username, db=userDb) {
             return allGroups.rows.reduce((acc, row) => {
                 if (username in row.doc.memberDict) {
                     acc.push(row.id);
-                    return acc;
                 }
+                return acc;
             }, []);
         },
 
