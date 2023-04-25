@@ -1,4 +1,3 @@
-
 let requestListCol = document.getElementById("requestListCol");
 
 let mockCurrUsername = "ananya";
