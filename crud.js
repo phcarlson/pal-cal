@@ -1,3 +1,4 @@
+//import PouchDB from 'pouchdb';
 import { BusyEvent, PlannedEvent } from './datatypes.js';
 
 const userDb = new PouchDB("users.pouchdb");

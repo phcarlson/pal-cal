@@ -1,7 +1,13 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
+import * as crud from './crud.js';
 
+// containers
 const membersContainer = document.getElementById("members-container");
-const plannedEventsContainer = document.getElementById("plannedEventsContainer");
+const plannedEventsContainer = document.getElementById("planned-events-container");
+
+// buttons
+const selectAllButton = document.getElementById("select-all-button");
+const deselectAllButton = document.getElementById("deselect-all-button");
 
 membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
@@ -13,7 +19,7 @@ function addMember(screenName) {
                                         <div class="row g-0">
                                             <div class="col-md-2 d-flex justify-content-center align-items-center">
                                                 <div class="form-check checkbox-xl">
-                                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+                                                    <input class="form-check-input member-checkbox" type="checkbox" value="" id="flexCheckDefault">
 
                                                 </div>
                                             </div>
@@ -28,9 +34,11 @@ function addMember(screenName) {
                                             </div>
                                         </div>
                                     </div>`;
+
+    //document.getElementById("flexCheckDefault").checked = true;
 }
 
-function addPlannedEvent(startTime, endTime, startDay, title, location, description, yesDict, noDict, maybeDict, creatorID) {
+function addPlannedEvent(startTime, endTime, startDay, title, location, description) {
     plannedEventsContainer.innerHTML += `<div class="card card-margin">
                                             <div class="card-header no-border">
                                                 <h5 class="card-title">${title}</h5>
@@ -72,7 +80,7 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                         const noButton = document.getElementById(`no-${eventsAdded}`);
                                         const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-                                        const plannedEvents = getGroup(__currentGroupID__).getPlannedEvents();
+                                        const plannedEvents = crud.getGroup(__currentGroupID__).getPlannedEvents();
 
                                         yesButton.addEventListener("click", () => {
                                             plannedEvents[eventsAdded].yesDict[__currentUserID__] = '';
@@ -87,20 +95,37 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                         eventsAdded += 1;
 }
 
-function renderGroupMembers() {
-    const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
-    const groupMemberIDs = currentGroup.getMemberList(); // get list of IDs in Group
-
-    for (const id of groupMemberIDs) { // for each ID, look up the member and add it to the display
-        addMember(getUser(id).getUsername());
+function selectAllMembers() {
+    const checkBoxes = document.getElementsByClassName("member-checkbox");
+    
+    for (const box of checkBoxes) {
+        box.checked = true;
     }
 }
 
-function renderPlannedEvents() {
-    const currentGroup = getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
-    const plannedEventList = currentGroup.getPlannedList(); // list of PlannedEvent objects
+function deselectAllMembers() {
+    const checkBoxes = document.getElementsByClassName("member-checkbox");
+    
+    for (const box of checkBoxes) {
+        box.checked = false;
+    }
+}
 
-    for (const event of groupMemberIDs) { // for each PlannedEvent object in list
+async function renderGroupMembers() {
+    const currentGroup = crud.getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const groupMemberIDs = await currentGroup.getMemberList(); // get list of IDs in Group
+
+    for (const id of groupMemberIDs) { // for each ID, look up the member and add it to the display
+        const user = crud.getUser(id);
+        addMember(await user.getFirstName());
+    }
+}
+
+async function renderPlannedEvents() {
+    const currentGroup = crud.getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const plannedEventList = await currentGroup.getPlannedList(); // list of PlannedEvent objects
+
+    for (const event of plannedEventList) { // for each PlannedEvent object in list
         addPlannedEvent(getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description, event.yesDict, event.noDict, event.maybeDict, WHAAAAAAAAA);
     }
 }
@@ -124,6 +149,11 @@ function getDay(dayNum) {
     return dayArr[dayNum];
 }
 
-addMember("Screen Name");
-addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
-addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
+// event listeners
+selectAllButton.addEventListener("click", selectAllMembers);
+deselectAllButton.addEventListener("click", deselectAllMembers);
+
+await addMember("Screen Name");
+await addMember("NAH");
+//addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
+//addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
