@@ -55,7 +55,7 @@ function renderRequests(mockCurrUsername){
             if(buttonClass === 'btn-success'){
             //crud.addFriend(userRequest.username);
             }
-            setTimeout(function() {   //  call a 2s setTimeout when the loop is called
+            setTimeout(function() {   //  call a 1.5 second setTimeout when the loop is called
                 requestListCol.removeChild(requestCard);
               }, 1500);
           });
@@ -67,6 +67,8 @@ function renderRequests(mockCurrUsername){
     });
 }
 
+renderRequests(mockCurrUsername);
+renderProfile(mockCurrUsername);
 
 let screenNameInput = document.getElementById("screenNameInput");
 let firstNameInput = document.getElementById("firstNameInput");
@@ -75,21 +77,6 @@ let collegeInput = document.getElementById("collegeInput");
 let majorInput = document.getElementById("majorInput");
 let bioInput = document.getElementById("bioInput");
 let editProfileButton = document.getElementById("editProfileButton");
-
-editProfileButton.addEventListener("click", (event)=>{
-    if(editProfileButton.innerHTML === '<i class="bi bi-pencil-square"></i>'){
-        editProfile(mockCurrUsername);
-    }
-
-    else{
-        saveProfile(mockCurrUsername);
-    }
-});
-
-renderRequests(mockCurrUsername);
-renderProfile(mockCurrUsername);
-
-
 
 function renderProfile(mockCurrUsername){
     // let user = crud.getUser(mockCurrUsername);
@@ -102,6 +89,16 @@ function renderProfile(mockCurrUsername){
     majorInput.value = user.major;
     bioInput.value = user.bio;
 }
+
+editProfileButton.addEventListener("click", (event)=>{
+    if(editProfileButton.innerHTML === '<i class="bi bi-pencil-square"></i>'){
+        editProfile(mockCurrUsername);
+    }
+
+    else{
+        saveProfile(mockCurrUsername);
+    }
+});
 
 function editProfile(mockCurrUsername){
     let toEdit = [
@@ -137,7 +134,6 @@ function saveProfile(mockCurrUsername){
     });
 
     editProfileButton.innerHTML = '<i class="bi bi-pencil-square"></i>';
-
 
     // Once values are set in stone, perform CRUD updates:
     
