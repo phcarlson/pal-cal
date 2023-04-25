@@ -53,7 +53,7 @@ function toTwelveHour(hour, minute=0) {
  * @param {string} type One of "busy", "planned", or "filler"
  * @param {string} text Text to display on the event block
  */
-function renderEventBlock(day, duration, type, text="") {
+function renderEventBlock(day, duration, type, text="", startHour, startMinute, endHour, endMinute) {
     const weekdayCol = document.getElementById(`column-${days[day]}`);
     const eventDiv = document.createElement("div");
     eventDiv.classList.add("row", "calendar-element");
@@ -68,7 +68,11 @@ function renderEventBlock(day, duration, type, text="") {
             eventDiv.classList.add("calendar-block", "calendar-planned");
             break;
     }
-    eventDiv.style.height = `calc((100%/12) * ${duration})`
+    eventDiv.style.height = `calc((100%/12) * ${duration})`;
+    eventDiv.dataset.startHour = startHour;
+    eventDiv.dataset.startMinute = startMinute;
+    eventDiv.dataset.endHour = endHour;
+    eventDiv.dataset.endMinute = endMinute;
     eventDiv.innerText = text;
     weekdayCol.appendChild(eventDiv);
 }
@@ -86,7 +90,7 @@ function renderEvents(events) {
                 // the last event
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 if (fillerDuration > 0.25) {
-                    renderEventBlock(event.startDay, fillerDuration, "free");
+                    renderEventBlock(event.startDay, fillerDuration, "free", "", prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
@@ -101,15 +105,15 @@ function renderEvents(events) {
                 if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
                     // Fill in free time at the end of the day
                     const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-                    renderEventBlock(prevEventEndDay, eventDuration, "free");
+                    renderEventBlock(prevEventEndDay, eventDuration, "free", "", prevEventEndHour, prevEventEndMinute, 23, 59);
                 }
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
                     const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
-                    renderEventBlock(event.startDay, fillerDuration, "free");
+                    renderEventBlock(event.startDay, fillerDuration, "free", "", 0, 0, event.startHour, event.startMinute);
                 }
                 for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
                     // Fill in free time on days in between
-                    renderEventBlock(day, 24, "free");
+                    renderEventBlock(day, 24, "free", "", 0, 0, 23, 59);
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
@@ -261,14 +265,34 @@ rerender();
 const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
 
 for (let element of document.getElementsByClassName("calendar-free")) {
-    element.addEventListener("click", () => modal.show());
+    element.addEventListener("click", () => {
+        const clickedBlock     = event.target;
+        const blockStartHour   = clickedBlock.dataset.startHour;
+        const blockStartMinute = clickedBlock.dataset.startMinute;
+        const blockEndHour     = clickedBlock.dataset.endHour;
+        const blockEndMinute   = clickedBlock.dataset.endMinute;
+
+        const startTimeInput = document.getElementById("start-time-input");
+        startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
+        const endTimeInput = document.getElementById("end-time-input");
+        endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
+
+        modal.show();
+    });
 }
 
 
 document.getElementById("modal-close").addEventListener("click", () => modal.hide());
 
-document.getElementById("modal-save").addEventListener("click", () => {
+document.getElementById("modal-save").addEventListener("click", (event) => {
+    const clickedBlock     = event.target;
+    const blockStartHour   = clickedBlock.dataset.startHour;
+    const blockStartMinute = clickedBlock.dataset.startMinute;
+    const blockEndHour     = clickedBlock.dataset.endHour;
+    const blockEndMinute   = clickedBlock.dataset.endMinute;
+
     const startTimeInput = document.getElementById("start-time-input");
+    startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
     // TODO: set day based on selected block
     let startDay = 1;
     let endDay = 1;
@@ -277,6 +301,7 @@ document.getElementById("modal-save").addEventListener("click", () => {
     startMinute = Number(startMinute);
 
     const endTimeInput = document.getElementById("end-time-input");
+    endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
     let [ endHour, endMinute ] = endTimeInput.value.split(":");
     endHour = Number(endHour);
     endMinute = Number(endMinute);
@@ -284,6 +309,6 @@ document.getElementById("modal-save").addEventListener("click", () => {
     const description = document.getElementById("description-input").value;
     const location = ""; // TODO
 
-    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, {}, {}, {}));
+    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
     modal.hide();
 });
