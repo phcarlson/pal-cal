@@ -46,14 +46,24 @@ function toTwelveHour(hour, minute=0) {
  * Add a div to the calendar representing an event or lack thereof
  * @param {number} day The day of the week to add the event. 0-6 for sunday-saturday
  * @param {number} duration The length of the event in hours
- * @param {boolean} isFiller True if this represents an event, false if this is a "filler" div representing time without an event
+ * @param {string} type One of "busy", "planned", or "filler"
  * @param {string} text Text to display on the event block
  */
-function addEventBlock(day, duration, isFiller, text="") {
+function addEventBlock(day, duration, type, text="") {
     const weekdayCol = document.getElementById(`column-${days[day]}`);
-    const cssClass = isFiller ? "calendar-filler" : "calendar-free-time";
     const eventDiv = document.createElement("div");
-    eventDiv.classList.add("row", cssClass);
+    eventDiv.classList.add("row");
+    switch (type) {
+        case "filler":
+            eventDiv.classList.add("calendar-filler");
+            break;
+        case "free":
+            eventDiv.classList.add("calendar-block", "calendar-free");
+            break;
+        case "planned":
+            eventDiv.classList.add("calendar-block", "calendar-planned");
+            break;
+    }
     eventDiv.style.height = `calc((100%/12) * ${duration})`
     eventDiv.innerText = text;
     weekdayCol.appendChild(eventDiv);
@@ -71,12 +81,14 @@ function addEvents(events) {
                 // If this is not the first event of the day, add padding after
                 // the last event
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
-                addEventBlock(event.startDay, fillerDuration, false);
+                if (fillerDuration > 0.25) {
+                    addEventBlock(event.startDay, fillerDuration, "free");
+                }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `Event ${eventStartTime}-${eventEndTime}`;
-                addEventBlock(event.startDay, eventDuration, true, label);
+                const label = `${eventStartTime}-${eventEndTime}`;
+                addEventBlock(event.startDay, eventDuration, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -85,21 +97,21 @@ function addEvents(events) {
                 if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
                     // Fill in free time at the end of the day
                     const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-                    addEventBlock(prevEventEndDay, eventDuration, false);
+                    addEventBlock(prevEventEndDay, eventDuration, "free");
                 }
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
                     const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
-                    addEventBlock(event.startDay, fillerDuration, false);
+                    addEventBlock(event.startDay, fillerDuration, "free");
                 }
                 for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
                     // Fill in free time on days in between
-                    addEventBlock(day, 24, false);
+                    addEventBlock(day, 24, "free");
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
                 const label = `Busy ${eventStartTime}-${eventEndTime}`;
-                addEventBlock(event.startDay, eventDuration, true, label);
+                addEventBlock(event.startDay, eventDuration, "filler", label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -109,11 +121,11 @@ function addEvents(events) {
     if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
         // Fill in free time at the end of the day
         const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-        addEventBlock(prevEventEndDay, eventDuration, false);
+        addEventBlock(prevEventEndDay, eventDuration, "free");
     }
     for (let day = prevEventEndDay + 1; day <= 6; ++day) {
         // Fill in free time on days after the last busy time
-        addEventBlock(day, 24, false);
+        addEventBlock(day, 24, "free");
     }
 
 }
@@ -174,7 +186,9 @@ function consolidateEvents(events) {
         else {
             let lastEvent = consolidated.at(-1);
             // If this new event starts before the last event ends, merge them
-            if (compareTimes(lastEvent.endDay, lastEvent.endHour, lastEvent.endMinute, event.startDay, event.startHour, event.startMinute) >= 0) {
+            if (lastEvent.type === "filler" && event.type === "filler" &&
+                    compareTimes(lastEvent.endDay, lastEvent.endHour, lastEvent.endMinute, event.startDay, event.startHour, event.startMinute) >= 0) 
+            {
                 lastEvent.endDay = event.endDay;
                 lastEvent.endHour = event.endHour;
                 lastEvent.endMinute = event.endMinute;
@@ -190,13 +204,27 @@ function consolidateEvents(events) {
 initializeCalendar(document.getElementById("calendar"));
 
 // Some random test events
-const events = [
+const busyEvents = [
     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
-    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute: 0},
-    {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute: 0},
+    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute:  0},
+    {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute:  0},
     {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
     {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
     {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
+];
+
+const plannedEvents = [
+    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute:  0}
 ]
+
+let events = busyEvents.map(event => {
+    let newEvent = structuredClone(event);
+    newEvent.type = "filler";
+    return newEvent;
+}).concat(plannedEvents.map(event => {
+    let newEvent = structuredClone(event);
+    newEvent.type = "planned";
+    return newEvent;
+}));
 
 addEvents(consolidateEvents(events));
