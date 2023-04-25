@@ -1,4 +1,4 @@
-import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser} from "./CRUD.js";
+import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser} from "./crud.js";
 import { BusyEvent, PlannedEvent } from './datatypes.js';
 
 let userDb = new PouchDB("users.pouchdb");
