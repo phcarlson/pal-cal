@@ -1,6 +1,6 @@
 
 // import { mock } from "node:test";
-// import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser } from "./crud.js";
+import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser } from "./crud.js";
 
 let friendsCol = document.getElementById('scrollableFriendsList');
 let groupsCol = document.getElementById('scrollableGroupList');
