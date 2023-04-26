@@ -1,8 +1,12 @@
+import { getGroup, getUser } from "./crud.js";
 import { PlannedEvent } from "./datatypes.js";
 
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
-const username = "user1";
+const username = "user0";
+const user = getUser(username);
+const groups = await user.getAllGroups();
+const groupId = groups[0]; // Todo: use this actual group
 let modalTime = {};
 
 function initializeCalendar(calendarDiv) {
@@ -211,29 +215,29 @@ function consolidateEvents(events) {
     return consolidated;
 }
 
-let plannedEvents = [
-    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute: 0, title: "this is a planned event with a long title"}
-]
+// let plannedEvents = [
+//     {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute: 0, title: "this is a planned event with a long title"}
+// ]
 
-function addPlannedEvent(event) {
+async function addPlannedEvent(event) {
     // For now, just add to this list
     // Once CRUD is working, will add to the group's planned events database
     plannedEvents.push(event);
-    rerender();
+    await rerender();
 }
 
 
 initializeCalendar(document.getElementById("calendar"));
 
-// Some random test events
-let busyEvents = [
-    {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
-    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute:  0},
-    {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute:  0},
-    {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
-    {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
-    {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
-];
+// // Some random test events
+// let busyEvents = [
+//     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
+//     {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute:  0},
+//     {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute:  0},
+//     {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
+//     {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
+//     {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
+// ];
 
 /**
  * Delete every element with the given classname
@@ -248,8 +252,10 @@ function removeElementsByClass(className){
 }
 
 
-function rerender() {
+async function rerender() {
     removeElementsByClass("calendar-element");
+    const busyEvents = await getBusyEvents(groupId);
+    const plannedEvents = await getPlannedEvents();
     let events = busyEvents.map(event => {
         let newEvent = structuredClone(event);
         newEvent.type = "filler";
@@ -288,7 +294,24 @@ function rerender() {
     }
 }
 
-rerender();
+async function getBusyEvents(groupId) {
+    let events = [];
+    const group = getGroup(groupId);
+    const members = await group.getAllMemberIds();
+    for (let username of members) {
+        const thisUser = getUser(username);
+        const userEvents = await thisUser.getBusyEvents();
+        events = events.concat(userEvents);
+    }
+    return events;
+}
+
+async function getPlannedEvents(groupId) {
+    const group = getGroup(groupId);
+    return await group.getPlannedEvents();
+}
+
+await rerender();
 
 const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
 document.getElementById("modal-close").addEventListener("click", () => modal.hide());
