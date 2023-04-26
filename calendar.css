@@ -6,6 +6,8 @@ div.calendar-block {
     padding: 0.5em;
     border-radius: 10px;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 div.calendar-free {

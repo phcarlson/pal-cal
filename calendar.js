@@ -97,7 +97,7 @@ function renderEvents(events) {
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `${eventStartTime}-${eventEndTime}`;
+                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
                 renderEventBlock(event.startDay, eventDuration, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
@@ -120,7 +120,7 @@ function renderEvents(events) {
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `Busy ${eventStartTime}-${eventEndTime}`;
+                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
                 renderEventBlock(event.startDay, eventDuration, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
@@ -212,7 +212,7 @@ function consolidateEvents(events) {
 }
 
 let plannedEvents = [
-    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute:  0}
+    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute: 0, title: "this is a planned event with a long title"}
 ]
 
 function addPlannedEvent(event) {
