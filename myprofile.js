@@ -68,8 +68,6 @@ function renderRequests(mockCurrUsername){
     });
 }
 
-renderRequests(mockCurrUsername);
-renderProfile(mockCurrUsername);
 
 let screenNameInput = document.getElementById("screenNameInput");
 let firstNameInput = document.getElementById("firstNameInput");
@@ -144,3 +142,6 @@ function saveProfile(mockCurrUsername){
     //crud.setMajor(majorInput.value); //--> not currently a property in crud
     //crud.setBio(bioInput.value);
 }
+
+renderRequests(mockCurrUsername);
+renderProfile(mockCurrUsername);
