@@ -154,7 +154,7 @@ function getDay(dayNum) {
 selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
 
-// dummy data
+// dummy data -- REST LOADED IN USING individualgroup.html, through loadmockdata.js file
 addMember("Screen Name");
 addMember("NAH");
 addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "Big fat party");
