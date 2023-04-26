@@ -185,6 +185,16 @@ function getUser(username, db=userDb) {
         },
 
         /**
+         * Get the usernames of everyone who has sent a pending friend request
+         * to this user
+         * @returns An array of usernames
+         */
+        getAllFriendRequests: async function() {
+            const data = await db.get(username);
+            return Object.keys(data.requestsDict);
+        },
+
+        /**
          * Get the id of every group this user is a member of
          * @param {PouchDB} localGroupDb The PouchDB database storing groups.
          * Optional - defaults to the main group database, a different db can be
