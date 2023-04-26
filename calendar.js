@@ -323,3 +323,5 @@ document.getElementById("modal-save").addEventListener("click", () => {
     modal.hide();
     addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
 });
+
+document.getElementById("modal-close").addEventListener("click", () => modal.hide);
