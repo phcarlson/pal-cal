@@ -139,6 +139,7 @@ function getUser(username, db=userDb) {
             // TODO: verify users are friends
             const data = await db.get(username);
             delete data.friendsDict[friendUsername];
+            await db.put(data);
         },
 
         /**

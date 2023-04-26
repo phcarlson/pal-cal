@@ -32,6 +32,7 @@ const testuser = getUser(`user0`);
 for (let i = 0; i < 20; i += 3){
     await testuser.addFriend(`user${i}`);
 }
+testuser.removeFriend(`user0`);
 console.log(await testuser.getAllFriends());
 
 
@@ -63,25 +64,6 @@ for (let i = 0; i < 20; i++){
 
 
 // let testGroupID = None;
-
-for (let i = 0; i < 20; i++){
-    const testgroupID = await createGroup();
-    const testGroup = getGroup(testgroupID);
-    if(i === 0){
-        // testGroupID = testGroupID;
-    }
-    await testGroup.setGroupName(`groupName${i}`);
-
-    for(let j = 0; j < 10; j++){
-        let usernum = i*10 + j + 1;
-        await testGroup.addMember(`user${usernum}`);
-    }
-    if(i < 10){
-        await testGroup.addMember("user0");
-    }
-
-    console.log(await testGroup.getAllMemberIds());
-}
 
 
 // // add planned events to test group 0
