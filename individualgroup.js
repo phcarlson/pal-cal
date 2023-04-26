@@ -155,7 +155,7 @@ selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
 
 // dummy data
-await addMember("Screen Name");
-await addMember("NAH");
+addMember("Screen Name");
+addMember("NAH");
 addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "Big fat party");
 addPlannedEvent("2:00pm", "4:00pm", 3, "Move in", "College Dorm", "College move in, drag stuff up a bunch of stairs");
