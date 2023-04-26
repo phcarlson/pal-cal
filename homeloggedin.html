@@ -7,7 +7,7 @@
     <title>Pal Cal Home</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"F
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="./custom.css">
@@ -20,10 +20,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
-    
+        <script type="module" src="wipeDb.js"></script>
+
     <script  type="module" src="loadmockdata.js"></script>
 
-    <script type="module" src="./homeloggedin.js" defer></script>
+    <script type="module" src="./homeloggedin.js"></script>
 
 
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -191,7 +192,7 @@
                 <div class="row d-flex">
                     <div class="col d-flex flex-row justify-content-start">
                         <div class="btn-group me-2" role="group" aria-label="First group">
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            <button type="button" class="btn btn-outline-primary btn-sm btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#friendSearchModal">
                                 Add friend <i
                                 class="bi bi-plus-circle"></i>
                             </button>
@@ -212,11 +213,11 @@
             </div>
 
             <!-- Modal triggered to pop up when adding a friend, can be x'd out without exiting -->
-            <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+            <div class="modal fade" id="friendSearchModal" tabindex="-1" aria-labelledby="friendSearchModalLabel" aria-hidden="true">
+                <div id="friendSearchModalDialog" class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Search For Friend</h5>
+                    <h5 class="modal-title" id="friendSearchModalLabel">Search For Friend</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

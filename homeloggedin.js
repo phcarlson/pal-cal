@@ -7,7 +7,10 @@ let friendsCol = document.getElementById('scrollableFriendsList');
 let groupsCol = document.getElementById('scrollableGroupList');
 let potentialMembers = document.getElementById('potentialMembers');
 
+// selection for making new group with members which starts empty
 let selectedMembers = [];
+
+// our pretend user ID logged in currently
 let mockusername = "user0";
 
 async function renderFriends(username) {
@@ -20,7 +23,7 @@ async function renderFriends(username) {
     // {username: 'adin'}, {username: 'amey'}, {username: 'anotheruser'}, {username: 'anotheruser2'}, {username: 'another3'}]}
 
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
-    friendsList.forEach((friend) => {
+    for(let friend of friendsList){
         let friendToInsert =
         `<div id=${friend}FriendCard class="card my-3">` +
             '<div class="row g-0">' +
@@ -58,8 +61,9 @@ async function renderFriends(username) {
         let friendProfileButton = document.getElementById(friend + 'Profile');
         friendProfileButton.addEventListener('click', (event) => {
             
-        });
-    })     
+        });   
+    }
+        
 }
 
 async function renderGroups(currUserID) {
@@ -71,9 +75,10 @@ async function renderGroups(currUserID) {
 
     let currUser = getUser(currUserID);
     let groupsList = await currUser.getAllGroups();
-    groupsList.forEach(async (groupID) => {
+    for(let groupID of groupsList){
         await renderGroup(groupID, currUserID);
-    });
+    }
+   
 }
 
 async function renderGroup(groupID, currUserID){
@@ -110,7 +115,6 @@ async function renderGroup(groupID, currUserID){
     });
 }
 async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentialFriends){
-
     // temp image while we sort out image upload
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     let userToFriendRequest = getUser(userIDToFriendRequest);
@@ -137,9 +141,14 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
 
     let addFriendButton = document.getElementById(`${userIDToFriendRequest}AddButton`);
     addFriendButton.addEventListener('click', async (event) => {
-        // add friend to this current user, update friends list 
+        // add friend to this current user, update friends list just to show how it would work if added immediately
         // and members that appear to add to a new group if we make one
         await currUser.addFriend(userIDToFriendRequest);
+
+        // in the future we would just have a friend request sent
+        let userRequested = getUser(userIDToFriendRequest);
+        userRequested.addFriendRequestFrom(currUserID);
+
         await renderFriends(mockusername);
         await renderPotentialMembers(mockusername);
         // alert user after CRUD that the friend worked
@@ -182,7 +191,8 @@ async function renderPotentialMembers(currUserID){
     //   {username: 'adin'}, {username: 'amey'}, {username: 'anotheruser'}, {username: 'anotheruser2'}, {username: 'another3'}],
     //   groupsList: [{id:1, groupName: 'Team 19'}, {id:2, groupName: 'Team 20'}, {id:3, groupName: 'Team 21'},  {id:4, groupName: 'Team 22'},
     //   {id:5, groupName: 'Team 2000'},  {id:6, groupName: 'Team 22222'}]}
-  
+    potentialMembers.innerHTML = ""
+
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
      friendsList.forEach((friend) => {
         let potentialMemberToInsert = renderPotentialMember(friend);
@@ -212,8 +222,6 @@ async function removeGroupFromUser(currUserID, groupID){
 async function removeFriendFromUser(friendUserID, currUserID){
     let currUser = getUser(currUserID);
     await currUser.removeFriend(friendUserID);
- 
-
     await renderFriends(currUserID);
 
     // Remove single friend without rerendering entire friends list:
@@ -226,6 +234,8 @@ async function removeFriendFromUser(friendUserID, currUserID){
 let makeGroupButton = document.getElementById("makeGroupButton");
 makeGroupButton.addEventListener('click', async (event) => {
     let groupName = document.getElementById('groupNameInput');
+
+    //TODO: collapse accordion of potential members on close always
     let accordionFriends = document.getElementById('flush-collapseOne');
 
     // form new group with unique id, get the obj, set it's name to inputted name
@@ -241,16 +251,21 @@ makeGroupButton.addEventListener('click', async (event) => {
     // Add ourselves, the group creator, to the members list and then add others
     // selectedMembers.push(mockusername);
     newGroup.addMember(mockusername);
+    let newlyAdded = getGroup(newGroupID);
+    console.log(await newlyAdded.hasMember(mockusername));
+
     // let groupObj =  {id:5, groupName: groupName.value, membersList: selectedMembers}
-    selectedMembers.forEach(async(memberToAdd)=>{
-        newGroup.addMember(memberToAdd);
-    });
+    for(let memberToAdd of selectedMembers){
+        await newGroup.addMember(memberToAdd);
+
+    }
+   
     // Wipe selected members for next creation, wipe group input, and collapse accordion
     selectedMembers = [];
     groupName.value = '';
     // accordionFriends.collapse('hide');
 
-    // // Render new group made
+    //Render new group made
     await renderGroups(mockusername);
     
 });
@@ -273,6 +288,17 @@ changedMindButton.addEventListener('click', (event) => {
 });
 
 let searchFriendButton = document.getElementById("searchFriendButton");
+let searchFriendModal = document.getElementById("friendSearchModalDialog");
+
+//TODO: Clear modal on hidden
+// $("#friendSearchModal").on("hidden.bs.modal", function () {
+//     alert("test");
+// });
+// searchFriendModal.addEventListener(gid, async (event) => {
+//     alert("test");
+
+// });
+
 searchFriendButton.addEventListener('click', async (event) => {
 
     let currUser = getUser(mockusername);

@@ -40,26 +40,26 @@ console.log(await testuser.getAllFriends());
 for (let i = 1; i < 20; i += 3){
     await testuser.addFriendRequestFrom(`user${i}`)
 }
-console.log(testuser.getAllFriendRequests());
+console.log(await testuser.getAllFriendRequests());
 
 
 // load up mock groups and their members, half of which should include user0
-for (let i = 0; i < 20; i++){
-    const testgroupID = await createGroup();
-    const testGroup = getGroup(testgroupID);
+// for (let i = 0; i < 20; i++){
+//     const testgroupID = await createGroup();
+//     const testGroup = getGroup(testgroupID);
 
-    await testGroup.setGroupName(`groupName${i}`);
+//     await testGroup.setGroupName(`groupName${i}`);
 
-    for(let j = 0; j < 10; j++){
-        let usernum = i*10 + j + 1;
-        await testGroup.addMember(`user${usernum}`);
-    }
-    if(i < 10){
-        await testGroup.addMember("user0");
-    }
+//     for(let j = 0; j < 10; j++){
+//         let usernum = i*10 + j + 1;
+//         await testGroup.addMember(`user${usernum}`);
+//     }
+//     if(i < 10){
+//         await testGroup.addMember("user0");
+//     }
 
-    console.log(await testGroup.getAllMemberIds());
-}
+//     console.log(await testGroup.getAllMemberIds());
+// }
 
 
 
