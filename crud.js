@@ -1,8 +1,15 @@
-//import PouchDB from 'pouchdb';
+// import PouchDB from 'pouchdb';
 import { BusyEvent, PlannedEvent } from './datatypes.js';
 
-const userDb = new PouchDB("users.pouchdb");
-const groupDb = new PouchDB("groups.pouchdb");
+// let userDb = new PouchDB("users.pouchdb");
+// let groupDb = new PouchDB("groups.pouchdb");
+let userDb = new PouchDB("users.pouchdb");
+let groupDb = new PouchDB("groups.pouchdb");
+// await userDb.destroy();
+// await groupDb.destroy();
+
+// userDb = new PouchDB("users.pouchdb");
+// groupDb = new PouchDB("groups.pouchdb");
 
 /**
  * Wrapper around getting a property of a document in a PouchDB store
@@ -131,6 +138,7 @@ function getUser(username, db=userDb) {
             // TODO: verify users are friends
             const data = await db.get(username);
             delete data.friendsDict[friendUsername];
+            await db.put(data);
         },
 
         /**
@@ -181,6 +189,16 @@ function getUser(username, db=userDb) {
             const data = await db.get(username);
             delete data.requestsDict[friendUsername];
             await db.put(data);
+        },
+
+                /**
+         * Get a list of this user's friends requests
+         * @returns An Array of the usernames of everybody in this user's
+         * friends request list
+         */
+        getAllFriendRequests: async function() {
+            const data = await db.get(username);
+            return Object.keys(data.requestsDict);
         },
 
         /**
@@ -412,26 +430,3 @@ function getGroup(groupId, db=groupDb) {
 }
 
 export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
-
-// Just a little test
-// TODO: make a real unit test suite
-
-// await createUser("user1");
-// await createUser("user2");
-// const user1 = getUser("user1");
-// const user2 = getUser("user2");
-// await user1.setFirstName("Foo");
-// console.log(await user1.getFirstName());
-// // Checking if getAllGroups works
-// const group1id = await createGroup();
-// const group2id = await createGroup();
-// const group3id = await createGroup();
-// const group1 = getGroup(group1id);
-// const group2 = getGroup(group2id);
-// console.log(`Group 1 id: ${group1id}`)
-// console.log(`Group 2 id: ${group2id}`)
-// await group1.addMember("user1");
-// await group1.addMember("user2");
-// await group2.addMember("user1");
-// console.log(await user1.getAllGroups());
-// console.log(await group1.getAllMemberIds());

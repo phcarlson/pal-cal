@@ -83,7 +83,6 @@ for (let i = 0; i < 20; i++){
     console.log(await testGroup.getAllMemberIds());
 }
 
-
 // add planned events to test group 0
 let testGroup = getGroup(testGroupID);
 
