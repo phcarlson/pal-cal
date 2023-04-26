@@ -39,8 +39,8 @@ console.log(await testuser.getAllFriends());
 for (let i = 1; i < 20; i += 3){
     await testuser.addFriendRequestFrom(`user${i}`)
 }
-console.log(testuser.getAllFriendRequests());
 
+console.log(await testuser.getAllFriendRequests());
 
 // load up mock groups and their members, half of which should include user0
 for (let i = 0; i < 20; i++){
@@ -62,13 +62,15 @@ for (let i = 0; i < 20; i++){
 
 
 
-// let testGroupID = None;
+let currentGroupID = undefined;
 
 for (let i = 0; i < 20; i++){
     const testgroupID = await createGroup();
+    console.log(testgroupID);
     const testGroup = getGroup(testgroupID);
     if(i === 0){
-        // testGroupID = testGroupID;
+        currentGroupID = testgroupID;
+
     }
     await testGroup.setGroupName(`groupName${i}`);
 
@@ -83,161 +85,42 @@ for (let i = 0; i < 20; i++){
     console.log(await testGroup.getAllMemberIds());
 }
 
+
 // add planned events to test group 0
-let testGroup = getGroup(testGroupID);
+let testGroup = getGroup(currentGroupID);
 
-let planned = new PlannedEvent(
-    title = "TitleEvent1",
-    startHour = 13,
-    endHour = 14, 
-    startMinute = 30,
-    endMinute = 30,
-    startDay = 1,
-    endDay = 1,
-    creatorUsername = "",
-    location = "library",
-    description = "group study",
-    yesDict = {},
-    noDict = {},
-    maybeDict ={}
-);
+let planned = new PlannedEvent( "TitleEvent1", 13, 14, 30, 30, 1, 1, "", "library", "group study", {}, {},);
+await testGroup.addPlannedEvent(planned);
+planned = new PlannedEvent( "TitleEvent2", 18, 20, 0, 0, 1, 1, "", "restaurant", "dinner", {}, {},);
 await testGroup.addPlannedEvent(planned);
 
-planned = new PlannedEvent(
-    title = "TitleEvent2",
-    startHour = 18,
-    endHour = 20, 
-    startMinute = 0,
-    endMinute = 0,
-    startDay = 1,
-    endDay = 1,
-    creatorUsername = "",
-    location = "restaurant",
-    description = "dinner",
-    yesDict = {},
-    noDict = {},
-    maybeDict ={}
-    );
+planned = new PlannedEvent( "TitleEvent3", 21, 23, 0, 0, 4, 4, "", "home", "movie", {}, {},);
 await testGroup.addPlannedEvent(planned);
 
-planned = new PlannedEvent(
-    title = "TitleEvent3",
-    startHour = 21,
-    endHour = 23, 
-    startMinute = 0,
-    endMinute = 0,
-    startDay = 4,
-    endDay = 4,
-    creatorUsername = "",
-    location = "home",
-    description = "movie",
-    yesDict = {},
-    noDict = {},
-    maybeDict ={}
-    );
+planned = new PlannedEvent( "TitleEvent4", 14, 16, 30, 45, 3, 3, "", "class", "super cool guest lecture", {}, {},);
 await testGroup.addPlannedEvent(planned);
 
-planned = new PlannedEvent(
-    title = "TitleEvent4",
-    startHour = 14,
-    endHour = 16, 
-    startMinute = 30,
-    endMinute = 45,
-    startDay = 3,
-    endDay = 3,
-    creatorUsername = "",
-    location = "class",
-    description = "super cool guest lecture",
-    yesDict = {},
-    noDict = {},
-    maybeDict ={}
-    );
+planned = new PlannedEvent( "TitleEvent5", 12, 12, 0, 0, 5, 6, "", "somewhere", "24 dance hour marathon", {}, {},);
 await testGroup.addPlannedEvent(planned);
 
-planned = new PlannedEvent(
-    title = "TitleEvent5",
-    startHour = 12,
-    endHour = 12, 
-    startMinute = 0,
-    endMinute = 0,
-    startDay = 5,
-    endDay = 6,
-    creatorUsername = "",
-    location = "somewhere",
-    description = "24 dance hour marathon",
-    yesDict = {},
-    noDict = {},
-    maybeDict ={}
-    );
-await testGroup.addPlannedEvent(planned);
-
-console.log(await testGroup.getPlannedEvents());
+// console.log(await testGroup.getPlannedEvents());
 
 //add busy events to testuser
-let busy = new BusyEvent(
-    title = "BusyEvent1",
-    startHour = 16, 
-    endHour = 17, 
-    startMinute = 15, 
-    endMinute = 0, 
-    startDay = 1, 
-    endDay = 1
-);
+let busy = new BusyEvent( "BusyEvent1", 16, 17, 15, 0, 1, 1);
 await testuser.addBusyEvent(busy);
 
-busy = new BusyEvent(
-    title = "BusyEvent2",
-    startHour = 12, 
-    endHour = 17, 
-    startMinute = 0, 
-    endMinute = 0, 
-    startDay = 2, 
-    endDay = 2
-    );
+busy = new BusyEvent( "BusyEvent2", 12, 17, 0, 0, 2, 2);
 await testuser.addBusyEvent(busy);
 
-busy = new BusyEvent(
-    title = "BusyEvent3",
-    startHour = 10, 
-    endHour = 13, 
-    startMinute = 30, 
-    endMinute = 0, 
-    startDay = 3, 
-    endDay = 3
-    );
+busy = new BusyEvent( "BusyEvent3", 10, 13, 30, 0, 3, 3);
 await testuser.addBusyEvent(busy);
 
-busy = new BusyEvent(
-    title = "BusyEvent4",
-    startHour = 9, 
-    endHour = 10, 
-    startMinute = 30, 
-    endMinute = 30, 
-    startDay = 4, 
-    endDay = 4
-    );
+busy = new BusyEvent( "BusyEvent4", 9, 10, 30, 30, 4, 4);
+await testuser.addBusyEvent(busy);
+busy = new BusyEvent( "BusyEvent5", 14, 15, 0, 0, 4, 4);
 await testuser.addBusyEvent(busy);
 
-busy = new BusyEvent(
-    title = "BusyEvent5",
-    startHour = 14, 
-    endHour = 15, 
-    startMinute = 0, 
-    endMinute = 0, 
-    startDay = 4, 
-    endDay = 4
-    );
+busy = new BusyEvent( "BusyEvent6", 10, 11, 0, 0, 5, 5);
 await testuser.addBusyEvent(busy);
 
-busy = new BusyEvent(
-    title = "BusyEvent6",
-    startHour = 10, 
-    endHour = 11, 
-    startMinute = 0, 
-    endMinute = 0, 
-    startDay = 5, 
-    endDay = 5
-    );
-await testuser.addBusyEvent(busy);
-
-console.log(await testuser.getBusyEvents());
+// console.log(await testuser.getBusyEvents());

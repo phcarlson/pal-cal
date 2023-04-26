@@ -38,7 +38,7 @@ function addMember(screenName) {
     //document.getElementById("flexCheckDefault").checked = true;
 }
 
-function addPlannedEvent(startTime, endTime, startDay, title, location, description) {
+async function addPlannedEvent(startTime, endTime, startDay, title, location, description) {
     plannedEventsContainer.innerHTML += `<div class="card card-margin">
                                             <div class="card-header no-border">
                                                 <h5 class="card-title">${title}</h5>
@@ -80,7 +80,8 @@ function addPlannedEvent(startTime, endTime, startDay, title, location, descript
                                         const noButton = document.getElementById(`no-${eventsAdded}`);
                                         const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-                                        const plannedEvents = crud.getGroup(__currentGroupID__).getPlannedEvents();
+                                        const thisGroup = crud.getGroup(__currentGroupID__);
+                                        const plannedEvents = await thisGroup.getPlannedEvents();
 
                                         yesButton.addEventListener("click", () => {
                                             plannedEvents[eventsAdded].yesDict[__currentUserID__] = '';
@@ -153,7 +154,8 @@ function getDay(dayNum) {
 selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
 
-await addMember("Screen Name");
-await addMember("NAH");
-//addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
-//addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "What do you think idiot, it's a party", '', '', '', '');
+// dummy data -- REST LOADED IN USING individualgroup.html, through loadmockdata.js file
+addMember("Screen Name");
+addMember("NAH");
+addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "Big fat party");
+addPlannedEvent("2:00pm", "4:00pm", 3, "Move in", "College Dorm", "College move in, drag stuff up a bunch of stairs");
