@@ -1,3 +1,4 @@
+import * as crud from './crud.js';
 let requestListCol = document.getElementById("requestListCol");
 
 let mockCurrUsername = "ananya";
