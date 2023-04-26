@@ -32,7 +32,6 @@ const testuser = getUser(`user0`);
 for (let i = 0; i < 20; i += 3){
     await testuser.addFriend(`user${i}`);
 }
-testuser.removeFriend(`user0`);
 console.log(await testuser.getAllFriends());
 
 
@@ -40,66 +39,205 @@ console.log(await testuser.getAllFriends());
 for (let i = 1; i < 20; i += 3){
     await testuser.addFriendRequestFrom(`user${i}`)
 }
-console.log(await testuser.getAllFriendRequests());
+console.log(testuser.getAllFriendRequests());
 
 
 // load up mock groups and their members, half of which should include user0
-// for (let i = 0; i < 20; i++){
-//     const testgroupID = await createGroup();
-//     const testGroup = getGroup(testgroupID);
+for (let i = 0; i < 20; i++){
+    const testgroupID = await createGroup();
+    const testGroup = getGroup(testgroupID);
 
-//     await testGroup.setGroupName(`groupName${i}`);
+    await testGroup.setGroupName(`groupName${i}`);
 
-//     for(let j = 0; j < 10; j++){
-//         let usernum = i*10 + j + 1;
-//         await testGroup.addMember(`user${usernum}`);
-//     }
-//     if(i < 10){
-//         await testGroup.addMember("user0");
-//     }
+    for(let j = 0; j < 10; j++){
+        let usernum = i*10 + j + 1;
+        await testGroup.addMember(`user${usernum}`);
+    }
+    if(i < 10){
+        await testGroup.addMember("user0");
+    }
 
-//     console.log(await testGroup.getAllMemberIds());
-// }
+    console.log(await testGroup.getAllMemberIds());
+}
 
 
 
 // let testGroupID = None;
 
+for (let i = 0; i < 20; i++){
+    const testgroupID = await createGroup();
+    const testGroup = getGroup(testgroupID);
+    if(i === 0){
+        // testGroupID = testGroupID;
+    }
+    await testGroup.setGroupName(`groupName${i}`);
 
-// // add planned events to test group 0
-// let testGroup = getGroup(testGroupID);
+    for(let j = 0; j < 10; j++){
+        let usernum = i*10 + j + 1;
+        await testGroup.addMember(`user${usernum}`);
+    }
+    if(i < 10){
+        await testGroup.addMember("user0");
+    }
 
-// let planned = new PlannedEvent(
-//     title:"TitleEvent1",
-// );
-// await testGroup.addPlannedEvent(planned);
+    console.log(await testGroup.getAllMemberIds());
+}
 
-// planned = new PlannedEvent(
-//     "TitleEvent2",
+// add planned events to test group 0
+let testGroup = getGroup(testGroupID);
 
+let planned = new PlannedEvent(
+    title = "TitleEvent1",
+    startHour = 13,
+    endHour = 14, 
+    startMinute = 30,
+    endMinute = 30,
+    startDay = 1,
+    endDay = 1,
+    creatorUsername = "",
+    location = "library",
+    description = "group study",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+);
+await testGroup.addPlannedEvent(planned);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+planned = new PlannedEvent(
+    title = "TitleEvent2",
+    startHour = 18,
+    endHour = 20, 
+    startMinute = 0,
+    endMinute = 0,
+    startDay = 1,
+    endDay = 1,
+    creatorUsername = "",
+    location = "restaurant",
+    description = "dinner",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-// planned = new PlannedEvent(
-//     "TitleEvent3",
+planned = new PlannedEvent(
+    title = "TitleEvent3",
+    startHour = 21,
+    endHour = 23, 
+    startMinute = 0,
+    endMinute = 0,
+    startDay = 4,
+    endDay = 4,
+    creatorUsername = "",
+    location = "home",
+    description = "movie",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+planned = new PlannedEvent(
+    title = "TitleEvent4",
+    startHour = 14,
+    endHour = 16, 
+    startMinute = 30,
+    endMinute = 45,
+    startDay = 3,
+    endDay = 3,
+    creatorUsername = "",
+    location = "class",
+    description = "super cool guest lecture",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-// planned = new PlannedEvent(
-//     "TitleEvent4"
+planned = new PlannedEvent(
+    title = "TitleEvent5",
+    startHour = 12,
+    endHour = 12, 
+    startMinute = 0,
+    endMinute = 0,
+    startDay = 5,
+    endDay = 6,
+    creatorUsername = "",
+    location = "somewhere",
+    description = "24 dance hour marathon",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+console.log(await testGroup.getPlannedEvents());
 
-// planned = new PlannedEvent(
-//     "TitleEvent5"
+//add busy events to testuser
+let busy = new BusyEvent(
+    title = "BusyEvent1",
+    startHour = 16, 
+    endHour = 17, 
+    startMinute = 15, 
+    endMinute = 0, 
+    startDay = 1, 
+    endDay = 1
+);
+await testuser.addBusyEvent(busy);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+busy = new BusyEvent(
+    title = "BusyEvent2",
+    startHour = 12, 
+    endHour = 17, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 2, 
+    endDay = 2
+    );
+await testuser.addBusyEvent(busy);
 
-// console.log(await testGroup.getPlannedEvents());
+busy = new BusyEvent(
+    title = "BusyEvent3",
+    startHour = 10, 
+    endHour = 13, 
+    startMinute = 30, 
+    endMinute = 0, 
+    startDay = 3, 
+    endDay = 3
+    );
+await testuser.addBusyEvent(busy);
 
+busy = new BusyEvent(
+    title = "BusyEvent4",
+    startHour = 9, 
+    endHour = 10, 
+    startMinute = 30, 
+    endMinute = 30, 
+    startDay = 4, 
+    endDay = 4
+    );
+await testuser.addBusyEvent(busy);
 
+busy = new BusyEvent(
+    title = "BusyEvent5",
+    startHour = 14, 
+    endHour = 15, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 4, 
+    endDay = 4
+    );
+await testuser.addBusyEvent(busy);
 
+busy = new BusyEvent(
+    title = "BusyEvent6",
+    startHour = 10, 
+    endHour = 11, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 5, 
+    endDay = 5
+    );
+await testuser.addBusyEvent(busy);
+
+console.log(await testuser.getBusyEvents());

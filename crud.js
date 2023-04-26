@@ -11,7 +11,6 @@ let groupDb = new PouchDB("groups.pouchdb");
 // userDb = new PouchDB("users.pouchdb");
 // groupDb = new PouchDB("groups.pouchdb");
 
-
 /**
  * Wrapper around getting a property of a document in a PouchDB store
  * @param {PouchDB} db The database to access
@@ -216,7 +215,6 @@ function getUser(username, db=userDb) {
             return allGroups.rows.reduce((acc, row) => {
                 if (username in row.doc.memberDict) {
                     acc.push(row.id);
-                    return acc;
                 }
                 return acc;
             }, []);
@@ -431,21 +429,4 @@ function getGroup(groupId, db=groupDb) {
     return group;
 }
 
-export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser, userDb, groupDb }
-
-// // // Just a little test
-// // // TODO: make a real unit test suite
-// await createUser("user1");
-// const user1 = getUser("user1");
-// await user1.setFirstName("Foo");
-// console.log(await user1.getFirstName());
-// // Checking if getAllGroups works
-// const group1id = await createGroup();
-// const group2id = await createGroup();
-// const group1 = getGroup(group1id);
-// const group2 = getGroup(group2id);
-// console.log(`Group 1 id: ${group1id}`)
-// console.log(`Group 2 id: ${group2id}`)
-// await group1.addMember("user1");
-// await group2.addMember("user1");
-// console.log(await user1.getAllGroups());
+export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
