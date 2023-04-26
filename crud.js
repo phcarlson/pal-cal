@@ -1,3 +1,4 @@
+//import PouchDB from 'pouchdb';
 import { BusyEvent, PlannedEvent } from './datatypes.js';
 
 const userDb = new PouchDB("users.pouchdb");
@@ -181,6 +182,16 @@ function getUser(username, db=userDb) {
             const data = await db.get(username);
             delete data.requestsDict[friendUsername];
             await db.put(data);
+        },
+
+        /**
+         * Get the usernames of everyone who has sent a pending friend request
+         * to this user
+         * @returns An array of usernames
+         */
+        getAllFriendRequests: async function() {
+            const data = await db.get(username);
+            return Object.keys(data.requestsDict);
         },
 
         /**

@@ -20,6 +20,7 @@
 
 <body>
     <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
+    <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
 
     <!-- Modal -->
     <div class="modal fade" id="modal-new-planned-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-planned-event-label">
@@ -158,13 +159,17 @@
 
                                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                                     <div class="btn-group me-2" role="group" aria-label="First group">
-                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Add member
+                                        <button id="add-member-button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Add member
                                             <i class="bi bi-plus-circle"></i></button>
 
                                     </div>
                                     <div class="btn-group me-2" role="group" aria-label="Second group">
-                                        <button class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Deselect
-                                            all members <i class="bi bi-dash-circle"></i></button>
+                                        <button id="select-all-button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Select
+                                            all <i class="bi bi-check-circle"></i></button>
+                                    </div>
+                                    <div class="btn-group me-2" role="group" aria-label="Second group">
+                                        <button id="deselect-all-button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm">Deselect
+                                            all <i class="bi bi-dash-circle"></i></button>
                                     </div>
 
                                 </div>
@@ -416,7 +421,7 @@
                 <!-- Row for holding scrollable group -->
                 <div class="row d-flex" style="height:40%">
                     <!-- Column of groups that scroll -->
-                    <div id="plannedEventsContainer" class="col d-flex flex-column h-100 scrollIt">
+                    <div id="planned-events-container" class="col d-flex flex-column h-100 scrollIt">
 
                         <!-- Example event -->
 
