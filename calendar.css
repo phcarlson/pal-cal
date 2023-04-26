@@ -2,16 +2,39 @@ div.calendar-weekday-header {
     background-color: whitesmoke;
 }
 
-div.calendar-event {
-    background-color: pink;
+div.calendar-block {
+    padding: 0.5em;
+    border-radius: 10px;
+    cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-div.calendar-event:hover {
-    background-color: rgb(255, 107, 132);
-    transition-property: background-color;
-    transition: 0.3s
+div.calendar-free {
+    background-color: forestgreen;
+    transition-property: background-color box-shadow transform;
+    transition: 0.3s;
+    color: white;
 }
 
-div.calendar-no-event {
-    background-color: lightgray;
+div.calendar-free:hover {
+    background-color: rgb(41, 169, 41);
+    transform: scale(1.01) ;
+    box-shadow: 7px 5px 5px rgba(0, 0, 0, 0.171);
+}
+
+div.calendar-planned {
+    background-color: skyblue;
+}
+
+div.calendar-filler {
+    background-color: #00000000;
+}
+
+#start-time-input:invalid {
+    color: red;
+}
+
+#end-time-input:invalid {
+    color: red;
 }
