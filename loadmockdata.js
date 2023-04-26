@@ -84,39 +84,161 @@ for (let i = 0; i < 20; i++){
 }
 
 
-// // add planned events to test group 0
-// let testGroup = getGroup(testGroupID);
+// add planned events to test group 0
+let testGroup = getGroup(testGroupID);
 
-// let planned = new PlannedEvent(
-//     title:"TitleEvent1",
-// );
-// await testGroup.addPlannedEvent(planned);
+let planned = new PlannedEvent(
+    title = "TitleEvent1",
+    startHour = 13,
+    endHour = 14, 
+    startMinute = 30,
+    endMinute = 30,
+    startDay = 1,
+    endDay = 1,
+    creatorUsername = "",
+    location = "library",
+    description = "group study",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+);
+await testGroup.addPlannedEvent(planned);
 
-// planned = new PlannedEvent(
-//     "TitleEvent2",
+planned = new PlannedEvent(
+    title = "TitleEvent2",
+    startHour = 18,
+    endHour = 20, 
+    startMinute = 0,
+    endMinute = 0,
+    startDay = 1,
+    endDay = 1,
+    creatorUsername = "",
+    location = "restaurant",
+    description = "dinner",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
+planned = new PlannedEvent(
+    title = "TitleEvent3",
+    startHour = 21,
+    endHour = 23, 
+    startMinute = 0,
+    endMinute = 0,
+    startDay = 4,
+    endDay = 4,
+    creatorUsername = "",
+    location = "home",
+    description = "movie",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+planned = new PlannedEvent(
+    title = "TitleEvent4",
+    startHour = 14,
+    endHour = 16, 
+    startMinute = 30,
+    endMinute = 45,
+    startDay = 3,
+    endDay = 3,
+    creatorUsername = "",
+    location = "class",
+    description = "super cool guest lecture",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-// planned = new PlannedEvent(
-//     "TitleEvent3",
+planned = new PlannedEvent(
+    title = "TitleEvent5",
+    startHour = 12,
+    endHour = 12, 
+    startMinute = 0,
+    endMinute = 0,
+    startDay = 5,
+    endDay = 6,
+    creatorUsername = "",
+    location = "somewhere",
+    description = "24 dance hour marathon",
+    yesDict = {},
+    noDict = {},
+    maybeDict ={}
+    );
+await testGroup.addPlannedEvent(planned);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+console.log(await testGroup.getPlannedEvents());
 
-// planned = new PlannedEvent(
-//     "TitleEvent4"
+//add busy events to testuser
+let busy = new BusyEvent(
+    title = "BusyEvent1",
+    startHour = 16, 
+    endHour = 17, 
+    startMinute = 15, 
+    endMinute = 0, 
+    startDay = 1, 
+    endDay = 1
+);
+await testuser.addBusyEvent(busy);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+busy = new BusyEvent(
+    title = "BusyEvent2",
+    startHour = 12, 
+    endHour = 17, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 2, 
+    endDay = 2
+    );
+await testuser.addBusyEvent(busy);
 
-// planned = new PlannedEvent(
-//     "TitleEvent5"
+busy = new BusyEvent(
+    title = "BusyEvent3",
+    startHour = 10, 
+    endHour = 13, 
+    startMinute = 30, 
+    endMinute = 0, 
+    startDay = 3, 
+    endDay = 3
+    );
+await testuser.addBusyEvent(busy);
 
-//     );
-// await testGroup.addPlannedEvent(planned);
+busy = new BusyEvent(
+    title = "BusyEvent4",
+    startHour = 9, 
+    endHour = 10, 
+    startMinute = 30, 
+    endMinute = 30, 
+    startDay = 4, 
+    endDay = 4
+    );
+await testuser.addBusyEvent(busy);
 
-// console.log(await testGroup.getPlannedEvents());
+busy = new BusyEvent(
+    title = "BusyEvent5",
+    startHour = 14, 
+    endHour = 15, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 4, 
+    endDay = 4
+    );
+await testuser.addBusyEvent(busy);
 
+busy = new BusyEvent(
+    title = "BusyEvent6",
+    startHour = 10, 
+    endHour = 11, 
+    startMinute = 0, 
+    endMinute = 0, 
+    startDay = 5, 
+    endDay = 5
+    );
+await testuser.addBusyEvent(busy);
 
+console.log(await testuser.getBusyEvents());
