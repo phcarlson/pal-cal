@@ -94,22 +94,57 @@ function getUser(username, db=userDb) {
 
         /**
          * Add a time the user is busy to their calendar
-         * @param {BusyEvent} busyEvent 
+         * @param {BusyEvent} busyEvent The event to add
+         * @param {PouchDB} localEventDb The database tracking busy events.
+         * Optional - defaults to the main event database, a different db can
+         * be provided e.g. for testing purposes
+         * @returns The unique ID of the event in the database
          */
-        addBusyEvent: async function(busyEvent) {
-            const data = await db.get(username);
-            // TODO: verify user doesn't have a conflicting event?
-            data.eventsList.push(busyEvent);
-            await db.put(data);
+        addBusyEvent: async function(busyEvent, localEventDb=busyEventDb) {
+            try {
+                const eventId = createBusyEvent(busyEvent, username, localEventDb);
+                const data = await db.get(username);
+                data.eventsDict[eventId] = 1;
+                return eventId;
+            }
+            catch(err) {
+                // todo: error handling
+                console.log(err);
+            }
         },
 
         /**
          * Get all of this user's recurring busy events
+         * @param {PouchDB} localEventDb The database tracking busy events.
+         * Optional - defaults to the main event database, a different db can
+         * be provided e.g. for testing purposes
          * @returns An array of BusyEvent objects
          */
-        getBusyEvents: async function() {
+        getBusyEvents: async function(localEventDb=busyEventDb) {
             const data = await db.get(username);
-            return data.eventsList;
+            const eventIds = Object.keys(data.eventsList);
+            return eventIds.map(eventId => getBusyEvent(eventId, localEventDb).event());
+        },
+
+        /**
+         * Deletes the given event
+         * @param {string} eventId The unique ID of the event to remove
+         * @param {PouchDB} localEventDb The database tracking busy events.
+         * Optional - defaults to the main event database, a different db can
+         * be provided e.g. for testing purposes
+         */
+        removeBusyEvent: async function(eventId, localEventDb=busyEventDb) {
+            try {
+                const eventData = await localEventDb.get(eventId);
+                const userData = await db.get(username);
+                await localEventDb.remove(eventData);
+                delete userData[eventId];
+                await db.put(userData);
+            }
+            catch(err) {
+                // todo: error handling
+                console.log(err);
+            }
         },
 
         // TODO: delete busy event, edit busy event
