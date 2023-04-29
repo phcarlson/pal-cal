@@ -5,6 +5,7 @@ import { BusyEvent, PlannedEvent } from './datatypes.js';
 // let groupDb = new PouchDB("groups.pouchdb");
 let userDb = new PouchDB("users.pouchdb");
 let groupDb = new PouchDB("groups.pouchdb");
+let busyEventDb = new PouchDB("busyevents.pouchdb");
 // await userDb.destroy();
 // await groupDb.destroy();
 
@@ -257,7 +258,7 @@ async function createUser(username, db=userDb) {
     try {
         const user = {
             _id: username,
-            eventsList: [],
+            eventsDict: {},
             friendsDict: {},
             firstName: "",
             lastName: "",
@@ -437,6 +438,65 @@ function getGroup(groupId, db=groupDb) {
         setGroupName: async value => await _setProperty(db, groupId, "groupName", value)
     }
     return group;
+}
+
+/**
+ * Create a new busy event associated with the given user
+ * @param {*} event A BusyEvent object
+ * @param {*} username Unique username of the user who owns this event
+ * @param {*} db The database holding busy events. OPTIONAL - defaults to the
+ * main busyEvent db, a different database can be 
+ * provided for test purposes
+ * @returns The unique ID of the new event
+ */
+function createBusyEvent(event, username, db=busyEventDb) {
+    event = structuredClone(event);
+    event.user = username;
+    try {
+        const response = db.post(event);
+        return response.id;
+    }
+    catch(err) {
+        // TODO: proper error handling
+        console.log(err);
+    }
+}
+
+function getBusyEvent(eventId, db=busyEventDb) {
+    return {
+        getTitle      : async () => await _getProperty(db, eventId, "title"),
+        getStartDay   : async () => await _getProperty(db, eventId, "startDay"),
+        getStartHour  : async () => await _getProperty(db, eventId, "startHour"),
+        getStartMinute: async () => await _getProperty(db, eventId, "startMinute"),
+        getEndDay     : async () => await _getProperty(db, eventId, "endDay"),
+        getEndHour    : async () => await _getProperty(db, eventId, "endHour"),
+        getEndMinute  : async () => await _getProperty(db, eventId, "endMinute"),
+
+        setTitle      : async (value) => await _setProperty(db, eventId, "title", value),
+        setStartDay   : async (value) => await _setProperty(db, eventId, "startDay", value),
+        setStartHour  : async (value) => await _setProperty(db, eventId, "startHour", value),
+        setStartMinute: async (value) => await _setProperty(db, eventId, "startMinute", value),
+        setEndDay     : async (value) => await _setProperty(db, eventId, "endDay", value),
+        setEndHour    : async (value) => await _setProperty(db, eventId, "endHour", value),
+        setEndMinute  : async (value) => await _setProperty(db, eventId, "endMinute", value),
+
+        /**
+         * Get the whole event as one object,
+         * for backwards compatibility & efficiency
+         * Most of the time you're working with more than one field of an event,
+         * so it would be really slow to have to do a separate db call for each field
+         * @returns A BusyEvent object representing this event
+         */
+        async event() {
+            try {
+                const data = await db.get(eventId);
+                return data;
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+    }
 }
 
 export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
