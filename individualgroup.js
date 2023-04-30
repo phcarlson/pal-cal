@@ -120,9 +120,23 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
 
                                         const attendingYes = document.getElementById(`attending-yes-${eventsAdded}`);
                                         const attendingNo = document.getElementById(`attending-no-${eventsAdded}`);
-                                        const attendingYMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
+                                        const attendingMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
 
-                                        
+                                        // reset innertexts
+                                        attendingYes.innerText = "Yes:";
+                                        attendingNo.innerText = "No:";
+                                        attendingMaybe.innerText = "Maybe:";
+
+                                        // add all people attending events to the dropdown info lists
+                                        for (attendee in plannedEvents[eventsAdded].yesDict) {
+                                            attendingYes.innerText += " " + attendee;
+                                        }
+                                        for (attendee in plannedEvents[eventsAdded].noDict) {
+                                            attendingNo.innerText += " " + attendee;
+                                        }
+                                        for (attendee in plannedEvents[eventsAdded].maybeDict) {
+                                            attendingMaybe.innerText += " " + attendee;
+                                        }
 
                                         eventsAdded += 1;
 }
