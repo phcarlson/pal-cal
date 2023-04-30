@@ -6,7 +6,7 @@ import { BusyEvent, PlannedEvent } from './datatypes.js';
 let userDb = new PouchDB("users.pouchdb");
 let groupDb = new PouchDB("groups.pouchdb");
 let busyEventDb = new PouchDB("busyevents.pouchdb");
-let plannedEventDb = new PouchDb("plannedevents.pouchdb")
+let plannedEventDb = new PouchDB("plannedevents.pouchdb")
 // await userDb.destroy();
 // await groupDb.destroy();
 
