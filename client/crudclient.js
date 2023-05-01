@@ -169,7 +169,7 @@ function getUser(username) {
          */
         hasFriend: async function(friendUsername) {
             try {
-                const response = await fetch(`/has/friend?username=${username}&friendusername=${friendUsername}`, {
+                const response = await fetch(`/has/friend?username=${username}&friendUsername=${friendUsername}`, {
                     method: 'GET',
                 });
 
