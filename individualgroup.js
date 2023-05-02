@@ -60,7 +60,7 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
 
                                                     <div class="widget-49-meeting-action">
                                                         <div class="dropdown">
-                                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                            <button class="btn btn-lg btn-flash-border-primary dropdown-toggle"
                                                                 type="button" id="dropdownMenuButton-${eventsAdded}-0" data-bs-toggle="dropdown"
                                                                 aria-expanded="false">
                                                                 RSVP
@@ -70,12 +70,12 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                                                 <button id="no-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">No</button>
                                                                 <button id="maybe-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">Maybe</button>
                                                             </div>
-                                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                            <button class="btn btn-lg btn-flash-border-primary dropdown-toggle"
                                                                 type="button" id="dropdownMenuButton-${eventsAdded}-1" data-bs-toggle="dropdown"
                                                                 aria-expanded="false">
                                                                 Attending
                                                             </button>
-                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-${eventsAdded}-1">
+                                                            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenuButton-${eventsAdded}-1">
                                                                 <li id="attending-yes-${eventsAdded}">
                                                                     Yes:
                                                                 </li>
@@ -85,7 +85,7 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                                                 <li id="attending-maybe-${eventsAdded}">
                                                                     Maybe:
                                                                 </li>
-                                                            </div>
+                                                            </ul>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -124,18 +124,18 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
 
                                         // reset innertexts
                                         attendingYes.innerText = "Yes:";
-                                        attendingNo.innerText = "No:";
-                                        attendingMaybe.innerText = "Maybe:";
+                                        attendingNo.innerText = "\nNo:";
+                                        attendingMaybe.innerText = "\nMaybe:";
 
                                         // add all people attending events to the dropdown info lists
                                         for (attendee in plannedEvents[eventsAdded].yesDict) {
-                                            attendingYes.innerText += " " + attendee;
+                                            attendingYes.innerText += "\n" + attendee;
                                         }
                                         for (attendee in plannedEvents[eventsAdded].noDict) {
-                                            attendingNo.innerText += " " + attendee;
+                                            attendingNo.innerText += "\n" + attendee;
                                         }
                                         for (attendee in plannedEvents[eventsAdded].maybeDict) {
-                                            attendingMaybe.innerText += " " + attendee;
+                                            attendingMaybe.innerText += "\n" + attendee;
                                         }
 
                                         eventsAdded += 1;
