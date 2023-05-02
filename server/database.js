@@ -1,68 +1,10 @@
 import 'dotenv/config';
-import pgPkg from 'pg';
-const { Pool } = pgPkg;
-import format from 'pg-format';
+import { Sequelize, Op } from 'sequelize';
+import initModels from './models/init-models.js';
 
-
-const pool = new Pool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: 5432,
-    database: process.env.DATABASE_DATABASE
-});
-
-/**
- * Constructs the "VALUES" part of an SQL INSERT string. Values given in valueObj
- * are set to that value, others are set to the database's default for that column
- * @param {Array[String]} columnNames The names of all the columns in the table
- * @param {Object} valueObj An object mapping column names to values. Keys are
- * some subset of the columns in the columnNames array
- * @returns An object with properties "text", holding a string desigined to go
- * in the VALUES(...) part of an insert query,
- * and "values" holding an array designed to be passed to the pool.query method
- */
-function constructValuesWithDefaults(columnNames, valueObj) {
-    let parameters = [];
-    let values = [];
-    let parameterIndex = 1;
-    for (let column of columnNames) {
-        if (column in valueObj) {
-            parameters.push(`$${parameterIndex}`)
-            values.push(valueObj[column]);
-            parameterIndex++;
-        }
-        else {
-            parameters.push("DEFAULT");
-        }
-    }
-    return {
-        text: parameters.join(", "),
-        values: values
-    };
-}
-
-function constructUpdateWithPatch(table, primaryKeyName, primaryKeyVal, patchObj) {
-    let sql = "UPDATE %I SET "
-    let updates = [];
-    let identifiers = [table.toLowerCase()];
-    let valueIndex = 1;
-    let values = []; 
-    for (let columnName in patchObj) {
-        updates.push(`%I = $${valueIndex}`);
-        identifiers.push(columnName.toLowerCase());
-        values.push(patchObj[columnName]);
-        valueIndex++;
-    }
-    sql += updates.join(", ");
-    sql += ` WHERE %I = $${valueIndex}`;
-    identifiers.push(primaryKeyName.toLowerCase());
-    values.push(primaryKeyVal);
-    return {
-        text: format.withArray(sql, identifiers),
-        values: values
-    };
-}
+const sequelize = new Sequelize(process.env.DATABASE_URL);
+await sequelize.authenticate();
+const models = initModels(sequelize);
 
 // USER
 /**
@@ -72,17 +14,7 @@ function constructUpdateWithPatch(table, primaryKeyName, primaryKeyVal, patchObj
  * Missing fields will be given sane default values
  */
 export async function createUser(user) {
-    const values = constructValuesWithDefaults(["username", "firstName", "lastName", "college", "bio", "image"], user);
-    try {
-        await pool.query(
-            `INSERT INTO Users(username, firstName, lastName, college, bio, image)
-            VALUES (${values.text})`,
-            values.values
-        );
-    }
-    catch(err) {
-        console.log(err);
-    }
+    await models.users.create(user);
 }
 
 /**
@@ -93,13 +25,7 @@ export async function createUser(user) {
  * Missing fields will be unchanged
  */
 export async function updateUser(username, userPatch) {
-    const query = constructUpdateWithPatch("Users", "username", username, userPatch);
-    try {
-        await pool.query(query);
-    }
-    catch(err) {
-        console.log(err);
-    }
+    await models.users.update(userPatch, {where: {username: username}});
 }
 
 /**
@@ -107,14 +33,27 @@ export async function updateUser(username, userPatch) {
  * @param {string} username The unique username of the user to get
  * @returns A User object
  */
-export async function getUser(username) {}
+export async function getUser(username) {
+    const user = await models.users.findByPk(username);
+    return user.dataValues;
+}
 
 /**
  * Batch retrieve info about multiple users
  * @param {Array[string]} usernames A list of usernames
  * @returns A list of User objects
  */
-export async function getUsers(usernames) {}
+export async function getUsers(usernames) {
+    const users = await models.users.findAll({where: {username: {[Op.in]: usernames}}});
+    return users.map(user => user.dataValues);
+}
+
+await models.users.truncate({cascade: true});
+console.log(await createUser({username: "user0", firstName: "Foo"}));
+console.log(await createUser({username: "user1", college: "UMass"}));
+console.log(await updateUser("user0", {lastName: "Bar"}));
+console.log(await getUser("user0"));
+console.log(await getUsers(["user0", "user1"]));
 
 /**
  * Get the IDs of all groups the user is in
