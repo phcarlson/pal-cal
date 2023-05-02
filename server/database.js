@@ -1,13 +1,15 @@
 import 'dotenv/config';
-import pkg from 'pg';
-const { Pool } = pkg;
+import pgPkg from 'pg';
+const { Pool } = pgPkg;
+import format from 'pg-format';
 
 
 const pool = new Pool({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
-    port: 5432
+    port: 5432,
+    database: process.env.DATABASE_DATABASE
 });
 
 /**
@@ -40,14 +42,26 @@ function constructValuesWithDefaults(columnNames, valueObj) {
     };
 }
 
-function constructUpdateParams(valueObj) {
-    let parameters = [];
-    let parameterIndex = 1;
-    for (let column in valueObj) {
-        parameters.push(`$${parameterIndex}`);
-        parameterIndex++;
+function constructUpdateWithPatch(table, primaryKeyName, primaryKeyVal, patchObj) {
+    let sql = "UPDATE %I SET "
+    let updates = [];
+    let identifiers = [table.toLowerCase()];
+    let valueIndex = 1;
+    let values = []; 
+    for (let columnName in patchObj) {
+        updates.push(`%I = $${valueIndex}`);
+        identifiers.push(columnName.toLowerCase());
+        values.push(patchObj[columnName]);
+        valueIndex++;
     }
-    return parameters.join(", ");
+    sql += updates.join(", ");
+    sql += ` WHERE %I = $${valueIndex}`;
+    identifiers.push(primaryKeyName.toLowerCase());
+    values.push(primaryKeyVal);
+    return {
+        text: format.withArray(sql, identifiers),
+        values: values
+    };
 }
 
 // USER
@@ -78,7 +92,15 @@ export async function createUser(user) {
  * Has one or more of these fields: username, firstName, lastName, college, bio, image
  * Missing fields will be unchanged
  */
-export async function updateUser(username, userPatch) {}
+export async function updateUser(username, userPatch) {
+    const query = constructUpdateWithPatch("Users", "username", username, userPatch);
+    try {
+        await pool.query(query);
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
 
 /**
  * Get info about a user
