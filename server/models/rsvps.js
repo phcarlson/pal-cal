@@ -12,12 +12,12 @@ export default class rsvps extends Model {
         key: 'username'
       }
     },
-    plannedeventid: {
+    plannedEventId: {
       type: DataTypes.UUID,
       allowNull: true,
       references: {
         model: 'plannedEvents',
-        key: 'plannedeventid'
+        key: 'plannedEventId'
       }
     },
     response: {

@@ -9,12 +9,12 @@ export default class users extends Model {
       allowNull: false,
       primaryKey: true
     },
-    firstname: {
+    firstName: {
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: ""
     },
-    lastname: {
+    lastName: {
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: ""

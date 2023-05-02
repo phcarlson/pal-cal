@@ -12,12 +12,12 @@ export default class groupPlannedEvents extends Model {
         key: 'groupId'
       }
     },
-    plannedeventid: {
+    plannedEventId: {
       type: DataTypes.UUID,
       allowNull: true,
       references: {
         model: 'plannedEvents',
-        key: 'plannedeventid'
+        key: 'plannedEventId'
       }
     }
   }, {

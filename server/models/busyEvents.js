@@ -4,7 +4,7 @@ const { Model, Sequelize } = _sequelize;
 export default class busyEvents extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    busyeventid: {
+    busyEventId: {
       type: DataTypes.UUID,
       allowNull: false,
       defaultValue: DataTypes.UUIDV4,
@@ -15,32 +15,32 @@ export default class busyEvents extends Model {
       allowNull: true,
       defaultValue: ""
     },
-    startday: {
+    startDay: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
     },
-    starthour: {
+    startHour: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
     },
-    startminute: {
+    startMinute: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
     },
-    endday: {
+    endDay: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
     },
-    endhour: {
+    endHour: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
     },
-    endminute: {
+    endMinute: {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
@@ -55,7 +55,7 @@ export default class busyEvents extends Model {
         name: "busyEvents_pkey",
         unique: true,
         fields: [
-          { name: "busyeventid" },
+          { name: "busyEventId" },
         ]
       },
     ]

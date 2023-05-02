@@ -19,7 +19,7 @@ export default class userBusyEvents extends Model {
       primaryKey: true,
       references: {
         model: 'busyEvents',
-        key: 'busyeventid'
+        key: 'busyEventId'
       }
     }
   }, {

@@ -4,7 +4,7 @@ const { Model, Sequelize } = _sequelize;
 export default class friendRequests extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
-    fromusername: {
+    fromUsername: {
       type: DataTypes.STRING,
       allowNull: true,
       references: {
@@ -12,7 +12,7 @@ export default class friendRequests extends Model {
         key: 'username'
       }
     },
-    tousername: {
+    toUsername: {
       type: DataTypes.STRING,
       allowNull: true,
       references: {
