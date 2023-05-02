@@ -47,7 +47,22 @@ function constructValuesWithDefaults(columnNames, valueObj) {
  * Can have zero or more of these fields: firstName, lastName, college, bio, image
  * Missing fields will be given sane default values
  */
-export async function createUser(user) {}
+export async function createUser(user) {
+    const values = constructValuesWithDefaults(["username", "firstName", "lastName", "college", "bio", "image"], user);
+    try {
+        await pool.query(
+            `INSERT INTO Users(username, firstName, lastName, college, bio, image)
+            VALUES (${values.text})`,
+            values.values
+        );
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
+
+createUser({username: "foo", lastName: "Richards", bio: "hello"});
+createUser({username: "bar", firstName: "Tim", college: "UMass"});
 
 /**
  * Update a user
