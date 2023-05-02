@@ -1,3 +1,14 @@
+import 'dotenv/config';
+import pkg from 'pg';
+const { Pool } = pkg;
+
+
+const pool = new Pool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: 5432
+});
 // USER
 /**
  * Creates a user with the given properties
