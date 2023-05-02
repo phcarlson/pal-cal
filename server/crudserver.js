@@ -1,15 +1,13 @@
 // import PouchDB from 'pouchdb';
-import { BusyEvent, PlannedEvent } from './datatypes.js';
+import { BusyEvent, PlannedEvent } from '..client/datatypes.js';
+
+// TODO : TURN ALL THIS INTO POSTGRES CALLS
 
 // let userDb = new PouchDB("users.pouchdb");
 // let groupDb = new PouchDB("groups.pouchdb");
 let userDb = new PouchDB("users.pouchdb");
 let groupDb = new PouchDB("groups.pouchdb");
-// await userDb.destroy();
-// await groupDb.destroy();
 
-// userDb = new PouchDB("users.pouchdb");
-// groupDb = new PouchDB("groups.pouchdb");
 
 /**
  * Wrapper around getting a property of a document in a PouchDB store

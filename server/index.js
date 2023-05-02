@@ -4,6 +4,21 @@ import { readFile, writeFile } from 'fs/promises';
 import * as http from 'http';
 import * as url from 'url';
 // import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser } from "./database.js"
+import * as Pool from 'pg';
+import env from 'dotenv';
+
+// dotenv.config();
+
+// const pool = new Pool({
+//   user: 'postgres',
+//   host: 'localhost',
+//   database: 'testdb',
+//   password: 'password',
+//   port: 5432,
+// });
+
+// console.log(process.env.DATABASE_URL);
+// console.log(process.env.API_KEY);
 
 const app = express();
 const port = 3000;
@@ -54,7 +69,7 @@ app.get('/get/busyEvents', async (request, response) => {
   const username = options.username;
 });
 
-// HANDLING USER FRIENDS AND FRIEND REQUESTS AND GROUPS REQUESTS
+// HANDLING USER FRIENDS AND FRIEND REQUESTS AND GROUPS REQUESTS + USER INFO
 
 // Add friend to specified user id
 app.put('/add/friend', async (request, response) => {
@@ -107,14 +122,13 @@ app.get('/get/friendRequests', async (request, response) => {
 app.get('/get/groups', async (request, response) => {
   const options = request.query;
   const username = options.username;
+  
 });
 
-// app.post('/create', async (request, response) => {
-//   const options = request.body;
-//   createCounter(response, options.name);
-// });
-
 //TODO setting and getting properties of user, maybe we use it as PATCH for the obj
+
+
+// GENERAL DB REQUESTS
 
 // Create new user
 app.put('/create/user', async (request, response) => {
@@ -134,7 +148,6 @@ app.get('/get/users', async (request, response) => {
   const username = options.username;
 });
 
-
 //TODO must return new group id
 // Create new group
 app.put('/create/group', async (request, response) => {
@@ -142,8 +155,9 @@ app.put('/create/group', async (request, response) => {
 
 });
 
+// HANDLE GROUP MEMBER AND PLANNED EVENTS REQUESTS + GROUP INFO
 // Add member to specified group id
-app.get('/add/member', async (request, response) => {
+app.put('/add/member', async (request, response) => {
   const options = request.query;
   const groupId = options.groupId;
   const username = options.username;
