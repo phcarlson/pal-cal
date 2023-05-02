@@ -40,6 +40,16 @@ function constructValuesWithDefaults(columnNames, valueObj) {
     };
 }
 
+function constructUpdateParams(valueObj) {
+    let parameters = [];
+    let parameterIndex = 1;
+    for (let column in valueObj) {
+        parameters.push(`$${parameterIndex}`);
+        parameterIndex++;
+    }
+    return parameters.join(", ");
+}
+
 // USER
 /**
  * Creates a user with the given properties
