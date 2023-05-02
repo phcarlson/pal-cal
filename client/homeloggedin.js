@@ -1,6 +1,5 @@
 
-// import { mock } from "node:test";
-import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser } from "./crud.js";
+import * as crud from "./crudclient.js";
 
 // collect column for friends and groups to render in
 let friendsCol = document.getElementById('scrollableFriendsList');
