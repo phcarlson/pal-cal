@@ -7,7 +7,7 @@ import * as url from 'url';
 import * as Pool from 'pg';
 import env from 'dotenv';
 
-// dotenv.config();
+env.config();
 
 // const pool = new Pool({
 //   user: 'postgres',
@@ -17,8 +17,8 @@ import env from 'dotenv';
 //   port: 5432,
 // });
 
-// console.log(process.env.DATABASE_URL);
-// console.log(process.env.API_KEY);
+console.log(process.env.DATABASE_URL);
+console.log(process.env.API_KEY);
 
 const app = express();
 const port = 3000;
@@ -27,181 +27,257 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 // app.use('/client', express.static('client'));
 
-// SET USER OR GROUP IMAGES REQUESTS
-app.put('/set/image', async (request, response) => {
-  const options = request.query;
 
-  // Set image for group
-  if(options.groupId !== undefined && options.username === undefined){
+// HANDLE USER RELATED REQUESTS:
 
-  }
-  // Set image for user
-  else if (options.groupId === undefined && options.username !== undefined){
-    
-  }
-});
-
-// GET USER OR GROUP IMAGES REQUESTS
-app.get('/get/image', async (request, response) => {
-  const options = request.query;
-
-    // Get image from group
-    if(options.groupId !== undefined && options.username === undefined){
-
-    }
-    // Get image from user
-    else if (options.groupId === undefined && options.username !== undefined){
-      
-    }
-});
-
-// HANDLING USER BUSY EVENTS REQUESTS
-// TODO make sure you retrieve busy event correctly from body
-// Add busy event to specified user id
-app.put('/add/busyEvent', async (request, response) => {
+// Create new user with obj
+app.post('/create/user', async (request, response) => {
   const options = request.query;
   const requestBody = request.body;
 });
 
-// Get busy events from specified user id
+// Get user by id
+app.get('/get/user', async (request, response) => {
+  const options = request.query;
+});
+
+// Patch a user obj by id
+app.patch('/update/user', async (request, response) => {
+  const options = request.query;
+  const requestBody = request.body;
+});
+
+// Delete a user obj by id
+app.delete('/delete/user', async (request, response) => {
+  const options = request.query;
+});
+
+// Get all user objs from ids listed 
+app.get('/get/users', async (request, response) => {
+  const options = request.query;
+  const requestBody = request.body;
+});
+
+// Sees if username exists in DB
+app.get('/has/user', async (request, response) => {
+  const options = request.query;
+});
+
+// Gets group ids of groups that user is in
+app.get('/get/groupIds', async (request, response) => {
+  const options = request.query;
+});
+
+// Get all usernames in DB
+app.get('/get/usernames', async (request, response) => {
+  const options = request.query;
+});
+
+
+// HANDLING USER BUSY EVENTS REQUESTS:
+
+// TODO make sure you retrieve busy event correctly from body
+// Create busy event for specified user id's calendar
+app.post('/create/busyEvent', async (request, response) => {
+  const options = request.query;
+  const requestBody = request.body;
+});
+
+// Get busy event from specified user id's calendar
+app.get('/get/busyEvent', async (request, response) => {
+  const options = request.query;
+});
+
+// Get busy events from ids listed 
 app.get('/get/busyEvents', async (request, response) => {
   const options = request.query;
-  const username = options.username;
 });
 
-// HANDLING USER FRIENDS AND FRIEND REQUESTS AND GROUPS REQUESTS + USER INFO
+// Get all busy event ids from user specified
+app.get('/get/busyEventIds', async (request, response) => {
+  const options = request.query;
+});
 
-// Add friend to specified user id
+// Update busy event from id specified
+app.patch('/update/busyEvent', async (request, response) => {
+  const options = request.query;
+});
+
+// Delete busy event from id specified
+app.delete('/delete/busyEvent', async (request, response) => {
+  const options = request.query;
+});
+
+
+// HANDLING USER FRIENDS:
+
+// Add friend from user id to user id
 app.put('/add/friend', async (request, response) => {
   const options = request.query;
-  const username = options.username;
-  const friendUsername = options.friendUsername;
 });
 
-// Remove friend from specified user id
-app.delete('/delete/friend', async (request, response) => {
-  const options = request.query;
-  const username = options.username;
-  const friendUsername = options.friendUsername;
-});
-
-// See if friend exists for specified user id
-app.get('/has/friend', async (request, response) => {
-  const options = request.query;
-  const username = options.username;
-  const friendUsername = options.friendUsername;
-});
-
-// See all friends from specified user id
+// Get all friends from specified user id
 app.get('/get/friends', async (request, response) => {
   const options = request.query;
   const username = options.username;
 });
 
-// TODO make sure you retrieve request correctly from body
-// Add friend request to specified user id
-app.put('/add/friendRequest', async (request, response) => {
+// See if two users are friends
+app.get('/has/friend', async (request, response) => {
   const options = request.query;
-  const username = options.username;
 });
 
-// Remove friend request from specified user id
+// Remove friendship between two users
+app.delete('/delete/friend', async (request, response) => {
+  const options = request.query;
+});
+
+
+// HANDLING USER FRIEND REQUESTS:
+
+// TODO make sure you retrieve request correctly from body
+// Add friend request from user to user
+app.put('/add/friendRequest', async (request, response) => {
+  const options = request.query;
+});
+
+// Remove friend request from user to user
 app.delete('/delete/friendRequest', async (request, response) => {
   const options = request.query;
-  const username = options.username;
-  const friendUsername = options.friendUsername;
+});
+
+// Get all friend requests to specified user id
+app.get('/get/friendRequests/to', async (request, response) => {
+  const options = request.query;
 });
 
 // Get all friend requests from specified user id
-app.get('/get/friendRequests', async (request, response) => {
+app.get('/get/friendRequests/from', async (request, response) => {
   const options = request.query;
-  const username = options.username;
 });
 
-// Get all groups of specified user id
+
+// HANDLING GROUPS:
+
+// Create group from obj provided, must return in response new group id
+app.patch('/create/group', async (request, response) => {
+  const options = request.query;  
+});
+
+
+// Get group by id
+app.get('/get/group', async (request, response) => {
+  const options = request.query;  
+});
+
+// Update group by id with obj provided
+app.patch('/update/group', async (request, response) => {
+  const options = request.query;  
+});
+
+// Delete group by id
+app.delete('/delete/group', async (request, response) => {
+  const options = request.query;  
+});
+
+
+// Get groups by id list
 app.get('/get/groups', async (request, response) => {
-  const options = request.query;
-  const username = options.username;
-  
+  const options = request.query;  
 });
 
-//TODO setting and getting properties of user, maybe we use it as PATCH for the obj
 
+// HANDLLE GROUP MEMBERS
 
-// GENERAL DB REQUESTS
-
-// Create new user
-app.put('/create/user', async (request, response) => {
-  const options = request.query;
-  const username = options.username;
-});
-
-// See if user exists in db
-app.get('/has/user', async (request, response) => {
-  const options = request.query;
-  const username = options.username;
-});
-
-// Get all user ids from db
-app.get('/get/users', async (request, response) => {
-  const options = request.query;
-  const username = options.username;
-});
-
-//TODO must return new group id
-// Create new group
-app.put('/create/group', async (request, response) => {
-  const options = request.query;
-
-});
-
-// HANDLE GROUP MEMBER AND PLANNED EVENTS REQUESTS + GROUP INFO
 // Add member to specified group id
-app.put('/add/member', async (request, response) => {
+app.post('/add/member', async (request, response) => {
   const options = request.query;
-  const groupId = options.groupId;
-  const username = options.username;
-});
-
-// Remove member from specified group id
-app.delete('/delete/member', async (request, response) => {
-  const options = request.query;
-  const groupId = options.groupId;
-  const username = options.username;
 });
 
 // Check if member exists in specified group id
 app.get('/has/member', async (request, response) => {
   const options = request.query;
-  const groupId = options.groupId;
-  const username = options.username;
 });
 
-// Get all member ids in specified group id
-app.get('/get/members', async (request, response) => {
+// Get all group member ids in specified group id
+app.get('/get/memberIds', async (request, response) => {
   const options = request.query;
-  const groupId = options.groupId;
+});
+
+// Remove member from specified group id
+app.delete('/delete/member', async (request, response) => {
+  const options = request.query;
 });
 
 
-// HANDLING GROUP PLANNED EVENTS REQUESTS
+// HANDLING GROUP PLANNED EVENTS:
+
 // TODO make sure you retrieve planned event correctly from body
-// Add busy event to specified user id
-app.put('/add/plannedEvent', async (request, response) => {
+// Add planned event to specified group id
+app.post('/create/plannedEvent', async (request, response) => {
   const options = request.query;
   const groupId = options.groupId;
   const requestBody = request.body;
 });
 
-// Get busy events from specified user id
-app.get('/get/plannedEvents', async (request, response) => {
+// Get planned event by id
+app.get('/get/plannedEvent', async (request, response) => {
   const options = request.query;
   const groupId = options.groupId;
 });
 
-// TODO handle getting and setting groupName param
+// Get planned event objs by id list
+app.get('/get/plannedEvents', async (request, response) => {
+  const options = request.query;
+});
+
+// Get planned event ids from specified group id
+app.get('/get/plannedEventIds', async (request, response) => {
+  const options = request.query;
+});
+
+// Update planned event by id with request obj
+app.patch('/update/plannedEvent', async (request, response) => {
+  const options = request.query;
+});
+
+// Delete planned event by id
+app.delete('/delete/plannedEvent', async (request, response) => {
+  const options = request.query;
+});
 
 
+// HANDLE RSVPS FOR PLANNED EVENTS:
+
+// Add RSVP to planned event with id specified
+app.post('/add/plannedEventRSVP', async (request, response) => {
+  const options = request.query;
+  const requestBody = request.body;
+});
+
+// Delete RSVP from planned event with id specified
+app.delete('/delete/plannedEventRSVP', async (request, response) => {
+  const options = request.query;
+  const requestBody = request.body;
+});
+
+// Get RSVP yes list from planned event with id specified
+app.get('/get/plannedEventRSVPs/yes', async (request, response) => {
+  const options = request.query;
+});
+
+// Get RSVP no list from planned event with id specified
+app.get('/get/plannedEventRSVPs/no', async (request, response) => {
+  const options = request.query;
+});
+
+// Get RSVP maybe list from planned event with id specified
+app.get('/get/plannedEventRSVPs/maybe', async (request, response) => {
+  const options = request.query;
+});
+
+
+// HANDLING PAGE RETRIEVALS:
 
 app.get('*', async (request, response) => {
   try {

@@ -164,7 +164,7 @@ export async function createBusyEvent(username, busyEvent) {
     // TODO: verify user doesn't have a conflicting event?
     try {
         const response = await fetch(`/create/busyEvent?username=${username}`, {
-            method: 'PUT',
+            method: 'POST',
             body: JSON.stringify(busyEvent)
         });
     }
@@ -235,16 +235,15 @@ export async function getBusyEventIdsOfUser(username) {
 
 /**
  * Update a busy event
- * @param {string} username Unique username for user's calendar to update busy event in
  * @param {string} busyEventId 
  * @param {Object} busyEventPatch An object containing the values to change
  * Has one or more of these fields: title, startDay, startHour, startMinute,
  * endDay, endHour, endMinute
  * Missing fields will be unchanged
  */
-export async function updateBusyEvent(username, busyEventId, busyEventPatch) {
+export async function updateBusyEvent(busyEventId, busyEventPatch) {
     try {
-        const response = await fetch(`/update/busyEvent?username=${username}busyEventId=${busyEventId}`, {
+        const response = await fetch(`/update/busyEvent?busyEventId=${busyEventId}`, {
             method: 'PATCH',
             body: JSON.stringify(busyEventPatch)
         });
@@ -368,11 +367,11 @@ export async function addFriendRequest(fromUsername, toUsername) {
 }
 
 /**
- * Delete a friend request from one user to another
+ * Remove a friend request from one user to another
  * @param {string} fromUsername 
  * @param {string} toUsername 
  */
-export async function deleteFriendRequest(fromUsername, toUsername) {
+export async function removeFriendRequest(fromUsername, toUsername) {
     try {
         const response = await fetch(`/delete/friendRequest?fromUsername=${fromUsername}&toUsername=${toUsername}`, {
             method: 'DELETE',
@@ -565,9 +564,9 @@ export async function hasMember(groupId, username) {
  * @param {string} groupId 
  * @returns an array of usernames
  */
-export async function getGroupMembers(groupId) {
+export async function getGroupMemberIds(groupId) {
     try {
-        const response = await fetch(`/get/members?groupId=${groupId}`, {
+        const response = await fetch(`/get/memberIds?groupId=${groupId}`, {
             method: 'GET',
         });
 
@@ -665,7 +664,7 @@ export async function getPlannedEvents(plannedEventIds) {
  */
 export async function getGroupPlannedEventIds(groupId) {
     try {
-        const response = await fetch(`/get/plannedEvents?groupId=${groupId}`, {
+        const response = await fetch(`/get/plannedEventIds?groupId=${groupId}`, {
             method: 'GET',
         });
 
@@ -726,7 +725,7 @@ export async function addRSVP(plannedEventId, username, rsvp) {
     plannedEventRSVP[username] = rsvp;
 
     try {
-        const response = await fetch(`/create/plannedEventRSVP?plannedEventId=${plannedEventId}`, {
+        const response = await fetch(`/add/plannedEventRSVP?plannedEventId=${plannedEventId}`, {
             method: 'POST',
             body: JSON.stringify(plannedEventRSVP)
         });
