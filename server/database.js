@@ -47,7 +47,7 @@ function constructValuesWithDefaults(columnNames, valueObj) {
  * Can have zero or more of these fields: firstName, lastName, college, bio, image
  * Missing fields will be given sane default values
  */
-export function createUser(user) {}
+export async function createUser(user) {}
 
 /**
  * Update a user
@@ -56,54 +56,54 @@ export function createUser(user) {}
  * Has one or more of these fields: username, firstName, lastName, college, bio, image
  * Missing fields will be unchanged
  */
-export function updateUser(username, userPatch) {}
+export async function updateUser(username, userPatch) {}
 
 /**
  * Get info about a user
  * @param {string} username The unique username of the user to get
  * @returns A User object
  */
-export function getUser(username) {}
+export async function getUser(username) {}
 
 /**
  * Batch retrieve info about multiple users
  * @param {Array[string]} usernames A list of usernames
  * @returns A list of User objects
  */
-export function getUsers(usernames) {}
+export async function getUsers(usernames) {}
 
 /**
  * Get the IDs of all groups the user is in
  * @param {string} username 
  * @returns An array of string group IDs
  */
-export function getGroupsOfUser(username) {}
+export async function getGroupsOfUser(username) {}
 
 /**
  * Check if the given user exists in the database
  * @param {string} username 
  * @returns true or false
  */
-export function userExists(username) {}
+export async function userExists(username) {}
 
 /**
  * Get the usernames of every user in the system
  * @returns An array of String usernames
  */
-export function getAllUsernames() {}
+export async function getAllUsernames() {}
 
 /**
  * Get the IDs all busy events on a user's calendar
  * @param {string} username 
  * @returns An array of String event IDs
  */
-export function getUserBusyEvents(username) {}
+export async function getUserBusyEvents(username) {}
 
 /**
  * Delete a user from the database
  * @param {string} username 
  */
-export function deleteUser(username) {}
+export async function deleteUser(username) {}
 
 // GROUP
 /**
@@ -112,7 +112,7 @@ export function deleteUser(username) {}
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new group
  */
-export function createGroup(group) {}
+export async function createGroup(group) {}
 
 /**
  * Update a group
@@ -121,41 +121,41 @@ export function createGroup(group) {}
  * Has one or more of these fields: name, image
  * Missing fields will be unchanged
  */
-export function updateGroup(groupId, groupPatch) {}
+export async function updateGroup(groupId, groupPatch) {}
 
 /**
  * Get info about a group
  * @param {string} groupId 
  * @returns a Group object
  */
-export function getGroup(groupId) {}
+export async function getGroup(groupId) {}
 
 /**
  * Batch retrieve info about multiple groups
  * @param {Array[string]} groupIds A list of string group IDs
  * @returns an array of Group objects
  */
-export function getGroups(groupIds) {}
+export async function getGroups(groupIds) {}
 
 /**
  * Get the username of every member of this group
  * @param {string} groupId 
  * @returns an array of usernames
  */
-export function getGroupMembers(groupId) {}
+export async function getGroupMembers(groupId) {}
 
 /**
  * Get all events planned by this group
  * @param {string} groupId 
  * @returns an array of planned event IDs
  */
-export function getGroupPlannedEvents(groupId) {}
+export async function getGroupPlannedEvents(groupId) {}
 
 /**
  * Delete a group
  * @param {string} groupId 
  */
-export function deleteGroup(groupId) {}
+export async function deleteGroup(groupId) {}
 
 // BUSY EVENTS
 /**
@@ -165,7 +165,7 @@ export function deleteGroup(groupId) {}
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new event
  */
-export function createBusyEvent(busyEvent) {}
+export async function createBusyEvent(busyEvent) {}
 
 /**
  * Update a busy event
@@ -175,27 +175,27 @@ export function createBusyEvent(busyEvent) {}
  * endDay, endHour, endMinute
  * Missing fields will be unchanged
  */
-export function updateBusyEvent(busyEventId, busyEventPatch) {}
+export async function updateBusyEvent(busyEventId, busyEventPatch) {}
 
 /**
  * Get info about a busy event
  * @param {string} busyEventId
  * @returns a busyEvent object
  */
-export function getBusyEvent(busyEventId) {}
+export async function getBusyEvent(busyEventId) {}
 
 /**
  * Batch retrieve info about multiple busy events
  * @param {Array[string]} busyEventIds A list of busy event IDs
  * @returns a list of busyEvent objects
  */
-export function getBusyEvents(busyEventIds) {}
+export async function getBusyEvents(busyEventIds) {}
 
 /**
  * Delete a busy event
  * @param {string} busyEventId 
  */
-export function deleteBusyEvent(busyEventId) {}
+export async function deleteBusyEvent(busyEventId) {}
 
 // PLANNED EVENTS
 /**
@@ -206,7 +206,7 @@ export function deleteBusyEvent(busyEventId) {}
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new event
  */
-export function createPlannedEvent(plannedEvent) {}
+export async function createPlannedEvent(plannedEvent) {}
 
 /**
  * Update a planned event
@@ -216,27 +216,27 @@ export function createPlannedEvent(plannedEvent) {}
  * endDay, endHour, endMinute, location, description
  * Missing fields will be unchanged
  */
-export function updatePlannedEvent(plannedEventId, plannedEventPatch) {}
+export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {}
 
 /**
  * Get info about a planned event
  * @param {string} plannedEventId 
  * @returns a plannedEvent object
  */
-export function getPlannedEvent(plannedEventId) {}
+export async function getPlannedEvent(plannedEventId) {}
 
 /**
  * Batch retrieve info about multiple planned events
  * @param {Array[string]} plannedEventIds 
  * @returns a list of plannedEvent objects
  */
-export function getPlannedEvents(plannedEventIds) {}
+export async function getPlannedEvents(plannedEventIds) {}
 
 /**
  * Delete a planned event
  * @param {string} plannedEventId 
  */
-export function deletePlannedEvent(plannedEventId) {}
+export async function deletePlannedEvent(plannedEventId) {}
 
 // PLANNED EVENT RSVPS
 /**
@@ -245,32 +245,32 @@ export function deletePlannedEvent(plannedEventId) {}
  * @param {string} username 
  * @param {string} response one of "YES", "NO", "MAYBE"
  */
-export function addRsvp(plannedEventId, username, response) {}
+export async function addRsvp(plannedEventId, username, response) {}
 
 /**
  * Remove a user's RSVP to a planned event
  * @param {string} plannedEventId 
  * @param {string} username 
  */
-export function deleteRsvp(plannedEventId, username) {}
+export async function deleteRsvp(plannedEventId, username) {}
 
 /**
  * Get the username of everyone who RSVPed 'yes' to this event
  * @param {string} plannedEventId 
  */
-export function getYesRsvpsTo(plannedEventId) {}
+export async function getYesRsvpsTo(plannedEventId) {}
 
 /**
  * Get the username of everyone who RSVPed 'no' to this event
  * @param {string} plannedEventId 
  */
-export function getNoRsvpsTo(plannedEventId) {}
+export async function getNoRsvpsTo(plannedEventId) {}
 
 /**
  * Get the username of everyone who RSVPed 'maybe' to this event
  * @param {string} plannedEventId 
  */
-export function getMaybeRsvpsTo(plannedEventId) {}
+export async function getMaybeRsvpsTo(plannedEventId) {}
 
 // FRIENDS
 /**
@@ -278,7 +278,7 @@ export function getMaybeRsvpsTo(plannedEventId) {}
  * @param {string} username1 
  * @param {string} username2 
  */
-export function addFriend(username1, username2) {}
+export async function addFriend(username1, username2) {}
 
 /**
  * Check if these users are friends
@@ -286,21 +286,21 @@ export function addFriend(username1, username2) {}
  * @param {string} username2 
  * @returns boolean true or false
  */
-export function areFriends(username1, username2) {}
+export async function areFriends(username1, username2) {}
 
 /**
  * Make these two users no longer friends
  * @param {string} username1 
  * @param {string} username2 
  */
-export function deleteFriend(username1, username2) {}
+export async function deleteFriend(username1, username2) {}
 
 /**
  * Get the all friends of this user
  * @param {string} username 
  * @returns an array of string usernames
  */
-export function getFriendsOf(username) {}
+export async function getFriendsOf(username) {}
 
 // FRIEND REQUESTS
 /**
@@ -308,25 +308,25 @@ export function getFriendsOf(username) {}
  * @param {string} fromUsername 
  * @param {string} toUsername 
  */
-export function addFriendRequest(fromUsername, toUsername) {}
+export async function addFriendRequest(fromUsername, toUsername) {}
 
 /**
  * Delete a friend request from one user to another
  * @param {string} fromUsername 
  * @param {string} toUsername 
  */
-export function deleteFriendRequest(fromUsername, toUsername) {}
+export async function deleteFriendRequest(fromUsername, toUsername) {}
 
 /**
  * Get everyone who's sent a friend request to this user
  * @param {string} username 
  * @returns an array of string usernames
  */
-export function getRequestsTo(username) {}
+export async function getRequestsTo(username) {}
 
 /**
  * Get everyone to whom this user has sent a friend request
  * @param {string} username 
  * @returns an array of string usernames
  */
-export function getRequestsFrom(username) {}
+export async function getRequestsFrom(username) {}
