@@ -61,9 +61,6 @@ export async function createUser(user) {
     }
 }
 
-createUser({username: "foo", lastName: "Richards", bio: "hello"});
-createUser({username: "bar", firstName: "Tim", college: "UMass"});
-
 /**
  * Update a user
  * @param {string} username The unique username of the user to update
