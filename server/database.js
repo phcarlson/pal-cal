@@ -9,6 +9,37 @@ const pool = new Pool({
     password: process.env.DATABASE_PASSWORD,
     port: 5432
 });
+
+/**
+ * Constructs the "VALUES" part of an SQL INSERT string. Values given in valueObj
+ * are set to that value, others are set to the database's default for that column
+ * @param {Array[String]} columnNames The names of all the columns in the table
+ * @param {Object} valueObj An object mapping column names to values. Keys are
+ * some subset of the columns in the columnNames array
+ * @returns An object with properties "text", holding a string desigined to go
+ * in the VALUES(...) part of an insert query,
+ * and "values" holding an array designed to be passed to the pool.query method
+ */
+function constructValuesWithDefaults(columnNames, valueObj) {
+    let parameters = [];
+    let values = [];
+    let parameterIndex = 1;
+    for (let column of columnNames) {
+        if (column in valueObj) {
+            parameters.push(`$${parameterIndex}`)
+            values.push(valueObj[column]);
+            parameterIndex++;
+        }
+        else {
+            parameters.push("DEFAULT");
+        }
+    }
+    return {
+        text: parameters.join(", "),
+        values: values
+    };
+}
+
 // USER
 /**
  * Creates a user with the given properties
