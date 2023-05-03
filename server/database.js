@@ -316,7 +316,14 @@ export async function addRsvp(plannedEventId, username, response) {
  * @param {string} plannedEventId 
  * @param {string} username 
  */
-export async function deleteRsvp(plannedEventId, username) {}
+export async function deleteRsvp(plannedEventId, username) {
+    await models.rsvps.destroy({
+        where: {
+            plannedEventId: plannedEventId,
+            username: username
+        }
+    })
+}
 
 /**
  * Get the username of everyone who RSVPed 'yes' to this event
