@@ -163,7 +163,12 @@ export async function getGroupMemberUsernames(groupId) {
  * @param {string} groupId 
  * @returns an array of planned event IDs
  */
-export async function getGroupPlannedEvents(groupId) {}
+export async function getGroupPlannedEventIds(groupId) {
+    const plannedEvents = await models.plannedEvents.findAll({
+        where: {groupId: groupId}
+    });
+    return plannedEvents.map(event => event.plannedEventId);
+}
 
 /**
  * Delete a group
