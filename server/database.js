@@ -200,7 +200,10 @@ export async function createBusyEvent(busyEvent) {
  * endDay, endHour, endMinute
  * Missing fields will be unchanged
  */
-export async function updateBusyEvent(busyEventId, busyEventPatch) {}
+export async function updateBusyEvent(busyEventId, busyEventPatch) {
+    const busyEvent = await models.busyEvents.findByPk(busyEventId);
+    await busyEvent.update(busyEventPatch);
+}
 
 /**
  * Get info about a busy event
