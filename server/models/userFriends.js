@@ -7,12 +7,20 @@ export default class userFriends extends Model {
     username1: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'users',
+        key: 'username'
+      }
     },
     username2: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'users',
+        key: 'username'
+      }
     }
   }, {
     sequelize,

@@ -7,12 +7,20 @@ export default class groupMembers extends Model {
     username: {
       type: DataTypes.STRING,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'users',
+        key: 'username'
+      }
     },
     groupId: {
       type: DataTypes.UUID,
       allowNull: false,
-      primaryKey: true
+      primaryKey: true,
+      references: {
+        model: 'groups',
+        key: 'groupId'
+      }
     }
   }, {
     sequelize,

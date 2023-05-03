@@ -13,7 +13,16 @@ export default class rsvpResponses extends Model {
     sequelize,
     tableName: 'rsvpResponses',
     schema: 'public',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        name: "rsvpresponses_pkey",
+        unique: true,
+        fields: [
+          { name: "value" },
+        ]
+      },
+    ]
   });
   }
 }

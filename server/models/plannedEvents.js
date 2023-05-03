@@ -56,6 +56,14 @@ export default class plannedEvents extends Model {
       type: DataTypes.STRING,
       allowNull: true,
       defaultValue: ""
+    },
+    groupId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+      references: {
+        model: 'groups',
+        key: 'groupId'
+      }
     }
   }, {
     sequelize,

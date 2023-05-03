@@ -44,6 +44,14 @@ export default class busyEvents extends Model {
       type: DataTypes.INTEGER,
       allowNull: true,
       defaultValue: 0
+    },
+    creatorUsername: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      references: {
+        model: 'users',
+        key: 'username'
+      }
     }
   }, {
     sequelize,
