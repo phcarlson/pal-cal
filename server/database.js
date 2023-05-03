@@ -121,7 +121,10 @@ export async function createGroup(group) {
  * Has one or more of these fields: name, image
  * Missing fields will be unchanged
  */
-export async function updateGroup(groupId, groupPatch) {}
+export async function updateGroup(groupId, groupPatch) {
+    const group = await models.groups.findByPk(groupId);
+    await group.update(groupPatch);
+}
 
 /**
  * Get info about a group
