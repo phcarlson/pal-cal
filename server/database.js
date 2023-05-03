@@ -470,7 +470,12 @@ export async function deleteFriendRequest(fromUsername, toUsername) {
  * @param {string} username 
  * @returns an array of string usernames
  */
-export async function getRequestsTo(username) {}
+export async function getRequestUsernamesTo(username) {
+    const result = await models.friendRequests.findAll({
+        where: {toUsername: username}
+    });
+    return result.map(request => request.fromUsername);
+}
 
 /**
  * Get everyone to whom this user has sent a friend request
