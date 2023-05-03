@@ -302,7 +302,14 @@ export async function deletePlannedEvent(plannedEventId) {
  * @param {string} username 
  * @param {string} response one of "YES", "NO", "MAYBE"
  */
-export async function addRsvp(plannedEventId, username, response) {}
+export async function addRsvp(plannedEventId, username, response) {
+   await models.rsvps.create({
+        username: username,
+        plannedEventId: plannedEventId,
+        response: response
+    });
+}
+
 
 /**
  * Remove a user's RSVP to a planned event
