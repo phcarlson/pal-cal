@@ -386,7 +386,15 @@ export async function addFriend(username1, username2) {
  * @param {string} username2 
  * @returns boolean true or false
  */
-export async function areFriends(username1, username2) {}
+export async function areFriends(username1, username2) {
+    const result = await models.userFriends.findAll({
+        where: {[Op.or]: [
+            {username1: username1, username2: username2},
+            {username1: username2, username2: username1}
+        ]}
+    });
+    return result.length !== 0;
+}
 
 /**
  * Make these two users no longer friends
