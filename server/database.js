@@ -220,7 +220,12 @@ export async function getBusyEvent(busyEventId) {
  * @param {Array[string]} busyEventIds A list of busy event IDs
  * @returns a list of busyEvent objects
  */
-export async function getBusyEvents(busyEventIds) {}
+export async function getBusyEvents(busyEventIds) {
+    const busyEvents = await models.busyEvents.findAll({
+        where: {busyEventId: {[Op.in]: busyEventIds}}
+    });
+    return busyEvents.map(busyEvent => busyEvent.dataValues);
+}
 
 /**
  * Delete a busy event
