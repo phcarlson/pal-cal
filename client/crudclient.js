@@ -281,6 +281,7 @@ export async function addFriend(username1, username2) {
         const response = await fetch(`/add/friend?username1=${username1}&username2=${username2}`, {
             method: 'POST',
         });
+        
     }
     catch (err) {
         console.log(err);

@@ -7,7 +7,7 @@ import * as url from 'url';
 import * as Pool from 'pg';
 import env from 'dotenv';
 
-env.config();
+// env.config();
 
 // const pool = new Pool({
 //   user: 'postgres',
@@ -17,8 +17,8 @@ env.config();
 //   port: 5432,
 // });
 
-console.log(process.env.DATABASE_URL);
-console.log(process.env.API_KEY);
+// console.log(process.env.DATABASE_URL);
+// console.log(process.env.API_KEY);
 
 const app = express();
 const port = 3000;
@@ -32,19 +32,64 @@ app.use(express.urlencoded({ extended: false }));
 
 // Create new user with obj
 app.post('/create/user', async (request, response) => {
-  const options = request.query;
   const requestBody = request.body;
+
+  console.log(requestBody)
+  try{
+    // database.createUser(requestBody);
+    response.status(200).end();
+  }
+  catch(error){
+  // Postgres should provide an error if username already exists, so that we have to find another username
+    response.status(500).end();
+  // Postgres should provide error when properties in object do not exist
+  }
 });
 
 // Get user by id
 app.get('/get/user', async (request, response) => {
   const options = request.query;
+  const username = options.username;
+
+  // Check if username is even specified to get user from
+  if(username === undefined){
+    response.status(400).send("Bad request: Username not defined");
+  }
+  // If good, try to retrieve
+  else {
+    try{
+      // const userRetrieved = database.getUser(username);
+      const userRetrieved = {username:"username1"};
+      response.status(200).json(userRetrieved);
+    }
+    catch(error){
+      response.status(500).send();
+    }
+  }
 });
 
 // Patch a user obj by id
 app.patch('/update/user', async (request, response) => {
   const options = request.query;
   const requestBody = request.body;
+  const username = options.username;
+
+  // Check if username is even specified to patch user from
+  if(username === undefined){
+    response.status(400).send("Bad request: Username not defined");
+  }
+  else{
+    try{  
+      // database.updateUser(requestBody);
+      response.status(200).send();
+    }
+    catch(error){
+      // Postgres should catch if user does not exist to patch
+      // Postgres should catch if properties in object do not exist
+
+      response.status(500).send();
+    }
+  }
 });
 
 // Delete a user obj by id
@@ -187,7 +232,7 @@ app.get('/get/groups', async (request, response) => {
 });
 
 
-// HANDLLE GROUP MEMBERS
+// HANDLING GROUP MEMBERS
 
 // Add member to specified group id
 app.post('/add/member', async (request, response) => {
@@ -247,7 +292,7 @@ app.delete('/delete/plannedEvent', async (request, response) => {
 });
 
 
-// HANDLE RSVPS FOR PLANNED EVENTS:
+// HANDLING RSVPS FOR PLANNED EVENTS:
 
 // Add RSVP to planned event with id specified
 app.post('/add/plannedEventRSVP', async (request, response) => {
