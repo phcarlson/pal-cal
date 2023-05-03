@@ -259,7 +259,10 @@ export async function createPlannedEvent(plannedEvent) {
  * endDay, endHour, endMinute, location, description
  * Missing fields will be unchanged
  */
-export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {}
+export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
+    const plannedEvent = await models.plannedEvents.findByPk(plannedEventId);
+    await plannedEvent.update(plannedEventPatch);
+}
 
 /**
  * Get info about a planned event
