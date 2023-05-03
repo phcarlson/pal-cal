@@ -29,6 +29,12 @@ export default class userFriends extends Model {
     timestamps: false,
     indexes: [
       {
+        name: "userfriends_no_duplicates",
+        unique: true,
+        fields: [
+        ]
+      },
+      {
         name: "userfriends_pk",
         unique: true,
         fields: [
