@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { Sequelize, Op } from 'sequelize';
+import { Sequelize, Op, QueryTypes } from 'sequelize';
 import initModels from './models/init-models.js';
 
 const sequelize = new Sequelize(process.env.DATABASE_URL);
@@ -411,11 +411,27 @@ export async function deleteFriend(username1, username2) {
 }
 
 /**
- * Get the all friends of this user
+ * Get the usernames of all friends of this user
  * @param {string} username 
  * @returns an array of string usernames
  */
-export async function getFriendsOf(username) {}
+export async function getFriendUsernamesOf(username) {
+    // we need to get 'other' from tuples of both (username, other)
+    // and (other, username), since friendship is reflexive
+    // sequelize doesn't support union queries, so easier to just do it with
+    // raw SQL
+    const results = await sequelize.query(
+        `SELECT username2 FROM "userFriends" WHERE username1 = :username
+         UNION
+         SELECT username1 FROM "userFriends" WHERE username2 = :username
+        `,
+        {
+            replacements: { username: username },
+            type: QueryTypes.SELECT
+        }
+    );
+    return results;
+}
 
 // FRIEND REQUESTS
 /**
