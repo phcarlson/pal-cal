@@ -401,7 +401,14 @@ export async function areFriends(username1, username2) {
  * @param {string} username1 
  * @param {string} username2 
  */
-export async function deleteFriend(username1, username2) {}
+export async function deleteFriend(username1, username2) {
+    await models.userFriends.destroy({
+        where: {[Op.or]: [
+            {username1: username1, username2: username2},
+            {username1: username2, username2: username1}
+        ]}
+    });
+}
 
 /**
  * Get the all friends of this user
