@@ -329,19 +329,46 @@ export async function deleteRsvp(plannedEventId, username) {
  * Get the username of everyone who RSVPed 'yes' to this event
  * @param {string} plannedEventId 
  */
-export async function getYesRsvpsTo(plannedEventId) {}
+export async function getYesRsvpsTo(plannedEventId) {
+    const results = await models.rsvps.findAll({
+        where: {
+            plannedEventId: plannedEventId,
+            response: "YES"
+        },
+        attributes: ["username"]
+    });
+    return results.map(result => result.username);
+}
 
 /**
  * Get the username of everyone who RSVPed 'no' to this event
  * @param {string} plannedEventId 
  */
-export async function getNoRsvpsTo(plannedEventId) {}
+export async function getNoRsvpsTo(plannedEventId) {
+    const results = await models.rsvps.findAll({
+        where: {
+            plannedEventId: plannedEventId,
+            response: "NO"
+        },
+        attributes: ["username"]
+    });
+    return results.map(result => result.username);
+}
 
 /**
  * Get the username of everyone who RSVPed 'maybe' to this event
  * @param {string} plannedEventId 
  */
-export async function getMaybeRsvpsTo(plannedEventId) {}
+export async function getMaybeRsvpsTo(plannedEventId) {
+    const results = await models.rsvps.findAll({
+        where: {
+            plannedEventId: plannedEventId,
+            response: "MAYBE"
+        },
+        attributes: ["username"]
+    });
+    return results.map(result => result.username);
+}
 
 // FRIENDS
 /**
