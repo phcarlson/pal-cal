@@ -131,7 +131,10 @@ export async function updateGroup(groupId, groupPatch) {
  * @param {string} groupId 
  * @returns a Group object
  */
-export async function getGroup(groupId) {}
+export async function getGroup(groupId) {
+    const group = await models.groups.findByPk(groupId);
+    return group.dataValues;
+}
 
 /**
  * Batch retrieve info about multiple groups
