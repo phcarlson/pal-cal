@@ -376,7 +376,9 @@ export async function getMaybeRsvpsTo(plannedEventId) {
  * @param {string} username1 
  * @param {string} username2 
  */
-export async function addFriend(username1, username2) {}
+export async function addFriend(username1, username2) {
+    await models.userFriends.create({username1: username1, username2: username2});
+}
 
 /**
  * Check if these users are friends
