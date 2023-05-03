@@ -98,8 +98,9 @@ export async function getUserBusyEventIds(username) {
  * @param {string} username 
  */
 export async function deleteUser(username) {
-    const user = await models.users.findByPk(username);
-    await user.destroy();
+    await models.users.destroy({
+        where: {username: username}
+    });
 }
 
 // GROUP
@@ -122,8 +123,9 @@ export async function createGroup(group) {
  * Missing fields will be unchanged
  */
 export async function updateGroup(groupId, groupPatch) {
-    const group = await models.groups.findByPk(groupId);
-    await group.update(groupPatch);
+    await models.groups.update(groupPatch, {
+        where: {groupId: groupId}
+    });
 }
 
 /**
@@ -175,8 +177,9 @@ export async function getGroupPlannedEventIds(groupId) {
  * @param {string} groupId 
  */
 export async function deleteGroup(groupId) {
-    const group = await models.groups.findByPk(groupId);
-    await group.destroy();
+    await models.groups.destroy({
+        where: {groupId: groupId}
+    });
 }
 
 // BUSY EVENTS
@@ -202,8 +205,9 @@ export async function createBusyEvent(busyEvent) {
  * Missing fields will be unchanged
  */
 export async function updateBusyEvent(busyEventId, busyEventPatch) {
-    const busyEvent = await models.busyEvents.findByPk(busyEventId);
-    await busyEvent.update(busyEventPatch);
+    await models.busyEvents.update(busyEventPatch, {
+        where: {busyEventId: busyEventId}
+    });
 }
 
 /**
@@ -233,8 +237,9 @@ export async function getBusyEvents(busyEventIds) {
  * @param {string} busyEventId 
  */
 export async function deleteBusyEvent(busyEventId) {
-    const busyEvent = await models.busyEvents.findByPk(busyEventId);
-    await busyEvent.destroy();
+    await models.busyEvents.destroy({
+        where: {busyEventId: busyEventId}
+    });
 }
 
 // PLANNED EVENTS
@@ -260,8 +265,9 @@ export async function createPlannedEvent(plannedEvent) {
  * Missing fields will be unchanged
  */
 export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
-    const plannedEvent = await models.plannedEvents.findByPk(plannedEventId);
-    await plannedEvent.update(plannedEventPatch);
+    await models.plannedEvents.update(plannedEventPatch, {
+        where: {plannedEventId: plannedEventId}
+    });
 }
 
 /**
@@ -291,8 +297,9 @@ export async function getPlannedEvents(plannedEventIds) {
  * @param {string} plannedEventId 
  */
 export async function deletePlannedEvent(plannedEventId) {
-    const plannedEvent = await models.plannedEvents.findByPk(plannedEventId);
-    await plannedEvent.destroy();
+    await models.plannedEvents.destroy({
+        where: {plannedEventId: plannedEventId}
+    });
 }
 
 // PLANNED EVENT RSVPS
