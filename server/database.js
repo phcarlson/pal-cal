@@ -182,12 +182,15 @@ export async function deleteGroup(groupId) {
 // BUSY EVENTS
 /**
  * Create a new busy event with the given properties
- * @param {Object} busyEvent May have zero or more of these fields:
- * title, startDay, startHour, startMinute, endDay, endHour, endMinute
+ * @param {Object} busyEvent MUST have a creatorUsername field
+ * May have zero or more of these fields: title, startDay, startHour,
+ * startMinute, endDay, endHour, endMinute
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new event
  */
-export async function createBusyEvent(busyEvent) {}
+export async function createBusyEvent(busyEvent) {
+    await models.busyEvents.create(busyEvent);
+}
 
 /**
  * Update a busy event
