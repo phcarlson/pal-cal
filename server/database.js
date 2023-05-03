@@ -85,7 +85,13 @@ export async function getAllUsernames() {
  * @param {string} username 
  * @returns An array of String event IDs
  */
-export async function getUserBusyEvents(username) {}
+export async function getUserBusyEventIds(username) {
+    const busyEvents = await models.busyEvents.findAll({
+        attributes: ["busyEventId"],
+        where: {creatorUsername: username}
+    });
+    return busyEvents.map(event => event.busyEventId);
+}
 
 /**
  * Delete a user from the database
