@@ -231,7 +231,10 @@ export async function getBusyEvents(busyEventIds) {
  * Delete a busy event
  * @param {string} busyEventId 
  */
-export async function deleteBusyEvent(busyEventId) {}
+export async function deleteBusyEvent(busyEventId) {
+    const busyEvent = await models.busyEvents.findByPk(busyEventId);
+    await busyEvent.destroy();
+}
 
 // PLANNED EVENTS
 /**
