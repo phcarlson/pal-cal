@@ -189,7 +189,8 @@ export async function deleteGroup(groupId) {
  * @returns A unique string ID for the new event
  */
 export async function createBusyEvent(busyEvent) {
-    await models.busyEvents.create(busyEvent);
+    const newEvent = await models.busyEvents.create(busyEvent);
+    return newEvent.busyEventId;
 }
 
 /**
@@ -239,13 +240,15 @@ export async function deleteBusyEvent(busyEventId) {
 // PLANNED EVENTS
 /**
  * Create a new planned event
- * @param {Object} plannedEvent MUST have a field called creatorUsername
+ * @param {Object} plannedEvent MUST have creatorUsername and groupId fields
  * Can have zero or more of these fields: title, startDay, startHour, startMinute,
  * endDay, endHour, endMinute, location, description
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new event
  */
-export async function createPlannedEvent(plannedEvent) {}
+export async function createPlannedEvent(plannedEvent) {
+    await models.plannedEvents.create(plannedEvent);
+}
 
 /**
  * Update a planned event
