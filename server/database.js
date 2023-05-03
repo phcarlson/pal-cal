@@ -141,7 +141,10 @@ export async function getGroup(groupId) {
  * @param {Array[string]} groupIds A list of string group IDs
  * @returns an array of Group objects
  */
-export async function getGroups(groupIds) {}
+export async function getGroups(groupIds) {
+    const groups = await models.groups.findAll({ where: { groupId: { [Op.in]: groupIds } } });
+    return groups.map(group => group.dataValues);
+}
 
 /**
  * Get the username of every member of this group
