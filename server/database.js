@@ -290,7 +290,10 @@ export async function getPlannedEvents(plannedEventIds) {
  * Delete a planned event
  * @param {string} plannedEventId 
  */
-export async function deletePlannedEvent(plannedEventId) {}
+export async function deletePlannedEvent(plannedEventId) {
+    const plannedEvent = await models.plannedEvents.findByPk(plannedEventId);
+    await plannedEvent.destroy();
+}
 
 // PLANNED EVENT RSVPS
 /**
