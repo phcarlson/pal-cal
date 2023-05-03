@@ -247,7 +247,8 @@ export async function deleteBusyEvent(busyEventId) {
  * @returns A unique string ID for the new event
  */
 export async function createPlannedEvent(plannedEvent) {
-    await models.plannedEvents.create(plannedEvent);
+    const newEvent = await models.plannedEvents.create(plannedEvent);
+    return newEvent.plannedEventId;
 }
 
 /**
