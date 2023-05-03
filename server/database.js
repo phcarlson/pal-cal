@@ -482,4 +482,9 @@ export async function getRequestUsernamesTo(username) {
  * @param {string} username 
  * @returns an array of string usernames
  */
-export async function getRequestsFrom(username) {}
+export async function getRequestUsernamesFrom(username) {
+    const result = await models.friendRequests.findAll({
+        where: {fromUsername: username}
+    });
+    return result.map(request => request.toUsername);
+}
