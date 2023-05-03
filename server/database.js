@@ -279,7 +279,12 @@ export async function getPlannedEvent(plannedEventId) {
  * @param {Array[string]} plannedEventIds 
  * @returns a list of plannedEvent objects
  */
-export async function getPlannedEvents(plannedEventIds) {}
+export async function getPlannedEvents(plannedEventIds) {
+    const plannedEvents = await models.plannedEvents.findAll({
+        where: {plannedEventId: {[Op.in]: plannedEventIds}}
+    });
+    return plannedEvents.map(plannedEvent => plannedEvent.dataValues);
+}
 
 /**
  * Delete a planned event
