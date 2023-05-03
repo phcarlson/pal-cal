@@ -75,7 +75,10 @@ export async function userExists(username) {
  * Get the usernames of every user in the system
  * @returns An array of String usernames
  */
-export async function getAllUsernames() {}
+export async function getAllUsernames() {
+    const users = await models.users.findAll({attributes: ["username"]});
+    return users.map(user => user.username);
+}
 
 /**
  * Get the IDs all busy events on a user's calendar
