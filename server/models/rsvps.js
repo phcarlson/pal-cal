@@ -6,7 +6,8 @@ export default class rsvps extends Model {
   return super.init({
     username: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      primaryKey: true,
       references: {
         model: 'users',
         key: 'username'
@@ -14,7 +15,8 @@ export default class rsvps extends Model {
     },
     plannedEventId: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
+      primaryKey: true,
       references: {
         model: 'plannedEvents',
         key: 'plannedEventId'
@@ -22,7 +24,7 @@ export default class rsvps extends Model {
     },
     response: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'rsvpResponses',
         key: 'value'
@@ -32,7 +34,17 @@ export default class rsvps extends Model {
     sequelize,
     tableName: 'rsvps',
     schema: 'public',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        name: "rsvps_pk",
+        unique: true,
+        fields: [
+          { name: "username" },
+          { name: "plannedEventId" },
+        ]
+      },
+    ]
   });
   }
 }

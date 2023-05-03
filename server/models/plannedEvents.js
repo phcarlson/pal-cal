@@ -17,27 +17,33 @@ export default class plannedEvents extends Model {
     },
     startDay: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     startHour: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     startMinute: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     endDay: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     endHour: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     endMinute: {
       type: DataTypes.INTEGER,
-      allowNull: true
+      allowNull: true,
+      defaultValue: 0
     },
     creatorUsername: {
       type: DataTypes.STRING,
@@ -59,7 +65,7 @@ export default class plannedEvents extends Model {
     },
     groupId: {
       type: DataTypes.UUID,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'groups',
         key: 'groupId'

@@ -22,13 +22,19 @@ export default function initModels(sequelize) {
   const users = _users.init(sequelize, DataTypes);
 
   groups.belongsToMany(users, { as: 'username_users', through: groupMembers, foreignKey: "groupId", otherKey: "username" });
+  plannedEvents.belongsToMany(users, { as: 'username_users_rsvps', through: rsvps, foreignKey: "plannedEventId", otherKey: "username" });
   users.belongsToMany(groups, { as: 'groupId_groups', through: groupMembers, foreignKey: "username", otherKey: "groupId" });
+  users.belongsToMany(plannedEvents, { as: 'plannedEventId_plannedEvents', through: rsvps, foreignKey: "username", otherKey: "plannedEventId" });
   users.belongsToMany(users, { as: 'username2_users', through: userFriends, foreignKey: "username1", otherKey: "username2" });
   users.belongsToMany(users, { as: 'username1_users', through: userFriends, foreignKey: "username2", otherKey: "username1" });
   groupMembers.belongsTo(groups, { foreignKey: "groupId"});
   groups.hasMany(groupMembers, { foreignKey: "groupId"});
   plannedEvents.belongsTo(groups, { foreignKey: "groupId"});
   groups.hasMany(plannedEvents, { foreignKey: "groupId"});
+  rsvps.belongsTo(plannedEvents, { foreignKey: "plannedEventId"});
+  plannedEvents.hasMany(rsvps, { foreignKey: "plannedEventId"});
+  rsvps.belongsTo(rsvpResponses, { foreignKey: "response"});
+  rsvpResponses.hasMany(rsvps, { foreignKey: "response"});
   busyEvents.belongsTo(users, { foreignKey: "creatorUsername"});
   users.hasMany(busyEvents, { foreignKey: "creatorUsername"});
   friendRequests.belongsTo(users, { foreignKey: "fromUsername"});
@@ -39,6 +45,8 @@ export default function initModels(sequelize) {
   users.hasMany(groupMembers, { foreignKey: "username"});
   plannedEvents.belongsTo(users, { foreignKey: "creatorUsername"});
   users.hasMany(plannedEvents, { foreignKey: "creatorUsername"});
+  rsvps.belongsTo(users, { foreignKey: "username"});
+  users.hasMany(rsvps, { foreignKey: "username"});
   userFriends.belongsTo(users, { foreignKey: "username1"});
   users.hasMany(userFriends, { foreignKey: "username1"});
   userFriends.belongsTo(users, { foreignKey: "username2"});
