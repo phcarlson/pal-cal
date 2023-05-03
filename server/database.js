@@ -210,7 +210,10 @@ export async function updateBusyEvent(busyEventId, busyEventPatch) {
  * @param {string} busyEventId
  * @returns a busyEvent object
  */
-export async function getBusyEvent(busyEventId) {}
+export async function getBusyEvent(busyEventId) {
+    const busyEvent = await models.busyEvents.findByPk(busyEventId);
+    return busyEvent.dataValues;
+}
 
 /**
  * Batch retrieve info about multiple busy events
