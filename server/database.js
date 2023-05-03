@@ -151,7 +151,12 @@ export async function getGroups(groupIds) {
  * @param {string} groupId 
  * @returns an array of usernames
  */
-export async function getGroupMembers(groupId) {}
+export async function getGroupMemberUsernames(groupId) {
+    const users = await models.users.findAll({
+        include: [{model: models.groups, as: "groupId_groups", where: {groupId: groupId}}]
+    });
+    return users.map(user => user.username);
+}
 
 /**
  * Get all events planned by this group
