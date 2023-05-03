@@ -109,7 +109,10 @@ export async function deleteUser(username) {
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new group
  */
-export async function createGroup(group) {}
+export async function createGroup(group) {
+    const newGroup = await models.groups.create(group);
+    return newGroup.groupId;
+}
 
 /**
  * Update a group
