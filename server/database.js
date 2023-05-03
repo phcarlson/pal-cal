@@ -48,13 +48,6 @@ export async function getUsers(usernames) {
     return users.map(user => user.dataValues);
 }
 
-// await models.users.truncate({cascade: true});
-// console.log(await createUser({username: "user0", firstName: "Foo"}));
-// console.log(await createUser({username: "user1", college: "UMass"}));
-// console.log(await updateUser("user0", {lastName: "Bar"}));
-// console.log(await getUser("user0"));
-// console.log(await getUsers(["user0", "user1"]));
-
 /**
  * Get the IDs of all groups the user is in
  * @param {string} username 
@@ -67,7 +60,6 @@ export async function getGroupIdsOfUser(username) {
     });
     return groups.map(group => group.groupId);
 }
-console.log(await getGroupsOfUser("user0"));
 
 /**
  * Check if the given user exists in the database
