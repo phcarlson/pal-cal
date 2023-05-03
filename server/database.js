@@ -66,7 +66,10 @@ export async function getGroupIdsOfUser(username) {
  * @param {string} username 
  * @returns true or false
  */
-export async function userExists(username) {}
+export async function userExists(username) {
+    const user = await models.users.findByPk(username);
+    return user !== null;
+}
 
 /**
  * Get the usernames of every user in the system
