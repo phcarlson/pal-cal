@@ -439,7 +439,18 @@ export async function getFriendUsernamesOf(username) {
  * @param {string} fromUsername 
  * @param {string} toUsername 
  */
-export async function addFriendRequest(fromUsername, toUsername) {}
+export async function addFriendRequest(fromUsername, toUsername) {
+    try {
+
+        await models.friendRequests.create({
+            fromUsername: fromUsername,
+            toUsername: toUsername
+        });
+    }
+    catch(err) {
+        console.log(err);
+    }
+}
 
 /**
  * Delete a friend request from one user to another
