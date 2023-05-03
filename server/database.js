@@ -174,7 +174,10 @@ export async function getGroupPlannedEventIds(groupId) {
  * Delete a group
  * @param {string} groupId 
  */
-export async function deleteGroup(groupId) {}
+export async function deleteGroup(groupId) {
+    const group = await models.groups.findByPk(groupId);
+    await group.destroy();
+}
 
 // BUSY EVENTS
 /**
