@@ -269,7 +269,10 @@ export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
  * @param {string} plannedEventId 
  * @returns a plannedEvent object
  */
-export async function getPlannedEvent(plannedEventId) {}
+export async function getPlannedEvent(plannedEventId) {
+    const plannedEvent = await models.plannedEvents.findByPk(plannedEventId);
+    return plannedEvent.dataValues;
+}
 
 /**
  * Batch retrieve info about multiple planned events
