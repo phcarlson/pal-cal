@@ -25,6 +25,8 @@ export default function initModels(sequelize) {
   plannedEvents.belongsToMany(users, { as: 'username_users_rsvps', through: rsvps, foreignKey: "plannedEventId", otherKey: "username" });
   users.belongsToMany(groups, { as: 'groupId_groups', through: groupMembers, foreignKey: "username", otherKey: "groupId" });
   users.belongsToMany(plannedEvents, { as: 'plannedEventId_plannedEvents', through: rsvps, foreignKey: "username", otherKey: "plannedEventId" });
+  users.belongsToMany(users, { as: 'toUsername_users', through: friendRequests, foreignKey: "fromUsername", otherKey: "toUsername" });
+  users.belongsToMany(users, { as: 'fromUsername_users', through: friendRequests, foreignKey: "toUsername", otherKey: "fromUsername" });
   users.belongsToMany(users, { as: 'username2_users', through: userFriends, foreignKey: "username1", otherKey: "username2" });
   users.belongsToMany(users, { as: 'username1_users', through: userFriends, foreignKey: "username2", otherKey: "username1" });
   groupMembers.belongsTo(groups, { foreignKey: "groupId"});

@@ -6,7 +6,8 @@ export default class friendRequests extends Model {
   return super.init({
     fromUsername: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      primaryKey: true,
       references: {
         model: 'users',
         key: 'username'
@@ -14,7 +15,8 @@ export default class friendRequests extends Model {
     },
     toUsername: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
+      primaryKey: true,
       references: {
         model: 'users',
         key: 'username'
@@ -24,7 +26,17 @@ export default class friendRequests extends Model {
     sequelize,
     tableName: 'friendRequests',
     schema: 'public',
-    timestamps: false
+    timestamps: false,
+    indexes: [
+      {
+        name: "friendRequests_pk",
+        unique: true,
+        fields: [
+          { name: "fromUsername" },
+          { name: "toUsername" },
+        ]
+      },
+    ]
   });
   }
 }
