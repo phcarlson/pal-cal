@@ -97,7 +97,10 @@ export async function getUserBusyEventIds(username) {
  * Delete a user from the database
  * @param {string} username 
  */
-export async function deleteUser(username) {}
+export async function deleteUser(username) {
+    const user = await models.users.findByPk(username);
+    await user.destroy();
+}
 
 // GROUP
 /**
