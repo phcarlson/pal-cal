@@ -48,19 +48,26 @@ export async function getUsers(usernames) {
     return users.map(user => user.dataValues);
 }
 
-await models.users.truncate({cascade: true});
-console.log(await createUser({username: "user0", firstName: "Foo"}));
-console.log(await createUser({username: "user1", college: "UMass"}));
-console.log(await updateUser("user0", {lastName: "Bar"}));
-console.log(await getUser("user0"));
-console.log(await getUsers(["user0", "user1"]));
+// await models.users.truncate({cascade: true});
+// console.log(await createUser({username: "user0", firstName: "Foo"}));
+// console.log(await createUser({username: "user1", college: "UMass"}));
+// console.log(await updateUser("user0", {lastName: "Bar"}));
+// console.log(await getUser("user0"));
+// console.log(await getUsers(["user0", "user1"]));
 
 /**
  * Get the IDs of all groups the user is in
  * @param {string} username 
  * @returns An array of string group IDs
  */
-export async function getGroupsOfUser(username) {}
+export async function getGroupIdsOfUser(username) {
+    const groups = await models.groups.findAll({
+        include: [{ model: models.users, as: "username_users", where: { username: username } }],
+        attributes: ['groupId']
+    });
+    return groups.map(group => group.groupId);
+}
+console.log(await getGroupsOfUser("user0"));
 
 /**
  * Check if the given user exists in the database
