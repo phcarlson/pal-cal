@@ -7,15 +7,6 @@ import * as url from 'url';
 import * as Pool from 'pg';
 import env from 'dotenv';
 
-// env.config();
-
-// const pool = new Pool({
-//   user: 'postgres',
-//   host: 'localhost',
-//   database: 'testdb',
-//   password: 'password',
-//   port: 5432,
-// });
 
 // console.log(process.env.DATABASE_URL);
 // console.log(process.env.API_KEY);
