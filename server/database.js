@@ -30,8 +30,6 @@ export async function updateUser(username, userPatch) {
     }
 }
 
-await updateUser("user0", {biooo: "newbio"});
-
 /**
  * Get info about a user
  * @param {string} username The unique username of the user to get
