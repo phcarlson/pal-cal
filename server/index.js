@@ -7,15 +7,6 @@ import * as url from 'url';
 import * as Pool from 'pg';
 import env from 'dotenv';
 
-// env.config();
-
-// const pool = new Pool({
-//   user: 'postgres',
-//   host: 'localhost',
-//   database: 'testdb',
-//   password: 'password',
-//   port: 5432,
-// });
 
 // console.log(process.env.DATABASE_URL);
 // console.log(process.env.API_KEY);
@@ -95,27 +86,83 @@ app.patch('/update/user', async (request, response) => {
 // Delete a user obj by id
 app.delete('/delete/user', async (request, response) => {
   const options = request.query;
+  
+  const username = options.username;
+
+    // Check if username is even specified in order to delete
+    if(username === undefined){
+      response.status(400).send("Bad request: Username not defined");
+    }
+    else{
+      try{  
+        // database.deleteUser(username); ??? does anything have to happen with request body or can we just delete jser
+        response.status(200).send();
+      }
+      catch(error){
+        response.status(500).send();
+      }
+    }
 });
 
 // Get all user objs from ids listed 
 app.get('/get/users', async (request, response) => {
   const options = request.query;
   const requestBody = request.body;
+
+  
+
 });
 
 // Sees if username exists in DB
 app.get('/has/user', async (request, response) => {
   const options = request.query;
+  const username = options.username;
+
+  // Check if username is even specified in order check against DB
+  if(username === undefined){
+    response.status(400).send("Bad request: Username not defined");
+  }
+  else{
+    try{  
+      // database.userExists(username); 
+      response.status(200).send();
+    }
+    catch(error){
+      response.status(500).send();
+    }
+  }
 });
 
 // Gets group ids of groups that user is in
 app.get('/get/groupIds', async (request, response) => {
   const options = request.query;
+  const username = options.username;
+
+  // Check if username is even specified in order retreive its group IDs
+  if(username === undefined){
+    response.status(400).send("Bad request: Username not defined");
+  }
+  else{
+    try{  
+      // database.getGroupIdsOfUser(username); 
+      response.status(200).send();
+    }
+    catch(error){
+      response.status(500).send();
+    }
+  }
 });
 
 // Get all usernames in DB
 app.get('/get/usernames', async (request, response) => {
   const options = request.query;
+  try{
+    //database.getAllUsernames(); 
+    response.status(200).end();
+  }
+  catch(error){
+    response.status(500).end();
+  }
 });
 
 
