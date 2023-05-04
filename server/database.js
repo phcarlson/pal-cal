@@ -24,8 +24,13 @@ export async function createUser(user) {
  * Missing fields will be unchanged
  */
 export async function updateUser(username, userPatch) {
-    await models.users.update(userPatch, {where: {username: username}});
+    const changedRows = await models.users.update(userPatch, {where: {username: username}});
+    if (changedRows[0] === 0) {
+        throw new Error("Failed to update");
+    }
 }
+
+await updateUser("user0", {biooo: "newbio"});
 
 /**
  * Get info about a user
@@ -122,9 +127,12 @@ export async function createGroup(group) {
  * Missing fields will be unchanged
  */
 export async function updateGroup(groupId, groupPatch) {
-    await models.groups.update(groupPatch, {
+    const changedRows = await models.groups.update(groupPatch, {
         where: {groupId: groupId}
     });
+    if (changedRows[0] === 0) {
+        throw new Error("Failed to update");
+    }
 }
 
 /**
@@ -204,9 +212,12 @@ export async function createBusyEvent(busyEvent) {
  * Missing fields will be unchanged
  */
 export async function updateBusyEvent(busyEventId, busyEventPatch) {
-    await models.busyEvents.update(busyEventPatch, {
+    const changedRows = await models.busyEvents.update(busyEventPatch, {
         where: {busyEventId: busyEventId}
     });
+    if (changedRows[0] === 0) {
+        throw new Error("Failed to update");
+    }
 }
 
 /**
@@ -264,9 +275,12 @@ export async function createPlannedEvent(plannedEvent) {
  * Missing fields will be unchanged
  */
 export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
-    await models.plannedEvents.update(plannedEventPatch, {
+    const changedRows = await models.plannedEvents.update(plannedEventPatch, {
         where: {plannedEventId: plannedEventId}
     });
+    if (changedRows[0] === 0) {
+        throw new Error("Failed to update");
+    }
 }
 
 /**
