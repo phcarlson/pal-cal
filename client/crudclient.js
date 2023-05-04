@@ -163,7 +163,7 @@ export async function getAllUsernames() {
 export async function createBusyEvent(username, busyEvent) {
     // TODO: verify user doesn't have a conflicting event?
     try {
-        const response = await fetch(`/create/busyEvent?username=${username}`, {
+        const response = await fetch(`/create/busyEvent`, {
             method: 'POST',
             body: JSON.stringify(busyEvent)
         });
@@ -193,7 +193,6 @@ export async function getBusyEvent(busyEventId) {
 }
 
 
-//TODO: CLARIFY BETWEEN GETTING EVENTS AND IDS SINCE POSTGRES CALLS DID NOT HAVE DIFF
 /**
  * Batch retrieve info about multiple busy events
  * @param {Array[string]} busyEventIds A list of busy event IDs
@@ -259,7 +258,7 @@ export async function updateBusyEvent(busyEventId, busyEventPatch) {
  */
 export async function deleteBusyEvent(busyEventId) {
     try {
-        const response = await fetch(`/delete/busyEvent?username=${username}busyEventId=${busyEventId}`, {
+        const response = await fetch(`/delete/busyEvent?busyEventId=${busyEventId}`, {
             method: 'DELETE',
         });
     }

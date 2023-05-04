@@ -3,13 +3,8 @@ import logger from 'morgan';
 import { readFile, writeFile } from 'fs/promises';
 import * as http from 'http';
 import * as url from 'url';
-// import { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser } from "./database.js"
-import * as Pool from 'pg';
+import * as database from './database.js';
 import env from 'dotenv';
-
-
-// console.log(process.env.DATABASE_URL);
-// console.log(process.env.API_KEY);
 
 const app = express();
 const port = 3000;
@@ -25,14 +20,14 @@ app.use(express.urlencoded({ extended: false }));
 app.post('/create/user', async (request, response) => {
   const requestBody = request.body;
 
-  console.log(requestBody)
   try{
-    // database.createUser(requestBody);
+    await database.createUser(requestBody);
     response.status(200).end();
   }
   catch(error){
+    console.log(error);
   // Postgres should provide an error if username already exists, so that we have to find another username
-    response.status(500).end();
+    response.status(500).send(error.message);
   // Postgres should provide error when properties in object do not exist
   }
 });
@@ -49,12 +44,11 @@ app.get('/get/user', async (request, response) => {
   // If good, try to retrieve
   else {
     try{
-      // const userRetrieved = database.getUser(username);
-      const userRetrieved = {username:"username1"};
+      const userRetrieved = await database.getUser(username);
       response.status(200).json(userRetrieved);
     }
     catch(error){
-      response.status(500).send();
+      response.status(500).send(error.message);
     }
   }
 });
@@ -71,14 +65,16 @@ app.patch('/update/user', async (request, response) => {
   }
   else{
     try{  
-      // database.updateUser(requestBody);
+      await database.updateUser(username, requestBody);
+      const userRetrieved = await database.getUser(username);
       response.status(200).send();
     }
     catch(error){
+      //TODO:
       // Postgres should catch if user does not exist to patch
       // Postgres should catch if properties in object do not exist
 
-      response.status(500).send();
+      response.status(500).send(error.message);
     }
   }
 });
@@ -86,31 +82,22 @@ app.patch('/update/user', async (request, response) => {
 // Delete a user obj by id
 app.delete('/delete/user', async (request, response) => {
   const options = request.query;
-  
   const username = options.username;
-
-    // Check if username is even specified in order to delete
-    if(username === undefined){
-      response.status(400).send("Bad request: Username not defined");
+  // Check if username is even specified to patch user from
+  if(username === undefined){
+    response.status(400).send("Bad request: Username not defined");
+  }
+  else{
+    try{  
+      await database.deleteUser(username);
+      response.status(200).send();
     }
-    else{
-      try{  
-        // database.deleteUser(username); ??? does anything have to happen with request body or can we just delete jser
-        response.status(200).send();
-      }
-      catch(error){
-        response.status(500).send();
-      }
+    catch(error){
+      //TODO:
+      // Postgres should catch if user does not exist to patch
+      response.status(500).send(error.message);
     }
-});
-
-// Get all user objs from ids listed 
-app.get('/get/users', async (request, response) => {
-  const options = request.query;
-  const requestBody = request.body;
-
-  
-
+  }
 });
 
 // Sees if username exists in DB
@@ -124,12 +111,43 @@ app.get('/has/user', async (request, response) => {
   }
   else{
     try{  
-      // database.userExists(username); 
-      response.status(200).send();
+      //{exists: true}
+      const exists = await database.userExists(username); 
+      response.status(200).json({exists: exists});
     }
     catch(error){
-      response.status(500).send();
+      response.status(500).send(error.message);
     }
+  }
+});
+
+
+// Get all user objs from ids listed 
+app.get('/get/users', async (request, response) => {
+  const requestBody = request.body;
+  const usernames = requestBody.usernames;
+//{usernames:[     ]}
+
+  try{  
+      const users = await database.getUsers(usernames); 
+      response.status(200).json({users: users});
+    }
+    catch(error){
+      // TODO: error for user that doesn't exist?
+      response.status(500).send(error.message);
+    }
+});
+
+// Get all usernames in DB
+app.get('/get/usernames', async (request, response) => {
+  try{
+    //database.getAllUsernames(); 
+    const usernames = await database.getAllUsernames(); 
+
+    response.status(200).json({usernames: usernames});
+  }
+  catch(error){
+    response.status(500).send(error.message);
   }
 });
 
@@ -144,24 +162,13 @@ app.get('/get/groupIds', async (request, response) => {
   }
   else{
     try{  
-      // database.getGroupIdsOfUser(username); 
-      response.status(200).send();
+      const groupIds = await database.getGroupIdsOfUser(username); 
+      response.status(200).json({groupIds: groupIds});
     }
     catch(error){
-      response.status(500).send();
+      // TODO have db check for username not exists 
+      response.status(500).send(error.message);
     }
-  }
-});
-
-// Get all usernames in DB
-app.get('/get/usernames', async (request, response) => {
-  const options = request.query;
-  try{
-    //database.getAllUsernames(); 
-    response.status(200).end();
-  }
-  catch(error){
-    response.status(500).end();
   }
 });
 
@@ -171,83 +178,296 @@ app.get('/get/usernames', async (request, response) => {
 // TODO make sure you retrieve busy event correctly from body
 // Create busy event for specified user id's calendar
 app.post('/create/busyEvent', async (request, response) => {
-  const options = request.query;
   const requestBody = request.body;
+  try{
+    const eventId = await database.createBusyEvent(requestBody);
+    response.status(200).send({eventId: eventId});
+  }
+  catch(error){
+    response.status(500).send(error.message);
+  }
 });
 
 // Get busy event from specified user id's calendar
 app.get('/get/busyEvent', async (request, response) => {
   const options = request.query;
+  const busyEventId = options.busyEventId;
+   // Check if username is even specified in order retreive its group IDs
+  if(busyEventId === undefined){
+    response.status(400).send("Bad request: busyEvent id not defined");
+  }
+  else{
+    try{  
+      const busyEvent = await database.getBusyEvent(busyEventId); 
+      response.status(200).json({busyEvent: busyEvent});
+    }
+    catch(error){
+      // TODO have db check for username not exists 
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Get busy events from ids listed 
 app.get('/get/busyEvents', async (request, response) => {
-  const options = request.query;
-});
+  const requestBody = request.body;
+  const busyEventIds = requestBody.busyEventIds;
+  try{  
+    const busyEvents = await database.getBusyEvents(busyEventIds); 
+    response.status(200).json({busyEvents: busyEvents});
+  }
+  catch(error){
+    // TODO have db check for bad busyeventids
+    response.status(500).send(error.message);
+  }
+}
+);
 
 // Get all busy event ids from user specified
 app.get('/get/busyEventIds', async (request, response) => {
   const options = request.query;
+  const username = options.username;
+   // Check if username is even specified in order retreive its group IDs
+   if(username === undefined){
+    response.status(400).send("Bad request: Username not defined");
+  }
+  else{
+    try{  
+      const busyEventIds = await database.getUserBusyEventIds(username); 
+      response.status(200).json({busyEventIds: busyEventIds});
+    }
+    catch(error){
+      // TODO have db check for wrong username
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Update busy event from id specified
 app.patch('/update/busyEvent', async (request, response) => {
   const options = request.query;
+  const requestBody = request.body;
+  const busyEventId = options.busyEventId;
+
+  if(busyEventId === undefined){
+    response.status(400).send("Bad request: busyEvent id not defined");
+  }
+  else{
+    try{  
+      await database.updateBusyEvent(busyEventId, requestBody);
+      response.status(200).end();
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
+
 });
 
 // Delete busy event from id specified
 app.delete('/delete/busyEvent', async (request, response) => {
   const options = request.query;
+  const busyEventId = options.busyEventId;
+
+
+  if(busyEventId === undefined){
+    response.status(400).send("Bad request: busyEvent id not defined");
+  }
+  else{
+    try{  
+      await database.deleteBusyEvent(busyEventId);
+      response.status(200).end();
+    }
+    catch(error){
+      //TODO: check if delete didn't apply ?
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 
 // HANDLING USER FRIENDS:
 
 // Add friend from user id to user id
-app.put('/add/friend', async (request, response) => {
+app.post('/add/friend', async (request, response) => {
   const options = request.query;
+  const username1 = options.username1;
+  const username2 = options.username2;
+
+  if(username1 === undefined){
+    response.status(400).send("Bad request: username1 undefined");
+  }
+  else if(username2 === undefined){
+    response.status(400).send("Bad request: username2 undefined");
+  }
+  else{
+    try{
+      await database.addFriend(username1, username2);
+      response.status(200).end();
+
+    }
+    catch(error){
+
+      // TODO: when trying to add two friends that are already friends, in other order, validation error
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Get all friends from specified user id
 app.get('/get/friends', async (request, response) => {
   const options = request.query;
   const username = options.username;
+  if(username === undefined){
+    response.status(400).send("Bad request: username undefined");
+  }
+  else{
+    try{
+      const usernames = await database.getFriendUsernamesOf(username);
+      response.status(200).json({usernames:usernames});
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // See if two users are friends
 app.get('/has/friend', async (request, response) => {
   const options = request.query;
+  const username1 = options.username1;
+  const username2 = options.username2;
+
+  if(username1 === undefined){
+    response.status(400).send("Bad request: username1 undefined");
+  }
+  else if(username2 === undefined){
+    response.status(400).send("Bad request: username2 undefined");
+  }
+  else{
+    try{
+      const hasFriend = await database.areFriends(username1, username2);
+      response.status(200).send({hasFriend:hasFriend});
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Remove friendship between two users
 app.delete('/delete/friend', async (request, response) => {
   const options = request.query;
-});
+  const username1 = options.username1;
+  const username2 = options.username2;
+
+  if(username1 === undefined){
+    response.status(400).send("Bad request: username1 undefined");
+  }
+  else if(username2 === undefined){
+    response.status(400).send("Bad request: username2 undefined");
+  }
+  else{
+    try{
+      const hasFriend = await database.deleteFriend(username1, username2);
+      response.status(200).end();
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+}});
 
 
 // HANDLING USER FRIEND REQUESTS:
 
 // TODO make sure you retrieve request correctly from body
 // Add friend request from user to user
-app.put('/add/friendRequest', async (request, response) => {
+app.post('/add/friendRequest', async (request, response) => {
   const options = request.query;
+  const fromUsername = options.fromUsername;
+  const toUsername = options.toUsername;
+
+  if(fromUsername === undefined){
+    response.status(400).send("Bad request: fromUsername undefined");
+  }
+  else if(toUsername === undefined){
+    response.status(400).send("Bad request: toUsername undefined");
+  }
+  else{
+    try{
+      await database.addFriendRequest(fromUsername, toUsername);
+      response.status(200).end();
+
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Remove friend request from user to user
 app.delete('/delete/friendRequest', async (request, response) => {
   const options = request.query;
+  const fromUsername = options.fromUsername;
+  const toUsername = options.toUsername;
+
+  if(fromUsername === undefined){
+    response.status(400).send("Bad request: fromUsername undefined");
+  }
+  else if(toUsername === undefined){
+    response.status(400).send("Bad request: toUsername undefined");
+  }
+  else{
+    try{
+      await database.deleteFriendRequest(fromUsername, toUsername);
+      response.status(200).end();
+
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Get all friend requests to specified user id
 app.get('/get/friendRequests/to', async (request, response) => {
   const options = request.query;
+  const username = options.username;
+
+  if(username === undefined){
+    response.status(400).send("Bad request: username undefined");
+  }
+  else{
+    try{
+      const friendRequestsTo = await database.getRequestUsernamesTo(username);
+      response.status(200).send({friendRequestsTo:friendRequestsTo});
+
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
 });
 
 // Get all friend requests from specified user id
 app.get('/get/friendRequests/from', async (request, response) => {
   const options = request.query;
-});
+  const username = options.username;
+  
+  if(username === undefined){
+    response.status(400).send("Bad request: username undefined");
+  }
+  else{
+    try{
+      const friendRequestsFrom = await database.getRequestUsernamesFrom(username);
+      response.status(200).send({friendRequestsFrom:friendRequestsFrom});
 
+    }
+    catch(error){
+      response.status(500).send(error.message);
+    }
+  }
+});
 
 // HANDLING GROUPS:
 
