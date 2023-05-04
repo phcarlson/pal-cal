@@ -2,11 +2,14 @@
   "type": "module",
   "dependencies": {
     "dotenv": "^16.0.3",
-    "env": "^0.0.2",
     "express": "^4.18.2",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.22",
     "pg": "^8.10.0",
-    "pouchdb": "^8.0.1"
+    "pg-format": "^1.0.4",
+    "pg-hstore": "^2.3.4",
+    "pouchdb": "^8.0.1",
+    "sequelize": "^6.31.1",
+    "sequelize-auto": "^0.8.8"
   }
 }

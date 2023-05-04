@@ -1,564 +1,497 @@
-// import { readFile, writeFile } from 'fs/promises';
+import 'dotenv/config';
+import { Sequelize, Op, QueryTypes } from 'sequelize';
+import initModels from './models/init-models.js';
 
-// /** A class representing a database to store scores */
-// class Database {
-//   constructor() {
-//     this.path = 'scores.json';
-//   }
+const sequelize = new Sequelize(process.env.DATABASE_URL);
+await sequelize.authenticate();
+const models = initModels(sequelize);
 
-//   /**
-//    * Saves a word score to the database.
-//    *
-//    * This method reads the database file as an object, adds the new score to the
-//    * data, and then writes the data back to the database file.
-//    *
-//    * @param {string} name the name of the player
-//    * @param {string} word the word played
-//    * @param {number} score the score of the word
-//    */
-//   async saveWordScore(name, word, score) {
-//     // TODO #4: Implement this method.
-//     // if database doesn't already have a scores Obj, inits the first game 
-//     let scoresObj = await this._read();
-//     this._ensureGamesExists(scoresObj);
-//     let gamesList = scoresObj['games'];
-
-//     gamesList[gamesList.length - 1].wordScores.push({name: name, word: word, score: score});
-//     await this._write(scoresObj);
-//   }
-//   /**
-//    * Saves a game score to the database.
-//    *
-//    * This method reads the database file as an object, adds the new score to the
-//    * data, and then writes the data back to the database file.
-//    *
-//    * @param {string} name the name of the player
-//    * @param {number} score the score of the game
-//    */
-//   async saveGameScore(name, score) {
-//     // TODO #5: Implement this method.
-//     let scoresObj = await this._read();
-//     this._ensureGamesExists(scoresObj); 
-
-//     // Add new game score to the game at end of the games score list, where game 0 is at index 0, game 1 is at index 1...
-//     let gamesList = scoresObj['games'];
-//     gamesList[gamesList.length - 1].gameScores.push({name: name, score: score});
-
-//     await this._write(scoresObj);
-//   }
-//   /**
-//    * Returns the top 10 word scores.
-//    *
-//    * This method reads the database file as an object, sorts the word scores by
-//    * word score, and returns the top 10.
-//    *
-//    * @returns [{name: string, word: string, score: number}] returns the top 10
-//    * scores
-//    */
-//   async top10WordScores() {
-//     // TODO #6: Implement this method.
-//     let scoresObj = await this._read();
-//     this._ensureGamesExists(scoresObj); 
-
-//     let gamesList = scoresObj['games'];
-//     let wordScores = gamesList[gamesList.length - 1]['wordScores'];
-
-//     // if 10 > length of array, slice auto returns to end
-//     let top10WordScores = wordScores.sort((a,b) => b.score - a.score).slice(0,10);
-//     return JSON.stringify(top10WordScores);
-//   }
-
-//   /**
-//    * Returns the top 10 game scores.
-//    *
-//    * This method reads the database file as an object, sorts the game scores by
-//    * game score, and returns the top 10.
-//    *
-//    * @returns [{name: string, score: number}] returns the top 10 game scores
-//    */
-//   async top10GameScores() {
-//     // TODO #7: Implement this method.
-//     let scoresObj = await this._read();
-//     this._ensureGamesExists(scoresObj); 
-
-//     let gamesList = scoresObj['games'];
-//     let gameScores = gamesList[gamesList.length - 1].gameScores;
-
-//     // if 10 > length of array, slice auto returns to end
-//     let top10GameScores = gameScores.sort((a,b) => b.score - a.score).slice(0,10);
-//     return JSON.stringify(top10GameScores);
-//   }
-
-//   async _read() {
-//     try {
-//       const data = await readFile(this.path, {encoding: 'utf8'});
-//       return JSON.parse(data);
-//     } catch (error) {
-//       return { games: [{gameScores: [], wordScores:[]}]};
-//     }
-//   }
-
-//   // This is a private methods. The # prefix means that they are private.
-//   async _write(data) {
-
-//     await writeFile(this.path, JSON.stringify(data), {encoding: 'utf8'});
-//   }
-
-//   _ensureGamesExists(scoresObj){
-//     // if it has this property, we know that we have already created the expected format
-//     // otherwise, init said format defined above where we are assuming this must be our first game since nothing was stored before
-//     if (scoresObj.hasOwnProperty('games') === false){
-//       scoresObj = { games: [{gameScores: [], wordScores:[]}]};
-//       // console.log("hello");
-//     }
-//   }
-
-// }
-
-// const database = new Database();
-
-// export { database };
-
-
-// import PouchDB from 'pouchdb';
-import { BusyEvent, PlannedEvent } from '../client/datatypes.js';
-
-// let userDb = new PouchDB("users.pouchdb");
-// let groupDb = new PouchDB("groups.pouchdb");
-let userDb = new PouchDB("users.pouchdb");
-let groupDb = new PouchDB("groups.pouchdb");
-// await userDb.destroy();
-// await groupDb.destroy();
-
-// userDb = new PouchDB("users.pouchdb");
-// groupDb = new PouchDB("groups.pouchdb");
-
+// USER
 /**
- * Wrapper around getting a property of a document in a PouchDB store
- * @param {PouchDB} db The database to access
- * @param {string} _id The id of the document
- * @param {string} property The name of the property to access
- * @returns The current value of the given property of the given document
+ * Creates a user with the given properties
+ * @param {Object} user MUST have a field called username.
+ * Can have zero or more of these fields: firstName, lastName, college, bio, image
+ * Missing fields will be given sane default values
  */
-async function _getProperty(db, _id, property) {
-    try {
-        const data = await db.get(_id);
-        return data[property];
-    }
-    catch (err) {
-        console.log(err);
-    }
+export async function createUser(user) {
+    await models.users.create(user);
 }
 
 /**
- * Wrapper around setting a property of a document in a PouchDB store
- * @param {PouchDB} db The database to access
- * @param {string} _id The id of the document
- * @param {string} property The name of the property to access
- * @param {*} value New value to set the property to
+ * Update a user
+ * @param {string} username The unique username of the user to update
+ * @param {Object} userPatch An object containing the values to change
+ * Has one or more of these fields: username, firstName, lastName, college, bio, image
+ * Missing fields will be unchanged
  */
-async function _setProperty(db, _id, property, value) {
-    try {
-        const data = await db.get(_id);
-        data[property] = value;
-        db.put(data);
-    }
-    catch (err) {
-        console.log(err);
-    }
-}
-
-// TODO: abstract dictionary/hashset getAll/add/remove functions
-
-/**
- * Returns an object allowing querying and modifying a given user
- * @param {string} username The unique username identifying the user
- * @param {PouchDB} db The database holding users. OPTIONAL - defaults to the main user
- * database, a different database can be provided for test purposes
- * @returns A closure holding a bunch of crud functions for the given user
- */
-function getUser(username, db=userDb) {
-    const imageId = "userImage";
-
-    const user = {
-        /**
-         * Set the user's profile picture
-         * How this is actually typed is still tbd, image types seem a little
-         * complicated
-         * See https://pouchdb.com/guides/attachments.html#allow-the-user-to-store-an-attachment
-         * for info on blob vs buffer vs base64 etc
-         * How we actually handle this will depend on how we do image uploads
-         * @param {Buffer} image The new image
-         */
-        setImage: async function(image) {
-            try {
-                const data = await db.get(username);
-                db.putAttachment(data._id, imageId, data._rev, image);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        },
-
-        /**
-         * Get the user's profile picture
-         * @returns A Buffer representing the image
-         */
-        getImage: async function() {
-            try {
-                return db.getAttachment(username, imageId);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        },
-
-        /**
-         * Add a time the user is busy to their calendar
-         * @param {BusyEvent} busyEvent 
-         */
-        addBusyEvent: async function(busyEvent) {
-            const data = await db.get(username);
-            // TODO: verify user doesn't have a conflicting event?
-            data.eventsList.push(busyEvent);
-            await db.put(data);
-        },
-
-        /**
-         * Get all of this user's recurring busy events
-         * @returns An array of BusyEvent objects
-         */
-        getBusyEvents: async function() {
-            const data = await db.get(username);
-            return data.eventsList;
-        },
-
-        // TODO: delete busy event, edit busy event
-        // How to identify the event to delete? Do events need IDs too?
-
-        /**
-         * Add another user to this user's friends list, by username
-         * Note this is not reciprocal - adding A to B's friends does not
-         * add B to A's friends, so make sure to do both
-         * Also note: does not currently validate that friendUsername refers to
-         * an actual user, just naively adds whatever name you give it
-         * @param {string} friendUsername Username of the friend to add
-         */
-        addFriend: async function(friendUsername) {
-            const data = await db.get(username);
-            // TODO: verify friend ID exists
-            // TODO: verify not already a friend?
-            data.friendsDict[friendUsername] = 1;
-            await db.put(data);
-        },
-
-        /**
-         * Remove a user from this user's friends list, by username
-         * @param {string} friendUsername Username of the friend to remove
-         */
-        removeFriend: async function(friendUsername) {
-            // TODO: verify users are friends
-            const data = await db.get(username);
-            delete data.friendsDict[friendUsername];
-            await db.put(data);
-        },
-
-        /**
-         * Check if this user has the given user in their friends list
-         * @param {string} friendUsername Username of the friend to check
-         * @returns True iff user friendUsername is in this user's friends
-         */
-        hasFriend: async function(friendUsername) {
-            const data = await db.get(username);
-            return (friendUsername in data.friendsDict);
-        },
-
-        /**
-         * Get a list of this user's friends
-         * Note - if you just want to check if this user has a specific friend,
-         * hasFriend will be more efficient
-         * @returns An Array of the usernames of everybody in this user's
-         * friends list
-         */
-        getAllFriends: async function() {
-            const data = await db.get(username);
-            return Object.keys(data.friendsDict);
-        },
-
-        /**
-         * Record that this user has a pending friend request from the given user
-         * Note: does not currently verify that the other user exists, that they
-         * are not already friends, or that there is not already a request from
-         * them.
-         * @param {username} friendUsername 
-         */
-        addFriendRequestFrom: async function(friendUsername) {
-            // TODO:
-            //   - verify friend exists
-            //   - verify not already friends
-            //   - verify not already requested
-            const data = await db.get(username);
-            data.requestsDict[friendUsername] = 1;
-            await db.put(data);
-        },
-
-        /**
-         * Remove any friend request from the given user, indicating it has
-         * been accepted or rejected
-         * @param {string} friendUsername Username of the friend who sent the request
-         */
-        removeFriendRequestFrom: async function(friendUsername) {
-            const data = await db.get(username);
-            delete data.requestsDict[friendUsername];
-            await db.put(data);
-        },
-
-                /**
-         * Get a list of this user's friends requests
-         * @returns An Array of the usernames of everybody in this user's
-         * friends request list
-         */
-        getAllFriendRequests: async function() {
-            const data = await db.get(username);
-            return Object.keys(data.requestsDict);
-        },
-
-        /**
-         * Get the usernames of everyone who has sent a pending friend request
-         * to this user
-         * @returns An array of usernames
-         */
-        getAllFriendRequests: async function() {
-            const data = await db.get(username);
-            return Object.keys(data.requestsDict);
-        },
-
-        /**
-         * Get the id of every group this user is a member of
-         * @param {PouchDB} localGroupDb The PouchDB database storing groups.
-         * Optional - defaults to the main group database, a different db can be
-         * provided e.g. for testing purposes
-         * @returns An Array of group IDs
-         */
-        getAllGroups: async function(localGroupDb=groupDb) {
-            // This linear scan is a pretty inefficient way to do it!
-            // Ideally I'd like to figure out PouchDB indexing but haven't gotten there yet
-            const allGroups = await localGroupDb.allDocs({include_docs: true});
-            return allGroups.rows.reduce((acc, row) => {
-                if (username in row.doc.memberDict) {
-                    acc.push(row.id);
-                }
-                return acc;
-            }, []);
-        },
-
-        getFirstName: async () => await _getProperty(db, username, "firstName"),
-        getLastName:  async () => await _getProperty(db, username, "lastName"),
-        getCollege:   async () => await _getProperty(db, username, "college"),
-        getBio:       async () => await _getProperty(db, username, "bio"),
-
-        setFirstName: async value => await _setProperty(db, username, "firstName", value),
-        setLastName:  async value => await _setProperty(db, username, "lastName", value),
-        setCollege:   async value => await _setProperty(db, username, "college", value),
-        setBio:       async value => await _setProperty(db, username, "bio", value),
-    };
-    return user;
+export async function updateUser(username, userPatch) {
+    await models.users.update(userPatch, {where: {username: username}});
 }
 
 /**
- * Create a new user with the given username
- * All other user fields default to empty
- * Note: username must be unique! There is not yet proper error handling, so
- * this will just crash if you provide a username that is taken.
- * In the future, this should throw a custom exception you can catch and handle
+ * Get info about a user
+ * @param {string} username The unique username of the user to get
+ * @returns A User object
+ */
+export async function getUser(username) {
+    const user = await models.users.findByPk(username);
+    return user.dataValues;
+}
+
+/**
+ * Batch retrieve info about multiple users
+ * @param {Array[string]} usernames A list of usernames
+ * @returns A list of User objects
+ */
+export async function getUsers(usernames) {
+    const users = await models.users.findAll({where: {username: {[Op.in]: usernames}}});
+    return users.map(user => user.dataValues);
+}
+
+/**
+ * Get the IDs of all groups the user is in
  * @param {string} username 
- * @param {PouchDB} db The database holding users. OPTIONAL - defaults to the main user
- * database, a different database can be provided for test purposes
+ * @returns An array of string group IDs
  */
-async function createUser(username, db=userDb) {
-    try {
-        const user = {
-            _id: username,
-            eventsList: [],
-            friendsDict: {},
-            firstName: "",
-            lastName: "",
-            college: "",
-            bio: "",
-            requestsDict: {}
-        };
-        await db.put(user);
-    }
-    catch (err){
-        console.log(err);
-    }
+export async function getGroupIdsOfUser(username) {
+    const groups = await models.groups.findAll({
+        include: [{ model: models.users, as: "username_users", where: { username: username } }],
+        attributes: ['groupId']
+    });
+    return groups.map(group => group.groupId);
 }
 
 /**
- * Check if there is a user with the given username
+ * Check if the given user exists in the database
  * @param {string} username 
- * @param {*} db The database holding users. OPTIONAL - defaults to the main user
- * database, a different database can be provided for test purposes
- * @returns True iff a user called `username` exists in the database
+ * @returns true or false
  */
-async function userExists(username, db=userDb) {
+export async function userExists(username) {
+    const user = await models.users.findByPk(username);
+    return user !== null;
+}
+
+/**
+ * Get the usernames of every user in the system
+ * @returns An array of String usernames
+ */
+export async function getAllUsernames() {
+    const users = await models.users.findAll({attributes: ["username"]});
+    return users.map(user => user.username);
+}
+
+/**
+ * Get the IDs all busy events on a user's calendar
+ * @param {string} username 
+ * @returns An array of String event IDs
+ */
+export async function getUserBusyEventIds(username) {
+    const busyEvents = await models.busyEvents.findAll({
+        attributes: ["busyEventId"],
+        where: {creatorUsername: username}
+    });
+    return busyEvents.map(event => event.busyEventId);
+}
+
+/**
+ * Delete a user from the database
+ * @param {string} username 
+ */
+export async function deleteUser(username) {
+    await models.users.destroy({
+        where: {username: username}
+    });
+}
+
+// GROUP
+/**
+ * Create a group with the given properties
+ * @param {Object} group Can have zero or more of these fields: name, image.
+ * Missing fields will be given sane default values
+ * @returns A unique string ID for the new group
+ */
+export async function createGroup(group) {
+    const newGroup = await models.groups.create(group);
+    return newGroup.groupId;
+}
+
+/**
+ * Update a group
+ * @param {string} groupId 
+ * @param {Object} groupPatch An object containing the values to change
+ * Has one or more of these fields: name, image
+ * Missing fields will be unchanged
+ */
+export async function updateGroup(groupId, groupPatch) {
+    await models.groups.update(groupPatch, {
+        where: {groupId: groupId}
+    });
+}
+
+/**
+ * Get info about a group
+ * @param {string} groupId 
+ * @returns a Group object
+ */
+export async function getGroup(groupId) {
+    const group = await models.groups.findByPk(groupId);
+    return group.dataValues;
+}
+
+/**
+ * Batch retrieve info about multiple groups
+ * @param {Array[string]} groupIds A list of string group IDs
+ * @returns an array of Group objects
+ */
+export async function getGroups(groupIds) {
+    const groups = await models.groups.findAll({ where: { groupId: { [Op.in]: groupIds } } });
+    return groups.map(group => group.dataValues);
+}
+
+/**
+ * Get the username of every member of this group
+ * @param {string} groupId 
+ * @returns an array of usernames
+ */
+export async function getGroupMemberUsernames(groupId) {
+    const users = await models.users.findAll({
+        include: [{model: models.groups, as: "groupId_groups", where: {groupId: groupId}}]
+    });
+    return users.map(user => user.username);
+}
+
+/**
+ * Get all events planned by this group
+ * @param {string} groupId 
+ * @returns an array of planned event IDs
+ */
+export async function getGroupPlannedEventIds(groupId) {
+    const plannedEvents = await models.plannedEvents.findAll({
+        where: {groupId: groupId}
+    });
+    return plannedEvents.map(event => event.plannedEventId);
+}
+
+/**
+ * Delete a group
+ * @param {string} groupId 
+ */
+export async function deleteGroup(groupId) {
+    await models.groups.destroy({
+        where: {groupId: groupId}
+    });
+}
+
+// BUSY EVENTS
+/**
+ * Create a new busy event with the given properties
+ * @param {Object} busyEvent MUST have a creatorUsername field
+ * May have zero or more of these fields: title, startDay, startHour,
+ * startMinute, endDay, endHour, endMinute
+ * Missing fields will be given sane default values
+ * @returns A unique string ID for the new event
+ */
+export async function createBusyEvent(busyEvent) {
+    const newEvent = await models.busyEvents.create(busyEvent);
+    return newEvent.busyEventId;
+}
+
+/**
+ * Update a busy event
+ * @param {string} busyEventId 
+ * @param {Object} busyEventPatch An object containing the values to change
+ * Has one or more of these fields: title, startDay, startHour, startMinute,
+ * endDay, endHour, endMinute
+ * Missing fields will be unchanged
+ */
+export async function updateBusyEvent(busyEventId, busyEventPatch) {
+    await models.busyEvents.update(busyEventPatch, {
+        where: {busyEventId: busyEventId}
+    });
+}
+
+/**
+ * Get info about a busy event
+ * @param {string} busyEventId
+ * @returns a busyEvent object
+ */
+export async function getBusyEvent(busyEventId) {
+    const busyEvent = await models.busyEvents.findByPk(busyEventId);
+    return busyEvent.dataValues;
+}
+
+/**
+ * Batch retrieve info about multiple busy events
+ * @param {Array[string]} busyEventIds A list of busy event IDs
+ * @returns a list of busyEvent objects
+ */
+export async function getBusyEvents(busyEventIds) {
+    const busyEvents = await models.busyEvents.findAll({
+        where: {busyEventId: {[Op.in]: busyEventIds}}
+    });
+    return busyEvents.map(busyEvent => busyEvent.dataValues);
+}
+
+/**
+ * Delete a busy event
+ * @param {string} busyEventId 
+ */
+export async function deleteBusyEvent(busyEventId) {
+    await models.busyEvents.destroy({
+        where: {busyEventId: busyEventId}
+    });
+}
+
+// PLANNED EVENTS
+/**
+ * Create a new planned event
+ * @param {Object} plannedEvent MUST have creatorUsername and groupId fields
+ * Can have zero or more of these fields: title, startDay, startHour, startMinute,
+ * endDay, endHour, endMinute, location, description
+ * Missing fields will be given sane default values
+ * @returns A unique string ID for the new event
+ */
+export async function createPlannedEvent(plannedEvent) {
+    const newEvent = await models.plannedEvents.create(plannedEvent);
+    return newEvent.plannedEventId;
+}
+
+/**
+ * Update a planned event
+ * @param {string} plannedEventId 
+ * @param {Object} plannedEventPatch An object containing the values to change
+ * Has one or more of these fields: title, startDay, startHour, startMinute,
+ * endDay, endHour, endMinute, location, description
+ * Missing fields will be unchanged
+ */
+export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
+    await models.plannedEvents.update(plannedEventPatch, {
+        where: {plannedEventId: plannedEventId}
+    });
+}
+
+/**
+ * Get info about a planned event
+ * @param {string} plannedEventId 
+ * @returns a plannedEvent object
+ */
+export async function getPlannedEvent(plannedEventId) {
+    const plannedEvent = await models.plannedEvents.findByPk(plannedEventId);
+    return plannedEvent.dataValues;
+}
+
+/**
+ * Batch retrieve info about multiple planned events
+ * @param {Array[string]} plannedEventIds 
+ * @returns a list of plannedEvent objects
+ */
+export async function getPlannedEvents(plannedEventIds) {
+    const plannedEvents = await models.plannedEvents.findAll({
+        where: {plannedEventId: {[Op.in]: plannedEventIds}}
+    });
+    return plannedEvents.map(plannedEvent => plannedEvent.dataValues);
+}
+
+/**
+ * Delete a planned event
+ * @param {string} plannedEventId 
+ */
+export async function deletePlannedEvent(plannedEventId) {
+    await models.plannedEvents.destroy({
+        where: {plannedEventId: plannedEventId}
+    });
+}
+
+// PLANNED EVENT RSVPS
+/**
+ * Record a user RSVPing to a planned event
+ * @param {string} plannedEventId 
+ * @param {string} username 
+ * @param {string} response one of "YES", "NO", "MAYBE"
+ */
+export async function addRsvp(plannedEventId, username, response) {
+   await models.rsvps.create({
+        username: username,
+        plannedEventId: plannedEventId,
+        response: response
+    });
+}
+
+
+/**
+ * Remove a user's RSVP to a planned event
+ * @param {string} plannedEventId 
+ * @param {string} username 
+ */
+export async function deleteRsvp(plannedEventId, username) {
+    await models.rsvps.destroy({
+        where: {
+            plannedEventId: plannedEventId,
+            username: username
+        }
+    })
+}
+
+/**
+ * Get the username of everyone who RSVPed 'yes' to this event
+ * @param {string} plannedEventId 
+ */
+export async function getYesRsvpsTo(plannedEventId) {
+    const results = await models.rsvps.findAll({
+        where: {
+            plannedEventId: plannedEventId,
+            response: "YES"
+        },
+        attributes: ["username"]
+    });
+    return results.map(result => result.username);
+}
+
+/**
+ * Get the username of everyone who RSVPed 'no' to this event
+ * @param {string} plannedEventId 
+ */
+export async function getNoRsvpsTo(plannedEventId) {
+    const results = await models.rsvps.findAll({
+        where: {
+            plannedEventId: plannedEventId,
+            response: "NO"
+        },
+        attributes: ["username"]
+    });
+    return results.map(result => result.username);
+}
+
+/**
+ * Get the username of everyone who RSVPed 'maybe' to this event
+ * @param {string} plannedEventId 
+ */
+export async function getMaybeRsvpsTo(plannedEventId) {
+    const results = await models.rsvps.findAll({
+        where: {
+            plannedEventId: plannedEventId,
+            response: "MAYBE"
+        },
+        attributes: ["username"]
+    });
+    return results.map(result => result.username);
+}
+
+// FRIENDS
+/**
+ * Make these two users friends
+ * @param {string} username1 
+ * @param {string} username2 
+ */
+export async function addFriend(username1, username2) {
+    await models.userFriends.create({username1: username1, username2: username2});
+}
+
+/**
+ * Check if these users are friends
+ * @param {string} username1 
+ * @param {string} username2 
+ * @returns boolean true or false
+ */
+export async function areFriends(username1, username2) {
+    const result = await models.userFriends.findAll({
+        where: {[Op.or]: [
+            {username1: username1, username2: username2},
+            {username1: username2, username2: username1}
+        ]}
+    });
+    return result.length !== 0;
+}
+
+/**
+ * Make these two users no longer friends
+ * @param {string} username1 
+ * @param {string} username2 
+ */
+export async function deleteFriend(username1, username2) {
+    await models.userFriends.destroy({
+        where: {[Op.or]: [
+            {username1: username1, username2: username2},
+            {username1: username2, username2: username1}
+        ]}
+    });
+}
+
+/**
+ * Get the usernames of all friends of this user
+ * @param {string} username 
+ * @returns an array of string usernames
+ */
+export async function getFriendUsernamesOf(username) {
+    // we need to get 'other' from tuples of both (username, other)
+    // and (other, username), since friendship is reflexive
+    // sequelize doesn't support union queries, so easier to just do it with
+    // raw SQL
+    const results = await sequelize.query(
+        `SELECT username2 FROM "userFriends" WHERE username1 = :username
+         UNION
+         SELECT username1 FROM "userFriends" WHERE username2 = :username
+        `,
+        {
+            replacements: { username: username },
+            type: QueryTypes.SELECT
+        }
+    );
+    return results;
+}
+
+// FRIEND REQUESTS
+/**
+ * Add a friend request from one user to another
+ * @param {string} fromUsername 
+ * @param {string} toUsername 
+ */
+export async function addFriendRequest(fromUsername, toUsername) {
     try {
-        await db.get(username);
-        return true;
+
+        await models.friendRequests.create({
+            fromUsername: fromUsername,
+            toUsername: toUsername
+        });
     }
     catch(err) {
-        return false;
-    }
-}
-
-/**
- * Get the username of every user in the system
- * Note: if you just want to use this list to check if a user exists, use
- * userExists instead, it's more efficient
- * @param {*} db The database holding users. OPTIONAL - defaults to the main user
- * database, a different database can be provided for test purposes
- * @returns An Array of strings representing all users' usernames
- */
-async function getAllUsernames(db=userDb) {
-    const docs = await db.allDocs();
-    return docs.rows.map(row => row.id);
-}
-
-/**
- * Create a new group. All group fields default to empty.
- * @param {PouchDB} db The database holding groups. OPTIONAL - defaults to the main group
- * database, a different database can be provided for test purposes
- * @returns The unique ID of the new group. Make sure to save if you want to
- * refer to the group after!
- */
-async function createGroup(db=groupDb) {
-    try {
-        const group = {
-            groupName: "",
-            memberDict: {},
-            eventsList: []
-        };
-        const response = await db.post(group);
-        return response.id;
-    }
-    catch(err) {
         console.log(err);
     }
 }
 
 /**
- * Returns an object allowing querying and modifying a given group
- * @param {string} groupId The unique ID identifying the group, as returned by
- * createGroup
- * @param {PouchDB} db The database holding groups. OPTIONAL - defaults to the main group
- * database, a different database can be provided for test purposes
- * @returns A closure holding a bunch of crud functions for the given group
+ * Delete a friend request from one user to another
+ * @param {string} fromUsername 
+ * @param {string} toUsername 
  */
-function getGroup(groupId, db=groupDb) {
-    const imageId = "groupImage";
-    const group = {
-        /**
-         * Set the group image
-         * How this is actually typed is still tbd, image types seem a little
-         * complicated
-         * See https://pouchdb.com/guides/attachments.html#allow-the-user-to-store-an-attachment
-         * for info on blob vs buffer vs base64 etc
-         * How we actually handle this will depend on how we do image uploads
-         * @param {Buffer} image The new image
-         */
-        setImage: async function(image) {
-            try {
-                const data = await db.get(groupId);
-                db.putAttachment(data._id, imageId, data._rev, image);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        },
+export async function deleteFriendRequest(fromUsername, toUsername) {
+    await models.friendRequests.destroy({
+        where: {
+            fromUsername: fromUsername,
+            toUsername: toUsername
+        }
+    });}
 
-        /**
-         * Get the group image
-         * @returns A Buffer object representing the image
-         */
-        getImage: async function() {
-            try {
-                return db.getAttachment(groupId, imageId);
-            }
-            catch (err) {
-                console.log(err);
-            }
-        },
-
-        /**
-         * Add the given user to this group, if not already a member
-         * Note: does not currently validate that the given user exists!
-         * @param {string} username The unique username of the user to add
-         * @param {*} localUserDb The database holding users. OPTIONAL - 
-         * defaults to the main user database, a different database can be 
-         * provided for test purposes
-         */
-        addMember: async function(username, localUserDb=userDb) {
-            // TODO: verify user exists?
-            // TODO: verify user not already in group
-            const group = await db.get(groupId);
-            group.memberDict[username] = 1;
-            await db.put(group);
-        },
-
-        /**
-         * Remove the given user from this group, if they are a member
-         * @param {string} username Username of the user to remove
-         */
-        removeMember: async function(username) {
-            // TODO: verify user is in group
-            const group = await db.get(groupId);
-            delete group.memberDict[username];
-            await db.put(group);
-        },
-
-        /**
-         * Check if the given user is in this group
-         * @param {string} username 
-         * @returns True iff there is a user with the given username in this group
-         */
-        hasMember: async function(username) {
-            const group = await db.get(groupId);
-            return (username in group.memberDict);
-        },
-
-        /**
-         * Get a list of all group members
-         * @returns An Array of the usernames of everybody in the group
-         */
-        getAllMemberIds: async function() {
-            const group = await db.get(groupId);
-            return Object.keys(group.memberDict);
-        },
-
-        /**
-         * Add a planned event to the group calendar
-         * @param {PlannedEvent} plannedEvent 
-         */
-        addPlannedEvent: async function(plannedEvent) {
-            const data = await db.get(groupId);
-            // TODO: verify user doesn't have a conflicting event?
-            data.eventsList.push(plannedEvent);
-            await db.put(data);
-        },
-
-        /**
-         * Get a list of all planned events on the group calendar
-         * @returns An Array of PlannedEvent objects
-         */
-        getPlannedEvents: async function() {
-            const data = await db.get(groupId);
-            return data.eventsList;
-        },
-        
-        getGroupName: async ()    => await _getProperty(db, groupId, "groupName"),
-        setGroupName: async value => await _setProperty(db, groupId, "groupName", value)
-    }
-    return group;
+/**
+ * Get everyone who's sent a friend request to this user
+ * @param {string} username 
+ * @returns an array of string usernames
+ */
+export async function getRequestUsernamesTo(username) {
+    const result = await models.friendRequests.findAll({
+        where: {toUsername: username}
+    });
+    return result.map(request => request.fromUsername);
 }
 
-export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
+/**
+ * Get everyone to whom this user has sent a friend request
+ * @param {string} username 
+ * @returns an array of string usernames
+ */
+export async function getRequestUsernamesFrom(username) {
+    const result = await models.friendRequests.findAll({
+        where: {fromUsername: username}
+    });
+    return result.map(request => request.toUsername);
+}
