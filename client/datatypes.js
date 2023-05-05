@@ -8,7 +8,7 @@
  * 
  * username = unique string
  * firstName, lastName = string
- * eventsList = List of BusyEvent objects
+ * eventsList = List of BusyEvent unique ids
  * friendsList = List of User unique usernames
  * groupsList = List of Group unique ids
  * college = string 
