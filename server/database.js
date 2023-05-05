@@ -187,6 +187,19 @@ export async function deleteGroup(groupId) {
     });
 }
 
+export async function addGroupMember(groupId, username) {
+    await models.groupMembers.create({groupId: groupId, username: username});
+}
+
+export async function removeGroupMember(groupId, username) {
+    // TODO: error if member not in group
+    await models.groupMembers.destroy({where: {
+        groupId: groupId,
+        username: username
+    }});
+}
+
+await removeGroupMember("88b2b71e-5d22-4d0a-912e-8e2cabf32e3c", "user1");
 // BUSY EVENTS
 /**
  * Create a new busy event with the given properties
