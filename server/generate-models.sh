@@ -1,0 +1,2 @@
+#!/bin/sh
+node_modules/sequelize-auto/bin/sequelize-auto -h 'lallah.db.elephantsql.com' -d 'jqjhiaeh' -u 'jqjhiaeh' -x -p 5432 -o server/models -e postgres -l esm --caseprop c --caseFile c --caseModel c --noAlias

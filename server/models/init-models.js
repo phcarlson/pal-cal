@@ -5,7 +5,6 @@ import _friendRequests from  "./friendRequests.js";
 import _groupMembers from  "./groupMembers.js";
 import _groups from  "./groups.js";
 import _plannedEvents from  "./plannedEvents.js";
-import _rsvpResponses from  "./rsvpResponses.js";
 import _rsvps from  "./rsvps.js";
 import _userFriends from  "./userFriends.js";
 import _users from  "./users.js";
@@ -16,7 +15,6 @@ export default function initModels(sequelize) {
   const groupMembers = _groupMembers.init(sequelize, DataTypes);
   const groups = _groups.init(sequelize, DataTypes);
   const plannedEvents = _plannedEvents.init(sequelize, DataTypes);
-  const rsvpResponses = _rsvpResponses.init(sequelize, DataTypes);
   const rsvps = _rsvps.init(sequelize, DataTypes);
   const userFriends = _userFriends.init(sequelize, DataTypes);
   const users = _users.init(sequelize, DataTypes);
@@ -35,8 +33,6 @@ export default function initModels(sequelize) {
   groups.hasMany(plannedEvents, { foreignKey: "groupId"});
   rsvps.belongsTo(plannedEvents, { foreignKey: "plannedEventId"});
   plannedEvents.hasMany(rsvps, { foreignKey: "plannedEventId"});
-  rsvps.belongsTo(rsvpResponses, { foreignKey: "response"});
-  rsvpResponses.hasMany(rsvps, { foreignKey: "response"});
   busyEvents.belongsTo(users, { foreignKey: "creatorUsername"});
   users.hasMany(busyEvents, { foreignKey: "creatorUsername"});
   friendRequests.belongsTo(users, { foreignKey: "fromUsername"});
@@ -60,7 +56,6 @@ export default function initModels(sequelize) {
     groupMembers,
     groups,
     plannedEvents,
-    rsvpResponses,
     rsvps,
     userFriends,
     users,

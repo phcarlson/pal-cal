@@ -23,12 +23,8 @@ export default class rsvps extends Model {
       }
     },
     response: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      references: {
-        model: 'rsvpResponses',
-        key: 'value'
-      }
+      type: DataTypes.ENUM("YES","NO","MAYBE"),
+      allowNull: false
     }
   }, {
     sequelize,
