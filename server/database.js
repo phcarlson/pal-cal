@@ -439,16 +439,16 @@ export async function getFriendUsernamesOf(username) {
     // sequelize doesn't support union queries, so easier to just do it with
     // raw SQL
     const results = await sequelize.query(
-        `SELECT username2 FROM "userFriends" WHERE username1 = :username
+        `SELECT username2 as username FROM "userFriends" WHERE username1 = :username
          UNION
-         SELECT username1 FROM "userFriends" WHERE username2 = :username
+         SELECT username1 as username FROM "userFriends" WHERE username2 = :username
         `,
         {
             replacements: { username: username },
             type: QueryTypes.SELECT
         }
     );
-    return results;
+    return results.map(result => result.username);
 }
 
 // FRIEND REQUESTS
