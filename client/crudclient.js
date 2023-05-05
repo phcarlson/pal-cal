@@ -721,13 +721,9 @@ export async function deletePlannedEvent(plannedEventId) {
  * @param {string} rsvp one of "YES", "NO", "MAYBE"
  */
 export async function addRSVP(plannedEventId, username, rsvp) {
-    let plannedEventRSVP = {};
-    plannedEventRSVP[username] = rsvp;
-
     try {
-        const response = await fetch(`/add/plannedEventRSVP?plannedEventId=${plannedEventId}`, {
+        const response = await fetch(`/add/plannedEventRSVP?plannedEventId=${plannedEventId}&username=${username}&rsvp=${rsvp}`, {
             method: 'POST',
-            body: JSON.stringify(plannedEventRSVP)
         });
     }
     catch (err) {
