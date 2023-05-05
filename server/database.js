@@ -188,7 +188,11 @@ export async function deleteGroup(groupId) {
 }
 
 export async function addGroupMember(groupId, username) {
-    await models.groupMembers.create({groupId: groupId, username: username});
+    try {
+        await models.groupMembers.create({groupId: groupId, username: username});
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function removeGroupMember(groupId, username) {
