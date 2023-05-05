@@ -47,7 +47,7 @@ export default class busyEvents extends Model {
     },
     creatorUsername: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       references: {
         model: 'users',
         key: 'username'

@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { Sequelize, Op, QueryTypes } from 'sequelize';
 import initModels from './models/init-models.js';
 
-const sequelize = new Sequelize(process.env.DATABASE_URL);
+const sequelize = new Sequelize(process.env.DATABASE_URL, {dialect: "postgres"});
 const models = initModels(sequelize);
 
 // USER
