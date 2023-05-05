@@ -5,7 +5,6 @@ import * as http from 'http';
 import * as url from 'url';
 import * as database from './database.js';
 import env from 'dotenv';
-import { addMember, getGroupMemberIds, hasMember, removeMember } from '../client/crudclient.js';
 
 const app = express();
 const port = 3000;
@@ -142,7 +141,6 @@ app.get('/get/users', async (request, response) => {
 // Get all usernames in DB
 app.get('/get/usernames', async (request, response) => {
   try{
-    //database.getAllUsernames(); 
     const usernames = await database.getAllUsernames(); 
 
     response.status(200).json({usernames: usernames});
@@ -266,7 +264,6 @@ app.patch('/update/busyEvent', async (request, response) => {
 app.delete('/delete/busyEvent', async (request, response) => {
   const options = request.query;
   const busyEventId = options.busyEventId;
-
 
   if(busyEventId === undefined){
     response.status(400).send("Bad request: busyEvent id not defined");
@@ -469,7 +466,7 @@ app.get('/get/friendRequests/from', async (request, response) => {
 // HANDLING GROUPS:
 
 // Create group from obj provided, must return in response new group id
-app.patch('/create/group', async (request, response) => {
+app.post('/create/group', async (request, response) => {
   const requestBody = request.body;
   try{
     const groupId = await database.createGroup(requestBody);
@@ -479,7 +476,6 @@ app.patch('/create/group', async (request, response) => {
     response.status(500).send(error.message);
   }
 });
-
 
 // Get group by id
 app.get('/get/group', async (request, response) => {
@@ -569,7 +565,7 @@ app.post('/add/member', async (request, response) => {
   }
   else{
     try{
-      await addMember(groupId, username);
+      await database.addMember(groupId, username);
       response.status(200).end();
 
     }
@@ -589,7 +585,7 @@ app.get('/has/member', async (request, response) => {
   }
   else{
     try{
-      const exists = await hasMember(groupId, username);
+      const exists = await database.hasMember(groupId, username);
       response.status(200).json({exists:exists});
 
     }
@@ -609,7 +605,7 @@ app.get('/get/memberIds', async (request, response) => {
   }
   else{
     try{
-      const memberIds = await getGroupMemberIds(groupId);
+      const memberIds = await database.getGroupMemberUsernames(groupId);
       response.status(200).json({memberIds:memberIds});
 
     }
@@ -633,7 +629,7 @@ app.delete('/delete/member', async (request, response) => {
   }
   else{
     try{
-      await removeMember(groupId, username);
+      await database.removeMember(groupId, username);
       response.status(200).end();
 
     }
@@ -658,7 +654,6 @@ app.post('/create/plannedEvent', async (request, response) => {
     response.status(500).send(error.message);
   }
 });
-
 
 // Get planned event by id
 app.get('/get/plannedEvent', async (request, response) => {
@@ -692,6 +687,7 @@ app.get('/get/plannedEvents', async (request, response) => {
     response.status(500).send(error.message);
   }
 });
+
 // Get planned event ids from specified group id
 app.get('/get/plannedEventIds', async (request, response) => {
   const options = request.query;
@@ -716,6 +712,7 @@ app.patch('/update/plannedEvent', async (request, response) => {
   const options = request.query;
   const requestBody = request.body;
   const plannedEventId = options.plannedEventId;
+  // is plannedEventId or username even defined to delete rsvp from?
 
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id not defined");
@@ -759,7 +756,7 @@ app.post('/add/plannedEventRSVP', async (request, response) => {
   const plannedEventId = options.plannedEventId;
   const username = options.username;
   const rsvp = options.rsvp
-
+  // is plannedEventId, username, or yes/no/maybe even defined to add rsvp?
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id undefined");
   }
@@ -781,13 +778,12 @@ app.post('/add/plannedEventRSVP', async (request, response) => {
   }
 });
 
-
 // Delete RSVP from planned event with id specified
 app.delete('/delete/plannedEventRSVP', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
   const username = options.username;
-
+  // is plannedEventId or username even defined to delete rsvp from?
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id undefined");
   }
@@ -806,13 +802,11 @@ app.delete('/delete/plannedEventRSVP', async (request, response) => {
   }
 });
 
-
-
 // Get RSVP yes list from planned event with id specified
 app.get('/get/plannedEventRSVPs/yes', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
-
+  // is plannedEventId even defined to get yesList from?
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id undefined");
   }
@@ -831,7 +825,7 @@ app.get('/get/plannedEventRSVPs/yes', async (request, response) => {
 app.get('/get/plannedEventRSVPs/no', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
-
+  // is plannedEventId even defined to get noList from?
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id undefined");
   }
@@ -851,7 +845,7 @@ app.get('/get/plannedEventRSVPs/no', async (request, response) => {
 app.get('/get/plannedEventRSVPs/maybe', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
-
+  // is plannedEventId even defined to get maybeList from?
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id undefined");
   }
