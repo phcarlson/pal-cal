@@ -1,5 +1,5 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
-import * as crud from './crud.js';
+import * as crud from './crudclient.js';
 
 // containers
 const membersContainer = document.getElementById("members-container");
