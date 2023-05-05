@@ -17,8 +17,7 @@ export default class groups extends Model {
     },
     image: {
       type: DataTypes.BLOB,
-      allowNull: true,
-      defaultValue: "\\x"
+      allowNull: true
     }
   }, {
     sequelize,
