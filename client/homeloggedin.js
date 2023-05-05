@@ -10,16 +10,13 @@ let potentialMembers = document.getElementById('potentialMembers');
 let selectedMembers = [];
 
 // our pretend user ID logged in currently
-let mockusername = "user0";
+let mockusername = "username1";
 
 async function renderFriends(username) {
     //wipe
     friendsCol.innerHTML = "";
 
-    let user = getUser(username);
-    let friendsList = await user.getAllFriends();
-    // let user = {friendsList: [{username: 'Amana22'}, {username: 'koba'}, {username: 'ananya'},
-    // {username: 'adin'}, {username: 'amey'}, {username: 'anotheruser'}, {username: 'anotheruser2'}, {username: 'another3'}]}
+    const friendsList = await crud.getFriends(username);
 
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     for(let friend of friendsList){
@@ -62,18 +59,12 @@ async function renderFriends(username) {
             
         });   
     }
-        
 }
 
 async function renderGroups(currUserID) {
-      // let user = {friendsList: [{username: 'Amana22'}, {username: 'koba'}, {username: 'ananya'},
-    // {username: 'adin'}, {username: 'amey'}, {username: 'anotheruser'}, {username: 'anotheruser2'}, {username: 'another3'}],
-    // groupsList: [{id:1, groupName: 'Team 19'}, {id:2, groupName: 'Team 20'}, {id:3, groupName: 'Team 21'},  {id:4, groupName: 'Team 22'},
-    // {id:5, groupName: 'Team 2000'},  {id:6, groupName: 'Team 22222'}]}
     groupsCol.innerHTML = "";
 
-    let currUser = getUser(currUserID);
-    let groupsList = await currUser.getAllGroups();
+    let groupsList = await crud.getGroupIdsOfUser(currUserID);
     for(let groupID of groupsList){
         await renderGroup(groupID, currUserID);
     }
@@ -114,48 +105,76 @@ async function renderGroup(groupID, currUserID){
     });
 }
 async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentialFriends){
-    // temp image while we sort out image upload
+    
+    // Temp image while we sort out image upload
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
-    let userToFriendRequest = getUser(userIDToFriendRequest);
-    let currUser = getUser(currUserID);
-    // user found in friend search
-    let potentalFriend =  '<div class="card my-3">' +
-    '<div class="row g-0">' +
-        '<div class="col-md-2 d-flex">' +
-            `<img src=${image}` +
-                'alt="generic profile pic" class="img-fluid rounded-start">'+
-        '</div>' +
-        '<div class="col-md-8 d-flex align-items-center">'+
-            '<div class="card-body">'+
-                `<h5 class="card-title text-start">${userIDToFriendRequest}</h5>`+
+    // User that we know exists to be found in friend search
+    let userToFriendRequest = await crud.getUser(userIDToFriendRequest);
+    // If already friends, then indicate that in the card result. Otherwise allow us to add them!
+    let areFriends = await crud.areFriends(currUserID, userIDToFriendRequest);
+    let buttonType = areFriends ? 'class="btn btn-success disabled">Already added' : 'class="btn btn-outline-secondary">Add';
+
+    let potentialFriend = '<div class="card my-3">' +
+        '<div class="row g-0">' +
+            '<div class="col-md-2 d-flex">' +
+                `<img src=${image}` +
+                    'alt="generic profile pic" class="img-fluid rounded-start">'+
+            '</div>' +
+            '<div class="col-md-8 d-flex align-items-center">'+
+                '<div class="card-body">'+
+                    `<h5 class="card-title text-start">${userIDToFriendRequest}</h5>`+
+                '</div>'+
+            '</div>'+
+            '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">'+
+                `<button id="${userIDToFriendRequest}AddButton" type="button" ${buttonType}</button>`+
             '</div>'+
         '</div>'+
-        '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">'+
-            `<button id="${userIDToFriendRequest}AddButton" type="button" class="btn btn-outline-secondary">Add</button>`+
-        '</div>'+
-    '</div>'+
-'</div>';
+    '</div>';
+    
+    // Whether or not they are already friends, add respective card to indicate that
+    potentialFriends.insertAdjacentHTML("afterbegin", potentialFriend);
+    
+    // No need for event handlers, no adding mechanism necessary for user that's already a friend so just return
+    if(areFriends){
+        return;
+    }
+    // Otherwise we need to add listeners for adding friend
+    else{
+        let addFriendButton = document.getElementById(`${userIDToFriendRequest}AddButton`);
+        addFriendButton.addEventListener('click', async (event) => {
+            // // have a friend request sent, does not immediately add friend
+            // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
+            try {
+                // //just for testing purposes
+                // let areFriends = await crud.areFriends(currUserID, userIDToFriendRequest);
+                // if(areFriends){
+                //     addFriendButton.className = "btn btn-success";
+                //     addFriendButton.innerText = "Already added"
+                // }
+                // else{
+                    await crud.addFriend(currUserID, userIDToFriendRequest);
+                    await renderFriends(currUserID);
+                    await renderPotentialMembers(currUserID);
 
-    potentialFriends.insertAdjacentHTML("afterbegin", potentalFriend);
-
-    let addFriendButton = document.getElementById(`${userIDToFriendRequest}AddButton`);
-    addFriendButton.addEventListener('click', async (event) => {
-        // add friend to this current user, update friends list just to show how it would work if added immediately
-        // and members that appear to add to a new group if we make one
-        await currUser.addFriend(userIDToFriendRequest);
-
-        // in the future we would just have a friend request sent
-        let userRequested = getUser(userIDToFriendRequest);
-        userRequested.addFriendRequestFrom(currUserID);
-
-        await renderFriends(mockusername);
-        await renderPotentialMembers(mockusername);
-        // alert user after CRUD that the friend worked
-        addFriendButton.className = "btn btn-success";
-        addFriendButton.innerText = "Added"
-    });
-
-    return potentalFriend;
+                    // alert user after CRUD that the friend worked
+                    addFriendButton.className = "btn btn-success";
+                    addFriendButton.innerText = "Added"
+                    addFriendButton.disabled = true;
+                // }
+            }
+            catch(error){
+                // Indicate that some error occurred when trying to add
+                addFriendButton.className = "btn btn-danger";
+                addFriendButton.innerText = "Try again later";
+                // After certain amount of time, flip it back to Add button to try again
+                setTimeout(function() {   
+                    addFriendButton.className = "btn btn-outline-primary";
+                    addFriendButton.innerText = "Add";
+                }, 1000);
+            }
+        });
+        return;
+    }
 }
 
 function renderPotentialMember(userToAdd){
@@ -184,12 +203,7 @@ function renderPotentialMember(userToAdd){
 }
 
 async function renderPotentialMembers(currUserID){
-    let currUser = getUser(currUserID);
-    let friendsList = await currUser.getAllFriends();
-    //   let user = {friendsList: [{username: 'Amana22'}, {username: 'koba'}, {username: 'ananya'},
-    //   {username: 'adin'}, {username: 'amey'}, {username: 'anotheruser'}, {username: 'anotheruser2'}, {username: 'another3'}],
-    //   groupsList: [{id:1, groupName: 'Team 19'}, {id:2, groupName: 'Team 20'}, {id:3, groupName: 'Team 21'},  {id:4, groupName: 'Team 22'},
-    //   {id:5, groupName: 'Team 2000'},  {id:6, groupName: 'Team 22222'}]}
+    let friendsList = await crud.getFriends(currUserID);
     potentialMembers.innerHTML = ""
 
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
@@ -211,17 +225,32 @@ async function renderPotentialMembers(currUserID){
 }
 
 async function removeGroupFromUser(currUserID, groupID){
-    let groupToKickMember = getGroup(groupID);
-    await groupToKickMember.removeMember(currUserID);
+    await crud.removeMember(groupID, currUserID);
     // let groupToDelete = document.getElementById(groupID + 'GroupCard');
     // groupsCol.removeChild(groupToDelete);
     await renderGroups(currUserID);
 }
 
 async function removeFriendFromUser(friendUserID, currUserID){
-    let currUser = getUser(currUserID);
-    await currUser.removeFriend(friendUserID);
-    await renderFriends(currUserID);
+    try{
+        await crud.deleteFriend(currUserID, friendUserID);
+        await renderFriends(currUserID);
+        await renderPotentialMembers(currUserID);
+    }
+    // In the case that it cannot delete, there is either an error with DB or the server is offline so we alert of that
+    catch(error){
+        let child = document.createElement('div')
+        child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                        'Try again later, possibly offline</div>';   
+
+        let friendCardToDelete = document.getElementById(`${friendUserID}FriendCard`);
+        friendCardToDelete.after(child);
+        setTimeout(function(){
+            let toRemove = document.getElementById(`deleteAlert`);
+            toRemove.remove();
+            },2500);
+    }
+   
 
     // Remove single friend without rerendering entire friends list:
     // let friendToDelete = document.getElementById(friendUsername + 'FriendCard');
@@ -251,7 +280,6 @@ makeGroupButton.addEventListener('click', async (event) => {
     // selectedMembers.push(mockusername);
     newGroup.addMember(mockusername);
     let newlyAdded = getGroup(newGroupID);
-    console.log(await newlyAdded.hasMember(mockusername));
 
     // let groupObj =  {id:5, groupName: groupName.value, membersList: selectedMembers}
     for(let memberToAdd of selectedMembers){
@@ -299,21 +327,27 @@ let searchFriendModal = document.getElementById("friendSearchModalDialog");
 // });
 
 searchFriendButton.addEventListener('click', async (event) => {
-
-    let currUser = getUser(mockusername);
     let friendToFind = document.getElementById("friendToFind");
     let potentialFriends = document.getElementById("potentialFriends");
 
-    //reset friend search results before searching
-    potentialFriends.innerHTML = "";
-    let exists = await userExists(friendToFind.value);
-    if(exists){
-        await renderPotentialFriend(friendToFind.value, mockusername, potentialFriends);
+    try{
+        //reset friend search results before searching
+        potentialFriends.innerHTML = "";
+        let exists = await crud.userExists(friendToFind.value);
+
+        if(exists && friendToFind.value !== mockusername){
+            await renderPotentialFriend(friendToFind.value, mockusername, potentialFriends);
+        }
+        else if(friendToFind.value === mockusername){
+            potentialFriends.innerHTML =  "<span style='color: red;'>Hey, that's your username.</span>";
+        }
+        else {
+            potentialFriends.innerHTML =  "<span style='color: red;'>Sorry, there aren't any other users close to that name!</span>";
+        }
     }
-    else {
-        potentialFriends.innerHTML =  "<span style='color: red;'>Sorry, there aren't any users close to that name!</span>";
+    catch(error){
+        potentialFriends.innerHTML =  "<span style='color: red;'>An unexpected error occured, please try again!</span>";
     }
-    
 });
 
 
