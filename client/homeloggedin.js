@@ -87,6 +87,7 @@ async function renderFriends(username) {
     }
 }
 
+
 /**
  * Takes input and provides results based on whether friend is found, not, or error
  * @param {string} username current user's username
@@ -171,6 +172,7 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
         return;
     }
 }
+
 
 /**
  * Makes request from current user to the user searched
@@ -265,7 +267,6 @@ async function renderGroups(currUserID) {
 }
 
 
-
 /**
  * Pushes group card dynamically to current user's group column
  * @param {string} groupID group to render
@@ -275,8 +276,11 @@ async function renderGroup(groupID, currUserID){
     // Retrieve fresh group info 
     let group = await crud.getGroup(groupID);
     // Temp until we figure out images
-    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    // let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     // Create card with fresh info
+    let image = new Image();
+    image.src = group.image;
+    // document.body.appendChild(image);
     let groupToInsert =
     `<div id=${groupID}GroupCard class="card my-3">` +
         '<div class="row g-0">' +
@@ -308,6 +312,7 @@ async function renderGroup(groupID, currUserID){
         await removeGroupFromUser(currUserID, groupID);
     });
 }
+
 
 /**
  * Pushes checkbox friend card dynamically to module for creating a group, as a possible member to add
@@ -383,9 +388,16 @@ async function renderPotentialMembers(currUserID){
     }
 }
 
+
+/**
+ * Removes current user as a member of group, then rerenders fresh group list
+ * @param {string} currUserID username to remove from group
+ * @param {string} groupID group to remove user from
+ */
 async function removeGroupFromUser(currUserID, groupID){
     try{
         await crud.removeMember(groupID, currUserID);
+        // Alternate way to rerender, only removing the one element and not the entire column:
         // let groupToDelete = document.getElementById(groupID + 'GroupCard');
         // groupsCol.removeChild(groupToDelete);
         await renderGroups(currUserID);
@@ -402,20 +414,24 @@ async function removeGroupFromUser(currUserID, groupID){
         setTimeout(function(){
             let toRemove = document.getElementById(`deleteAlert`);
             toRemove.remove();
-            },3500);
+        },3500);
     }
 }
 
-//deselects boxes and wipes those that are selected
-async function createGroup(currUserID, groupName){
 
+/**
+ * Adds all selected members to new group created 
+ * @param {string} currUserID username as the group creator to be added
+ * @param {Element} groupName group name input
+ */
+async function createGroup(currUserID, groupName, image){
     try{
         //TODO: collapse accordion of potential members on close always
         let accordionFriends = document.getElementById('flush-collapseOne');
 
         // Form new group with unique id returned, passing in name/image property 
         // TODO: pass in image property when figured out
-        let newGroupID = await crud.createGroup({name: groupName.value});
+        let newGroupID = await crud.createGroup({name: groupName.value, image: image});
 
         // Add ourselves, the group creator, to the members list and then add others
         await crud.addMember(newGroupID, currUserID);
@@ -452,8 +468,24 @@ async function createGroup(currUserID, groupName){
 let makeGroupButton = document.getElementById("makeGroupButton");
 makeGroupButton.addEventListener('click', async (event) => {
     let groupName = document.getElementById('groupNameInput');
-    await createGroup(mockusername, groupName);
+    let file = document.getElementById("groupPhotoUpload").files[0];
+    // let reader = new FileReader();
+    // reader.onloadend = async function() {
+    //   console.log('RESULT', reader.result)
+      await createGroup(mockusername, groupName, file.toString('base64'));
+    // }
+    // reader.readAsDataURL(file);
+
+    // let image = document.getElementById('groupPhotoUpload').value;
+    // console.log(image);
 });
+
+// makeGroupButton.addEventListener('change', function (e) {
+//     let name = document.getElementById("groupPhotoUpload").files[0].name;
+//     let nextSibling = e.target.nextElementSibling
+//     nextSibling.innerText = name
+//   })
+
 
 let changedMindButton = document.getElementById("changedMindButton");
 changedMindButton.addEventListener('click', (event) => {
@@ -472,8 +504,6 @@ changedMindButton.addEventListener('click', (event) => {
     // accordionFriends.collapse('hide');    
 });
 
-
-
 //TODO: Clear modal on hidden
 // $("#friendSearchModal").on("hidden.bs.modal", function () {
 //     alert("test");
@@ -482,7 +512,6 @@ changedMindButton.addEventListener('click', (event) => {
 //     alert("test");
 
 // });
-
 
 
 // INITIAL RENDERING OF HOME PAGE LOGGED IN:
