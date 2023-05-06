@@ -662,7 +662,7 @@ export async function hasMember(groupId, username) {
  */
 export async function getGroupMemberUsernames(groupId) {
     try {
-        const response = await fetch(`/get/memberIds?groupId=${groupId}`, {
+        const response = await fetch(`/get/memberUsernames?groupId=${groupId}`, {
             method: 'GET',
         });
 
