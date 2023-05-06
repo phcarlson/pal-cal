@@ -402,38 +402,49 @@ async function removeGroupFromUser(currUserID, groupID){
         setTimeout(function(){
             let toRemove = document.getElementById(`deleteAlert`);
             toRemove.remove();
-            },2500);
+            },3500);
     }
 }
 
 //deselects boxes and wipes those that are selected
 async function createGroup(currUserID, groupName){
 
-    //TODO: collapse accordion of potential members on close always
-    let accordionFriends = document.getElementById('flush-collapseOne');
+    try{
+        //TODO: collapse accordion of potential members on close always
+        let accordionFriends = document.getElementById('flush-collapseOne');
 
-    // Form new group with unique id returned, passing in name property 
-    // TODO: pass in image property when figured out
-    let newGroupID = await crud.createGroup({name: groupName.value});
+        // Form new group with unique id returned, passing in name/image property 
+        // TODO: pass in image property when figured out
+        let newGroupID = await crud.createGroup({name: groupName.value});
 
-    selectedMembers.forEach((member)=>{
-        let box = document.getElementById(`${member}Checkbox`);
-        box.checked = false;
-    });
+        // Add ourselves, the group creator, to the members list and then add others
+        await crud.addMember(newGroupID, currUserID);
+        for(let memberToAdd of selectedMembers){
+            await crud.addMember(newGroupID, memberToAdd);
+        }
 
-    // Add ourselves, the group creator, to the members list and then add others
-    await crud.addMember(newGroupID, currUserID);
-    for(let memberToAdd of selectedMembers){
-        await crud.addMember(newGroupID, memberToAdd);
+        // Unselect selected members checkboxes for next group creation
+        selectedMembers.forEach((member)=>{
+            let box = document.getElementById(`${member}Checkbox`);
+            box.checked = false;
+        });
+
+        // Wipe selected members for next group creation as well as  group input and accordion collapse
+        selectedMembers = [];
+        groupName.value = '';
+        // accordionFriends.collapse('hide');
+
+        //Render fresh groups
+        await renderGroups(mockusername);
     }
-   
-    // Wipe selected members for next creation, wipe group input, and collapse accordion
-    selectedMembers = [];
-    groupName.value = '';
-    // accordionFriends.collapse('hide');
-
-    //Render new group made
-    await renderGroups(mockusername);
+    catch(error){
+        // Create temp alert of issue
+        let child = document.createElement('div')
+        child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                        'Refresh page as group creation failed, possibly offline</div>';   
+        // Alert added to friend column that has failed to render correctly
+        groupsCol.prepend(child);
+    }
 }
 
 
