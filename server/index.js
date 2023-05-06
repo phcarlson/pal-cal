@@ -469,7 +469,7 @@ app.get('/get/friendRequests/from', async (request, response) => {
 // HANDLING GROUPS:
 
 // Create group from obj provided, must return in response new group id
-app.patch('/create/group', async (request, response) => {
+app.post('/create/group', async (request, response) => {
   const requestBody = request.body;
   try{
     const groupId = await database.createGroup(requestBody);
@@ -569,7 +569,7 @@ app.post('/add/member', async (request, response) => {
   }
   else{
     try{
-      await addMember(groupId, username);
+      await database.addGroupMember(groupId, username);
       response.status(200).end();
 
     }
@@ -583,6 +583,7 @@ app.post('/add/member', async (request, response) => {
 app.get('/has/member', async (request, response) => {
   const options = request.query;
   const username = options.username;
+  const groupId = options.groupId;
   
   if (username === undefined){
     response.status(400).send("Bad request: Username undefined");
@@ -600,7 +601,7 @@ app.get('/has/member', async (request, response) => {
 });
 
 // Get all group member ids in specified group id
-app.get('/get/memberIds', async (request, response) => {
+app.get('/get/memberUsernames', async (request, response) => {
   const options = request.query;
   const groupId = options.groupId;
 
@@ -609,7 +610,7 @@ app.get('/get/memberIds', async (request, response) => {
   }
   else{
     try{
-      const memberIds = await getGroupMemberIds(groupId);
+      const memberIds = await database.getGroupMemberUsernames(groupId);
       response.status(200).json({memberIds:memberIds});
 
     }
@@ -633,7 +634,7 @@ app.delete('/delete/member', async (request, response) => {
   }
   else{
     try{
-      await removeMember(groupId, username);
+      await database.removeGroupMember(groupId, username);
       response.status(200).end();
 
     }
@@ -665,7 +666,7 @@ app.get('/get/plannedEvent', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
    // Check if username is even specified in order retreive its group IDs
-  if(busyEventId === undefined){
+  if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id undefined");
   }
   else{
@@ -684,7 +685,7 @@ app.get('/get/plannedEvents', async (request, response) => {
   const requestBody = request.body;
   const plannedEventIds = requestBody.plannedEventIds;
   try{  
-    const plannedEvents = await database.getPlannedEvent(plannedEventIds); 
+    const plannedEvents = await database.getPlannedEvents(plannedEventIds); 
     response.status(200).json({plannedEvents: plannedEvents});
   }
   catch(error){
@@ -735,7 +736,7 @@ app.delete('/delete/plannedEvent', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
 
-  if(busyEventId === undefined){
+  if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id not defined");
   }
   else{
