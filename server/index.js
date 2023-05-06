@@ -39,7 +39,7 @@ app.get('/get/user', async (request, response) => {
 
   // Check if username is even specified to get user from
   if(username === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   // If good, try to retrieve
   else {
@@ -61,7 +61,7 @@ app.patch('/update/user', async (request, response) => {
 
   // Check if username is even specified to patch user from
   if(username === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{  
@@ -85,7 +85,7 @@ app.delete('/delete/user', async (request, response) => {
   const username = options.username;
   // Check if username is even specified to patch user from
   if(username === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{  
@@ -107,7 +107,7 @@ app.get('/has/user', async (request, response) => {
 
   // Check if username is even specified in order check against DB
   if(username === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{  
@@ -157,7 +157,7 @@ app.get('/get/groupIds', async (request, response) => {
 
   // Check if username is even specified in order retreive its group IDs
   if(username === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{  
@@ -193,7 +193,7 @@ app.get('/get/busyEvent', async (request, response) => {
   const busyEventId = options.busyEventId;
    // Check if username is even specified in order retreive its group IDs
   if(busyEventId === undefined){
-    response.status(400).send("Bad request: busyEvent id not defined");
+    response.status(400).send("Bad request: busyEvent id is undefined");
   }
   else{
     try{  
@@ -227,7 +227,7 @@ app.get('/get/busyEventIds', async (request, response) => {
   const username = options.username;
    // Check if username is even specified in order retreive its group IDs
    if(username === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{  
@@ -247,7 +247,7 @@ app.patch('/update/busyEvent', async (request, response) => {
   const busyEventId = options.busyEventId;
 
   if(busyEventId === undefined){
-    response.status(400).send("Bad request: busyEvent id not defined");
+    response.status(400).send("Bad request: busyEvent id is undefined");
   }
   else{
     try{  
@@ -266,7 +266,7 @@ app.delete('/delete/busyEvent', async (request, response) => {
   const busyEventId = options.busyEventId;
 
   if(busyEventId === undefined){
-    response.status(400).send("Bad request: busyEvent id not defined");
+    response.status(400).send("Bad request: busyEvent id is undefined");
   }
   else{
     try{  
@@ -290,10 +290,10 @@ app.post('/add/friend', async (request, response) => {
   const username2 = options.username2;
 
   if(username1 === undefined){
-    response.status(400).send("Bad request: username1 undefined");
+    response.status(400).send("Bad request: username1 is undefined");
   }
   else if(username2 === undefined){
-    response.status(400).send("Bad request: username2 undefined");
+    response.status(400).send("Bad request: username2 is undefined");
   }
   else{
     try{
@@ -314,7 +314,7 @@ app.get('/get/friends', async (request, response) => {
   const options = request.query;
   const username = options.username;
   if(username === undefined){
-    response.status(400).send("Bad request: username undefined");
+    response.status(400).send("Bad request: username is undefined");
   }
   else{
     try{
@@ -334,10 +334,10 @@ app.get('/has/friend', async (request, response) => {
   const username2 = options.username2;
 
   if(username1 === undefined){
-    response.status(400).send("Bad request: username1 undefined");
+    response.status(400).send("Bad request: username1 is undefined");
   }
   else if(username2 === undefined){
-    response.status(400).send("Bad request: username2 undefined");
+    response.status(400).send("Bad request: username2 is undefined");
   }
   else{
     try{
@@ -357,10 +357,10 @@ app.delete('/delete/friend', async (request, response) => {
   const username2 = options.username2;
 
   if(username1 === undefined){
-    response.status(400).send("Bad request: username1 undefined");
+    response.status(400).send("Bad request: username1 is undefined");
   }
   else if(username2 === undefined){
-    response.status(400).send("Bad request: username2 undefined");
+    response.status(400).send("Bad request: username2 is undefined");
   }
   else{
     try{
@@ -382,10 +382,10 @@ app.post('/add/friendRequest', async (request, response) => {
   const toUsername = options.toUsername;
 
   if(fromUsername === undefined){
-    response.status(400).send("Bad request: fromUsername undefined");
+    response.status(400).send("Bad request: fromUsername is undefined");
   }
   else if(toUsername === undefined){
-    response.status(400).send("Bad request: toUsername undefined");
+    response.status(400).send("Bad request: toUsername is undefined");
   }
   else{
     try{
@@ -406,10 +406,10 @@ app.delete('/delete/friendRequest', async (request, response) => {
   const toUsername = options.toUsername;
 
   if(fromUsername === undefined){
-    response.status(400).send("Bad request: fromUsername undefined");
+    response.status(400).send("Bad request: fromUsername is undefined");
   }
   else if(toUsername === undefined){
-    response.status(400).send("Bad request: toUsername undefined");
+    response.status(400).send("Bad request: toUsername is undefined");
   }
   else{
     try{
@@ -429,7 +429,7 @@ app.get('/get/friendRequests/to', async (request, response) => {
   const username = options.username;
 
   if(username === undefined){
-    response.status(400).send("Bad request: username undefined");
+    response.status(400).send("Bad request: username is undefined");
   }
   else{
     try{
@@ -449,7 +449,7 @@ app.get('/get/friendRequests/from', async (request, response) => {
   const username = options.username;
   
   if(username === undefined){
-    response.status(400).send("Bad request: username undefined");
+    response.status(400).send("Bad request: username is undefined");
   }
   else{
     try{
@@ -482,7 +482,7 @@ app.get('/get/group', async (request, response) => {
   const options = request.query; 
   const groupId = options.groupId;
   if(groupId === undefined){
-    response.status(400).send("Bad request: Group id not defined");
+    response.status(400).send("Bad request: Group id is undefined");
   }
   else{
     try{
@@ -503,7 +503,7 @@ app.patch('/update/group', async (request, response) => {
 
   // Check if username is even specified to patch user from
   if(groupId === undefined){
-    response.status(400).send("Bad request: Group id not defined");
+    response.status(400).send("Bad request: Group id is undefined");
   }
   else{
     try{  
@@ -522,7 +522,7 @@ app.delete('/delete/group', async (request, response) => {
 
   // Check if username is even specified to patch user from
   if(groupId === undefined){
-    response.status(400).send("Bad request: Group id not defined");
+    response.status(400).send("Bad request: Group id is undefined");
   }
   else{
     try{  
@@ -558,16 +558,15 @@ app.post('/add/member', async (request, response) => {
   const username = options.username;
 
   if(groupId === undefined){
-    response.status(400).send("Bad request: Group id undefined");
+    response.status(400).send("Bad request: Group id is undefined");
   }
   else if (username === undefined){
-    response.status(400).send("Bad request: Username undefined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{
-      await database.addMember(groupId, username);
+      await database.addGroupMember(groupId, username);
       response.status(200).end();
-
     }
     catch(error){
       response.status(500).send(error.message);
@@ -579,15 +578,15 @@ app.post('/add/member', async (request, response) => {
 app.get('/has/member', async (request, response) => {
   const options = request.query;
   const username = options.username;
+  const groupId = options.groupId;
   
   if (username === undefined){
-    response.status(400).send("Bad request: Username undefined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{
       const exists = await database.hasMember(groupId, username);
       response.status(200).json({exists:exists});
-
     }
     catch(error){
       response.status(500).send(error.message);
@@ -596,18 +595,17 @@ app.get('/has/member', async (request, response) => {
 });
 
 // Get all group member ids in specified group id
-app.get('/get/memberIds', async (request, response) => {
+app.get('/get/memberUsernames', async (request, response) => {
   const options = request.query;
   const groupId = options.groupId;
 
   if(groupId === undefined){
-    response.status(400).send("Bad request: Group id undefined");
+    response.status(400).send("Bad request: Group id is undefined");
   }
   else{
     try{
       const memberIds = await database.getGroupMemberUsernames(groupId);
       response.status(200).json({memberIds:memberIds});
-
     }
     catch(error){
       response.status(500).send(error.message);
@@ -622,16 +620,15 @@ app.delete('/delete/member', async (request, response) => {
   const username = options.username;
   
   if(groupId === undefined){
-    response.status(400).send("Bad request: Group id undefined");
+    response.status(400).send("Bad request: Group id is undefined");
   }
   else if (username === undefined){
-    response.status(400).send("Bad request: Username undefined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{
-      await database.removeMember(groupId, username);
+      await database.removeGroupMember(groupId, username);
       response.status(200).end();
-
     }
     catch(error){
       response.status(500).send(error.message);
@@ -660,8 +657,8 @@ app.get('/get/plannedEvent', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
    // Check if username is even specified in order retreive its group IDs
-  if(busyEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id undefined");
+  if(plannedEventId === undefined){
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else{
     try{  
@@ -679,7 +676,7 @@ app.get('/get/plannedEvents', async (request, response) => {
   const requestBody = request.body;
   const plannedEventIds = requestBody.plannedEventIds;
   try{  
-    const plannedEvents = await database.getPlannedEvent(plannedEventIds); 
+    const plannedEvents = await database.getPlannedEvents(plannedEventIds); 
     response.status(200).json({plannedEvents: plannedEvents});
   }
   catch(error){
@@ -694,7 +691,7 @@ app.get('/get/plannedEventIds', async (request, response) => {
   const groupId = options.groupId;
   // Is group id even defined to get event ids from?
   if(groupId === undefined){
-    response.status(400).send("Bad request: Username not defined");
+    response.status(400).send("Bad request: Username is undefined");
   }
   else{
     try{  
@@ -715,7 +712,7 @@ app.patch('/update/plannedEvent', async (request, response) => {
   // is plannedEventId or username even defined to delete rsvp from?
 
   if(plannedEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id not defined");
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else{
     try{  
@@ -732,8 +729,8 @@ app.delete('/delete/plannedEvent', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
 
-  if(busyEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id not defined");
+  if(plannedEventId === undefined){
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else{
     try{  
@@ -758,13 +755,13 @@ app.post('/add/plannedEventRSVP', async (request, response) => {
   const rsvp = options.rsvp
   // is plannedEventId, username, or yes/no/maybe even defined to add rsvp?
   if(plannedEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id undefined");
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else if(username === undefined){
-    response.status(400).send("Bad request: username undefined");
+    response.status(400).send("Bad request: username is undefined");
   }
   else if(rsvp === undefined){
-    response.status(400).send("Bad request: rsvp response undefined");
+    response.status(400).send("Bad request: rsvp response is undefined");
   }
   else{
     try{  
@@ -785,10 +782,10 @@ app.delete('/delete/plannedEventRSVP', async (request, response) => {
   const username = options.username;
   // is plannedEventId or username even defined to delete rsvp from?
   if(plannedEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id undefined");
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else if(username === undefined){
-    response.status(400).send("Bad request: username undefined");
+    response.status(400).send("Bad request: username is undefined");
   }
   else{
     try{  
@@ -808,7 +805,7 @@ app.get('/get/plannedEventRSVPs/yes', async (request, response) => {
   const plannedEventId = options.plannedEventId;
   // is plannedEventId even defined to get yesList from?
   if(plannedEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id undefined");
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else{
     try{  
@@ -827,7 +824,7 @@ app.get('/get/plannedEventRSVPs/no', async (request, response) => {
   const plannedEventId = options.plannedEventId;
   // is plannedEventId even defined to get noList from?
   if(plannedEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id undefined");
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else{
     try{  
@@ -847,7 +844,7 @@ app.get('/get/plannedEventRSVPs/maybe', async (request, response) => {
   const plannedEventId = options.plannedEventId;
   // is plannedEventId even defined to get maybeList from?
   if(plannedEventId === undefined){
-    response.status(400).send("Bad request: plannedEvent id undefined");
+    response.status(400).send("Bad request: plannedEvent id is undefined");
   }
   else{
     try{  

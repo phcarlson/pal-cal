@@ -60,15 +60,31 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
 
                                                     <div class="widget-49-meeting-action">
                                                         <div class="dropdown">
-                                                            <button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"
-                                                                type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+                                                            <button class="btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                                type="button" id="dropdownMenuButton-${eventsAdded}-0" data-bs-toggle="dropdown"
                                                                 aria-expanded="false">
                                                                 RSVP
                                                             </button>
-                                                            <ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">
-                                                                <li><a id="yes-${eventsAdded}" class="dropdown-item event-${eventsAdded}" href="#">Yes</a></li>
-                                                                <li><a id="no-${eventsAdded}" class="dropdown-item event-${eventsAdded}" href="#">No</a></li>
-                                                                <li><a id="maybe-${eventsAdded}" class="dropdown-item event-${eventsAdded}" href="#">Maybe</a></li>
+                                                            <div class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton-${eventsAdded}-0">
+                                                                <button id="yes-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">Yes</button>
+                                                                <button id="no-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">No</button>
+                                                                <button id="maybe-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">Maybe</button>
+                                                            </div>
+                                                            <button class="btn btn-lg btn-flash-border-primary dropdown-toggle"
+                                                                type="button" id="dropdownMenuButton-${eventsAdded}-1" data-bs-toggle="dropdown"
+                                                                aria-expanded="false">
+                                                                Attending
+                                                            </button>
+                                                            <ul class="dropdown-menu scrollable-menu" role="menu" aria-labelledby="dropdownMenuButton-${eventsAdded}-1">
+                                                                <li id="attending-yes-${eventsAdded}">
+                                                                    Yes:
+                                                                </li>
+                                                                <li id="attending-no-${eventsAdded}">
+                                                                    No:
+                                                                </li>
+                                                                <li id="attending-maybe-${eventsAdded}">
+                                                                    Maybe:
+                                                                </li>
                                                             </ul>
                                                         </div>
                                                     </div>
@@ -80,18 +96,47 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                         const noButton = document.getElementById(`no-${eventsAdded}`);
                                         const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-                                        const thisGroup = crud.getGroup(__currentGroupID__);
-                                        const plannedEvents = await thisGroup.getPlannedEvents();
+                                        // const thisGroup = crud.getGroup(__currentGroupID__);
+                                        // const plannedEvents = await thisGroup.getPlannedEvents();
 
                                         yesButton.addEventListener("click", () => {
-                                            plannedEvents[eventsAdded].yesDict[__currentUserID__] = '';
+                                            yesButton.classList.add("active");
+                                            noButton.classList.remove("active");
+                                            maybeButton.classList.remove("active");
+                                            // plannedEvents[eventsAdded].yesDict[__currentUserID__] = 1;
                                         });
                                         noButton.addEventListener("click", () => {
-                                            plannedEvents[eventsAdded].noDict[__currentUserID__] = '';
+                                            yesButton.classList.remove("active");
+                                            noButton.classList.add("active");
+                                            maybeButton.classList.remove("active");
+                                            // plannedEvents[eventsAdded].noDict[__currentUserID__] = 1;
                                         });
                                         maybeButton.addEventListener("click", () => {
-                                            plannedEvents[eventsAdded].maybeDict[__currentUserID__] = '';
+                                            yesButton.classList.remove("active");
+                                            noButton.classList.remove("active");
+                                            maybeButton.classList.add("active");
+                                            // plannedEvents[eventsAdded].maybeDict[__currentUserID__] = 1;
                                         });
+
+                                        const attendingYes = document.getElementById(`attending-yes-${eventsAdded}`);
+                                        const attendingNo = document.getElementById(`attending-no-${eventsAdded}`);
+                                        const attendingMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
+
+                                        // reset innertexts
+                                        attendingYes.innerText = "Yes:";
+                                        attendingNo.innerText = "\nNo:";
+                                        attendingMaybe.innerText = "\nMaybe:";
+
+                                        // add all people attending events to the dropdown info lists
+                                        for (attendee in plannedEvents[eventsAdded].yesDict) {
+                                            attendingYes.innerText += "\n" + attendee;
+                                        }
+                                        for (attendee in plannedEvents[eventsAdded].noDict) {
+                                            attendingNo.innerText += "\n" + attendee;
+                                        }
+                                        for (attendee in plannedEvents[eventsAdded].maybeDict) {
+                                            attendingMaybe.innerText += "\n" + attendee;
+                                        }
 
                                         eventsAdded += 1;
 }
@@ -127,7 +172,7 @@ async function renderPlannedEvents() {
     const plannedEventList = await currentGroup.getPlannedList(); // list of PlannedEvent objects
 
     for (const event of plannedEventList) { // for each PlannedEvent object in list
-        addPlannedEvent(getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description, event.yesDict, event.noDict, event.maybeDict, WHAAAAAAAAA);
+        addPlannedEvent(getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description);
     }
 }
 
