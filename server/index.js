@@ -468,6 +468,7 @@ app.get('/get/friendRequests/from', async (request, response) => {
 // Create group from obj provided, must return in response new group id
 app.post('/create/group', async (request, response) => {
   const requestBody = request.body;
+  
   try{
     const groupId = await database.createGroup(requestBody);
     response.status(200).send({groupId: groupId});
@@ -565,7 +566,7 @@ app.post('/add/member', async (request, response) => {
   }
   else{
     try{
-      await database.addMember(groupId, username);
+      await database.addGroupMember(groupId, username);
       response.status(200).end();
 
     }
@@ -629,7 +630,7 @@ app.delete('/delete/member', async (request, response) => {
   }
   else{
     try{
-      await database.removeMember(groupId, username);
+      await database.removeGroupMember(groupId, username);
       response.status(200).end();
 
     }

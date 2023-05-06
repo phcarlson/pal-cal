@@ -12,6 +12,10 @@ export async function createUser(user) {
     //TODO: check if user already exists and handle if so
     try {
         const response = await fetch(`/create/user`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify(user)
         });
@@ -54,6 +58,10 @@ export async function getUser(username) {
 export async function updateUser(username, userPatch) {
     try {
         const response = await fetch(`/update/user?username=${username}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'PATCH',
             body: JSON.stringify(userPatch)
         });
@@ -90,6 +98,10 @@ export async function deleteUser(username) {
 export async function getUsers(usernames) {
     try {
         const response = await fetch(`/get/users`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(usernames)
         });
@@ -180,6 +192,10 @@ export async function createBusyEvent(username, busyEvent) {
     // TODO: verify user doesn't have a conflicting event?
     try {
         const response = await fetch(`/create/busyEvent`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify(busyEvent)
         });
@@ -224,6 +240,10 @@ export async function getBusyEvent(busyEventId) {
 export async function getBusyEvents(busyEventIds) {
     try {
         const response = await fetch(`/get/busyEvents`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(busyEventIds)
         });
@@ -270,6 +290,10 @@ export async function getBusyEventIdsOfUser(username) {
 export async function updateBusyEvent(busyEventId, busyEventPatch) {
     try {
         const response = await fetch(`/update/busyEvent?busyEventId=${busyEventId}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'PATCH',
             body: JSON.stringify(busyEventPatch)
         });
@@ -478,12 +502,16 @@ export async function getRequestsFrom(username) {
 export async function createGroup(group) {
     try {
         const response = await fetch(`/create/group`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
             method: 'POST',
             body: JSON.stringify(group)
         });
 
         await handleResponseStatus(response);
-
+        
         const data = await response.json();
         return data.groupId;
     }
@@ -523,6 +551,10 @@ export async function getGroup(groupId) {
 export async function updateGroup(groupId, groupPatch) {
     try {
         const response = await fetch(`/update/group?groupId=${groupId}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+              },
             method: 'PATCH',
             body: JSON.stringify(groupPatch)
         });
@@ -559,6 +591,10 @@ export async function deleteGroup(groupId) {
 export async function getGroups(groupIds) {
     try {
         const response = await fetch(`/get/groups`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(groupIds)
         });
@@ -673,6 +709,10 @@ export async function removeMember(groupId, username) {
 export async function createPlannedEvent(groupId, plannedEvent) {
     try {
         const response = await fetch(`/create/plannedEvent`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify(plannedEvent)
         });
@@ -716,6 +756,10 @@ export async function getPlannedEvent(plannedEventId) {
 export async function getPlannedEvents(plannedEventIds) {
     try {
         const response = await fetch(`/get/plannedEvents`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(plannedEventIds)
         });
@@ -762,6 +806,10 @@ export async function getGroupPlannedEventIds(groupId) {
 export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
     try {
         const response = await fetch(`/update/plannedEvent?plannedEventId=${plannedEventId}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'PATCH',
             body: JSON.stringify(plannedEventPatch)
         });
