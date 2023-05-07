@@ -5,6 +5,8 @@ import { BusyEvent, PlannedEvent } from './datatypes.js';
 // let groupDb = new PouchDB("groups.pouchdb");
 let userDb = new PouchDB("users.pouchdb");
 let groupDb = new PouchDB("groups.pouchdb");
+let busyEventDb = new PouchDB("busyevents.pouchdb");
+let plannedEventDb = new PouchDB("plannedevents.pouchdb")
 // await userDb.destroy();
 // await groupDb.destroy();
 
@@ -93,22 +95,57 @@ function getUser(username, db=userDb) {
 
         /**
          * Add a time the user is busy to their calendar
-         * @param {BusyEvent} busyEvent 
+         * @param {BusyEvent} busyEvent The event to add
+         * @param {PouchDB} localEventDb The database tracking busy events.
+         * Optional - defaults to the main event database, a different db can
+         * be provided e.g. for testing purposes
+         * @returns The unique ID of the event in the database
          */
-        addBusyEvent: async function(busyEvent) {
-            const data = await db.get(username);
-            // TODO: verify user doesn't have a conflicting event?
-            data.eventsList.push(busyEvent);
-            await db.put(data);
+        addBusyEvent: async function(busyEvent, localEventDb=busyEventDb) {
+            try {
+                const eventId = createBusyEvent(busyEvent, username, localEventDb);
+                const data = await db.get(username);
+                data.eventsDict[eventId] = 1;
+                return eventId;
+            }
+            catch(err) {
+                // todo: error handling
+                console.log(err);
+            }
         },
 
         /**
          * Get all of this user's recurring busy events
+         * @param {PouchDB} localEventDb The database tracking busy events.
+         * Optional - defaults to the main event database, a different db can
+         * be provided e.g. for testing purposes
          * @returns An array of BusyEvent objects
          */
-        getBusyEvents: async function() {
+        getBusyEvents: async function(localEventDb=busyEventDb) {
             const data = await db.get(username);
-            return data.eventsList;
+            const eventIds = Object.keys(data.eventsDict);
+            return eventIds.map(eventId => getBusyEvent(eventId, localEventDb).asObject());
+        },
+
+        /**
+         * Deletes the given event
+         * @param {string} eventId The unique ID of the event to remove
+         * @param {PouchDB} localEventDb The database tracking busy events.
+         * Optional - defaults to the main event database, a different db can
+         * be provided e.g. for testing purposes
+         */
+        removeBusyEvent: async function(eventId, localEventDb=busyEventDb) {
+            try {
+                const eventData = await localEventDb.get(eventId);
+                const userData = await db.get(username);
+                await localEventDb.remove(eventData);
+                delete userData[eventId];
+                await db.put(userData);
+            }
+            catch(err) {
+                // todo: error handling
+                console.log(err);
+            }
         },
 
         // TODO: delete busy event, edit busy event
@@ -257,7 +294,7 @@ async function createUser(username, db=userDb) {
     try {
         const user = {
             _id: username,
-            eventsList: [],
+            eventsDict: {},
             friendsDict: {},
             firstName: "",
             lastName: "",
@@ -314,7 +351,7 @@ async function createGroup(db=groupDb) {
         const group = {
             groupName: "",
             memberDict: {},
-            eventsList: []
+            eventsDict: {}
         };
         const response = await db.post(group);
         return response.id;
@@ -417,10 +454,11 @@ function getGroup(groupId, db=groupDb) {
          * Add a planned event to the group calendar
          * @param {PlannedEvent} plannedEvent 
          */
-        addPlannedEvent: async function(plannedEvent) {
-            const data = await db.get(groupId);
+        addPlannedEvent: async function(plannedEvent, localPlannedEventDb=plannedEventDb) {
             // TODO: verify user doesn't have a conflicting event?
-            data.eventsList.push(plannedEvent);
+            const data = await db.get(groupId);
+            const id = await createPlannedEvent(plannedEvent)
+            data.eventsDict[id] = 1;
             await db.put(data);
         },
 
@@ -430,13 +468,198 @@ function getGroup(groupId, db=groupDb) {
          */
         getPlannedEvents: async function() {
             const data = await db.get(groupId);
-            return data.eventsList;
+            const eventIds = Object.keys(data.eventsDict);
+            return eventIds.map(eventId => getBusyEvent(eventId, localEventDb).asObject());
         },
-        
-        getGroupName: async ()    => await _getProperty(db, groupId, "groupName"),
+
+        getGroupName: async () => await _getProperty(db, groupId, "groupName"),
         setGroupName: async value => await _setProperty(db, groupId, "groupName", value)
     }
     return group;
+}
+
+/**
+ * Create a new busy event associated with the given user
+ * @param {*} event A BusyEvent object
+ * @param {*} username Unique username of the user who owns this event
+ * @param {*} db The database holding busy events. OPTIONAL - defaults to the
+ * main busyEvent db, a different database can be 
+ * provided for test purposes
+ * @returns The unique ID of the new event
+ */
+async function createBusyEvent(event, username, db=busyEventDb) {
+    event = structuredClone(event);
+    event.user = username;
+    try {
+        const response = db.post(event);
+        return response.id;
+    }
+    catch(err) {
+        // TODO: proper error handling
+        console.log(err);
+    }
+}
+
+function getBusyEvent(eventId, db=busyEventDb) {
+    return {
+        getTitle      : async () => await _getProperty(db, eventId, "title"),
+        getStartDay   : async () => await _getProperty(db, eventId, "startDay"),
+        getStartHour  : async () => await _getProperty(db, eventId, "startHour"),
+        getStartMinute: async () => await _getProperty(db, eventId, "startMinute"),
+        getEndDay     : async () => await _getProperty(db, eventId, "endDay"),
+        getEndHour    : async () => await _getProperty(db, eventId, "endHour"),
+        getEndMinute  : async () => await _getProperty(db, eventId, "endMinute"),
+
+        setTitle      : async (value) => await _setProperty(db, eventId, "title", value),
+        setStartDay   : async (value) => await _setProperty(db, eventId, "startDay", value),
+        setStartHour  : async (value) => await _setProperty(db, eventId, "startHour", value),
+        setStartMinute: async (value) => await _setProperty(db, eventId, "startMinute", value),
+        setEndDay     : async (value) => await _setProperty(db, eventId, "endDay", value),
+        setEndHour    : async (value) => await _setProperty(db, eventId, "endHour", value),
+        setEndMinute  : async (value) => await _setProperty(db, eventId, "endMinute", value),
+
+        /**
+         * Get the whole event as one object,
+         * for backwards compatibility & efficiency
+         * Most of the time you're working with more than one field of an event,
+         * so it would be really slow to have to do a separate db call for each field
+         * @returns A BusyEvent object representing this event
+         */
+        async asObject() {
+            try {
+                const data = await db.get(eventId);
+                return data;
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+    }
+}
+
+/**
+ * 
+ * @param {*} event 
+ * @param {*} groupId 
+ * @param {*} db 
+ * @returns 
+ */
+async function createPlannedEvent(event, groupId, db=plannedEventDb) {
+    event = structuredClone(event);
+    event.groupId = groupId;
+    try {
+        const response = db.post(event);
+        return response.id;
+    }
+    catch(err) {
+        // TODO: proper error handling
+        console.log(err);
+    }
+}
+
+/** 
+ * Create a new planned event associated with the given group
+ * @param {PlannedEvent} event A PlannedEvent object
+ * @param {string} groupId The unique ID of the group this event is associated with
+ * @param {PouchDB} db The database holding planned events. OPTIONAL - defaults to the
+ * main plannedEvent db, a different database can be provided for test purposes
+ * @returns The unique ID of the new event
+ */
+function getPlannedEvent(eventId, db=plannedEventDb) {
+    return {
+        getTitle      : async () => await _getProperty(db, eventId, "title"),
+        getStartDay   : async () => await _getProperty(db, eventId, "startDay"),
+        getStartHour  : async () => await _getProperty(db, eventId, "startHour"),
+        getStartMinute: async () => await _getProperty(db, eventId, "startMinute"),
+        getEndDay     : async () => await _getProperty(db, eventId, "endDay"),
+        getEndHour    : async () => await _getProperty(db, eventId, "endHour"),
+        getEndMinute  : async () => await _getProperty(db, eventId, "endMinute"),
+        getCreatorUsername: async () => await _getProperty(db, eventId, "creatorUsername"),
+        getLocation: async () => await _getProperty(db, eventId, "location"),
+        getDescription: async () => await _getProperty(db, eventId, "description"),
+
+        setTitle      : async (value) => await _setProperty(db, eventId, "title", value),
+        setStartDay   : async (value) => await _setProperty(db, eventId, "startDay", value),
+        setStartHour  : async (value) => await _setProperty(db, eventId, "startHour", value),
+        setStartMinute: async (value) => await _setProperty(db, eventId, "startMinute", value),
+        setEndDay     : async (value) => await _setProperty(db, eventId, "endDay", value),
+        setEndHour    : async (value) => await _setProperty(db, eventId, "endHour", value),
+        setEndMinute  : async (value) => await _setProperty(db, eventId, "endMinute", value),
+        setCreatorUsername: async () => await _setProperty(db, eventId, "creatorUsername"),
+        setLocation: async () => await _setProperty(db, eventId, "location"),
+        setDescription: async () => await _setProperty(db, eventId, "description"),
+
+        /**
+         * Get the whole event as one object,
+         * for backwards compatibility & efficiency
+         * Most of the time you're working with more than one field of an event,
+         * so it would be really slow to have to do a separate db call for each field
+         * @returns A BusyEvent object representing this event
+         */
+        async asObject() {
+            try {
+                const data = await db.get(eventId);
+                return data;
+            }
+            catch (err) {
+                console.log(err);
+            }
+        },
+
+        getYesRsvps: async function() {
+            const event = await this.asObject();
+            const yesDict = event.yesDict;
+            return Object.keys(yesDict);
+        },
+
+        getNoRsvps: async function() {
+            const event = await this.asObject();
+            const noDict = event.noDict;
+            return Object.keys(noDict);
+        },
+
+        getMaybeRsvps: async function() {
+            const event = await this.asObject();
+            const maybeDict = event.maybeDict;
+            return Object.keys(maybeDict);
+        },
+
+        addYesRsvp: async function(username) {
+            const data = await db.get(eventId);
+            data.yesDict[username] = 1;
+            await db.put(data);
+        },
+
+        addNoRsvp: async function(username) {
+            const data = await db.get(eventId);
+            data.noDict[username] = 1;
+            await db.put(data);
+        },
+
+        addMaybeRsvp: async function(username) {
+            const data = await db.get(eventId);
+            data.maybeDict[username] = 1;
+            await db.put(data);
+        },
+
+        removeYesRsvp: async function(username) {
+            const data = await db.get(eventId);
+            delete data.yesDict[username];
+            await db.put(data);
+        },
+
+        removeNoRsvp: async function(username) {
+            const data = await db.get(eventId);
+            delete data.noDict[username];
+            await db.put(data);
+        },
+
+        removeMaybeRsvp: async function(username) {
+            const data = await db.get(eventId);
+            delete data.maybeDict[username];
+            await db.put(data);
+        }
+    }
 }
 
 export { getUser, getGroup, getAllUsernames, userExists, createGroup, createUser }
