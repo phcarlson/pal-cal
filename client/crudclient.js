@@ -12,12 +12,18 @@ export async function createUser(user) {
     //TODO: check if user already exists and handle if so
     try {
         const response = await fetch(`/create/user`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify(user)
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -32,11 +38,13 @@ export async function getUser(username) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
         return data;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -50,12 +58,18 @@ export async function getUser(username) {
 export async function updateUser(username, userPatch) {
     try {
         const response = await fetch(`/update/user?username=${username}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'PATCH',
             body: JSON.stringify(userPatch)
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -68,9 +82,11 @@ export async function deleteUser(username) {
         const response = await fetch(`/delete/user?username=${username}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -82,15 +98,21 @@ export async function deleteUser(username) {
 export async function getUsers(usernames) {
     try {
         const response = await fetch(`/get/users`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(usernames)
         });
         
         const data = await response.json();
+        await handleResponseStatus(response);        
+        
         return data;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -101,15 +123,17 @@ export async function getUsers(usernames) {
  */
 export async function userExists(username) {
     try {
-        const response = await fetch(`/has/user/username=${username}`, {
+        const response = await fetch(`/has/user?username=${username}`, {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.exists;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -124,11 +148,13 @@ export async function getGroupIdsOfUser(username) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.groupIds;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -142,11 +168,13 @@ export async function getAllUsernames() {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.usernames;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -164,12 +192,21 @@ export async function createBusyEvent(username, busyEvent) {
     // TODO: verify user doesn't have a conflicting event?
     try {
         const response = await fetch(`/create/busyEvent`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify(busyEvent)
         });
+
+        await handleResponseStatus(response);
+
+        const data = await response.json();
+        return data.eventId;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -184,11 +221,13 @@ export async function getBusyEvent(busyEventId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.busyEvent;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -201,15 +240,21 @@ export async function getBusyEvent(busyEventId) {
 export async function getBusyEvents(busyEventIds) {
     try {
         const response = await fetch(`/get/busyEvents`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(busyEventIds)
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.busyEvents;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -224,11 +269,13 @@ export async function getBusyEventIdsOfUser(username) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.busyEventIds;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -243,12 +290,18 @@ export async function getBusyEventIdsOfUser(username) {
 export async function updateBusyEvent(busyEventId, busyEventPatch) {
     try {
         const response = await fetch(`/update/busyEvent?busyEventId=${busyEventId}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'PATCH',
             body: JSON.stringify(busyEventPatch)
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -261,9 +314,11 @@ export async function deleteBusyEvent(busyEventId) {
         const response = await fetch(`/delete/busyEvent?busyEventId=${busyEventId}`, {
             method: 'DELETE',
         });
+        
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -280,10 +335,11 @@ export async function addFriend(username1, username2) {
         const response = await fetch(`/add/friend?username1=${username1}&username2=${username2}`, {
             method: 'POST',
         });
-        
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -298,11 +354,13 @@ export async function getFriends(username) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.usernames;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -318,11 +376,13 @@ export async function areFriends(username1, username2) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.hasFriend;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -337,9 +397,11 @@ export async function deleteFriend(username1, username2) {
         const response = await fetch(`/delete/friend?username1=${username1}&username2=${username2}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -355,14 +417,16 @@ export async function addFriendRequest(fromUsername, toUsername) {
  // TODO:
     //   - verify friend exists
     //   - verify not already friends
-    //   - verify not already requested 
+    //   - verify not already requested possibly in client file not here
     try {
         const response = await fetch(`/add/friendRequest?fromUsername=${fromUsername}&toUsername=${toUsername}`, {
             method: 'POST',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -376,11 +440,14 @@ export async function removeFriendRequest(fromUsername, toUsername) {
         const response = await fetch(`/delete/friendRequest?fromUsername=${fromUsername}&toUsername=${toUsername}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
+
 
 /**
  * Get everyone who's sent a friend request to this user
@@ -393,11 +460,13 @@ export async function getRequestsTo(username) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.friendRequestsTo;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -411,12 +480,13 @@ export async function getRequestsFrom(username) {
         const response = await fetch(`/get/friendRequests/from?username=${username}`, {
             method: 'GET',
         });
+        await handleResponseStatus(response);
 
         const data = await response.json();
-        return data;
+        return data.friendRequestsFrom;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -432,15 +502,21 @@ export async function getRequestsFrom(username) {
 export async function createGroup(group) {
     try {
         const response = await fetch(`/create/group`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+              },
             method: 'POST',
             body: JSON.stringify(group)
         });
 
+        await handleResponseStatus(response);
+        
         const data = await response.json();
-        return data;
+        return data.groupId;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -455,11 +531,13 @@ export async function getGroup(groupId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
         return data;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -473,12 +551,18 @@ export async function getGroup(groupId) {
 export async function updateGroup(groupId, groupPatch) {
     try {
         const response = await fetch(`/update/group?groupId=${groupId}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+              },
             method: 'PATCH',
             body: JSON.stringify(groupPatch)
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -491,9 +575,11 @@ export async function deleteGroup(groupId) {
         const response = await fetch(`/delete/group?groupId=${groupId}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -505,15 +591,21 @@ export async function deleteGroup(groupId) {
 export async function getGroups(groupIds) {
     try {
         const response = await fetch(`/get/groups`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(groupIds)
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.groups;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -533,9 +625,11 @@ export async function addMember(groupId, username) {
         const response = await fetch(`/add/member?groupId=${groupId}&username=${username}`, {
             method: 'POST',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -551,11 +645,13 @@ export async function hasMember(groupId, username) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.exists;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -564,17 +660,19 @@ export async function hasMember(groupId, username) {
  * @param {string} groupId 
  * @returns an array of usernames
  */
-export async function getGroupMemberIds(groupId) {
+export async function getGroupMemberUsernames(groupId) {
     try {
-        const response = await fetch(`/get/memberIds?groupId=${groupId}`, {
+        const response = await fetch(`/get/memberUsernames?groupId=${groupId}`, {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.memberIds;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -589,9 +687,11 @@ export async function removeMember(groupId, username) {
         const response = await fetch(`/delete/member?groupId=${groupId}&username=${username}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -608,13 +708,22 @@ export async function removeMember(groupId, username) {
  */
 export async function createPlannedEvent(groupId, plannedEvent) {
     try {
-        const response = await fetch(`/create/plannedEvent?groupId=${groupId}`, {
+        const response = await fetch(`/create/plannedEvent`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'POST',
             body: JSON.stringify(plannedEvent)
         });
+
+        await handleResponseStatus(response);
+
+        const data = await response.json();
+        return data.eventId;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -629,11 +738,13 @@ export async function getPlannedEvent(plannedEventId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.plannedEvent;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -645,15 +756,21 @@ export async function getPlannedEvent(plannedEventId) {
 export async function getPlannedEvents(plannedEventIds) {
     try {
         const response = await fetch(`/get/plannedEvents`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'GET',
             body: JSON.stringify(plannedEventIds)
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.PlannedEvents
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -668,11 +785,13 @@ export async function getGroupPlannedEventIds(groupId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.plannedEventIds;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -687,12 +806,18 @@ export async function getGroupPlannedEventIds(groupId) {
 export async function updatePlannedEvent(plannedEventId, plannedEventPatch) {
     try {
         const response = await fetch(`/update/plannedEvent?plannedEventId=${plannedEventId}`, {
+            headers: {
+                'Accept': 'application/json,text/html', 
+                'Content-Type': 'application/json',
+            },
             method: 'PATCH',
             body: JSON.stringify(plannedEventPatch)
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -705,9 +830,11 @@ export async function deletePlannedEvent(plannedEventId) {
         const response = await fetch(`/delete/plannedEvent?plannedEventId=${plannedEventId}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -725,9 +852,11 @@ export async function addRSVP(plannedEventId, username, rsvp) {
         const response = await fetch(`/add/plannedEventRSVP?plannedEventId=${plannedEventId}&username=${username}&rsvp=${rsvp}`, {
             method: 'POST',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -741,9 +870,11 @@ export async function deleteRSVP(plannedEventId, username) {
         const response = await fetch(`/delete/plannedEventRSVP?plannedEventId=${plannedEventId}&username=${username}`, {
             method: 'DELETE',
         });
+
+        await handleResponseStatus(response);
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -757,11 +888,13 @@ export async function getYesRSVPsTo(plannedEventId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.yesList;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -775,11 +908,13 @@ export async function getNoRSVPsTo(plannedEventId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.noList;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
 }
 
@@ -793,10 +928,34 @@ export async function getMaybeRSVPsTo(plannedEventId) {
             method: 'GET',
         });
 
+        await handleResponseStatus(response);
+
         const data = await response.json();
-        return data;
+        return data.maybeList;
     }
     catch (err) {
-        console.log(err);
+        throw Error(`Unexpected error: ${err}`);
     }
+}
+
+async function handleResponseStatus(response){
+    if(response.status !== 200){
+        let body = await response.text();
+        throw Error(`${response.statusText} ${body}`);
+    }
+
+    // switch (response.status) {
+    //     case "400":
+    //         throw Error(`Error: ${response.statusMessage} ${response.body}`);
+    //         break;
+    //     case "500":
+    //         throw Error(`Error: ${response.statusMessage} ${response.body}`);
+    //         break;
+    //     case "404":
+    //         throw Error(`Error: ${response.statusMessage} ${response.body}`);
+    //         break;
+    //     default:
+    //         throw Error(`Error: ${response.statusMessage} ${response.body}`);
+    //         break;
+    // }
 }
