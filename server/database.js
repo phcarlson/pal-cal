@@ -199,7 +199,6 @@ export async function removeGroupMember(groupId, username) {
     }});
 }
 
-await removeGroupMember("88b2b71e-5d22-4d0a-912e-8e2cabf32e3c", "user1");
 // BUSY EVENTS
 /**
  * Create a new busy event with the given properties
