@@ -3,7 +3,7 @@ import { PlannedEvent } from "./datatypes.js";
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
 const username = "user1";
-let modalTime = {};
+let newEventModalTime = {};
 
 function initializeCalendar(calendarDiv) {
     const hoursCol = document.createElement("div");
@@ -271,7 +271,7 @@ function rerender() {
             const blockEndHour = clickedBlock.dataset.endHour;
             const blockEndMinute = clickedBlock.dataset.endMinute;
 
-            modalTime = { day: Number(blockDay), startHour: Number(blockStartHour), startMinute: Number(blockStartMinute), endHour: Number(blockEndHour), endMinute: Number(blockEndMinute) };
+            newEventModalTime = { day: Number(blockDay), startHour: Number(blockStartHour), startMinute: Number(blockStartMinute), endHour: Number(blockEndHour), endMinute: Number(blockEndMinute) };
 
             const startTimeInput = document.getElementById("start-time-input");
             startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
@@ -283,20 +283,20 @@ function rerender() {
             endTimeInput.min = startTimeInput.value;
             endTimeInput.max = endTimeInput.value;
 
-            modal.show();
+            newEventModal.show();
         });
     }
 }
 
 rerender();
 
-const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
-document.getElementById("modal-close").addEventListener("click", () => modal.hide());
-document.getElementById("modal-save").addEventListener("click", () => {
+const newEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
+document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newEventModal.hide());
+document.getElementById("modal-new-planned-event-save").addEventListener("click", () => {
     const startTimeInput = document.getElementById("start-time-input");
     // TODO: support spanning multiple days
-    let startDay = modalTime.day;
-    let endDay = modalTime.day;
+    let startDay = newEventModalTime.day;
+    let endDay = newEventModalTime.day;
     let [ startHour, startMinute ] = startTimeInput.value.split(":");
     startHour = Number(startHour);
     startMinute = Number(startMinute);
@@ -306,13 +306,13 @@ document.getElementById("modal-save").addEventListener("click", () => {
     endHour = Number(endHour);
     endMinute = Number(endMinute);
     
-    if ( compareTimes(0, endHour, endMinute, 0, modalTime.endHour, modalTime.endMinute) > 0 ||
-         compareTimes(0, endHour, endMinute, 0, modalTime.startHour, modalTime.startMinute) < 0 ||
-         compareTimes(0, startHour, startMinute, 0, modalTime.startHour, modalTime.startMinute) < 0 ||
-         compareTimes(0, startHour, startMinute, 0, modalTime.endHour, modalTime.endMinute) > 0
+    if ( compareTimes(0, endHour, endMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0 ||
+         compareTimes(0, endHour, endMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
+         compareTimes(0, startHour, startMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
+         compareTimes(0, startHour, startMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0
     ) {
         // If the start and end time aren't within this block
-        alert(`Select a time between ${toTwelveHour(modalTime.startHour, modalTime.startMinute)} and ${toTwelveHour(modalTime.endHour, modalTime.endMinute)} or select another block of free time`);
+        alert(`Select a time between ${toTwelveHour(newEventModalTime.startHour, newEventModalTime.startMinute)} and ${toTwelveHour(newEventModalTime.endHour, newEventModalTime.endMinute)} or select another block of free time`);
         return;
     }
 
@@ -320,8 +320,8 @@ document.getElementById("modal-save").addEventListener("click", () => {
     const description = document.getElementById("description-input").value;
     const location = ""; // TODO
 
-    modal.hide();
+    newEventModal.hide();
     addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
 });
 
-document.getElementById("modal-close-x").addEventListener("click", () => modal.hide());
+document.getElementById("modal-close-x").addEventListener("click", () => newEventModal.hide());
