@@ -14,6 +14,7 @@ plannedEventsContainer.innerHTML = ''; // clear all planned events
 
 let eventsAdded = 0;
 
+// dummy groupIDs and userIDs
 const __currentGroupID__ = "f973b67e-bdc5-4fb1-855e-ad824ed1f057";
 const __currentUserID__ = "username1";
 
@@ -95,50 +96,126 @@ async function addPlannedEvent(eventID, startTime, endTime, startDay, title, loc
                                                 </div>
                                             </div>
                                         </div>`;
+
+                                        // initial RSVP lists for this event
+                                        const yesRsvpList = await crud.getYesRSVPsTo(eventID);
+                                        const noRsvpList = await crud.getNoRSVPsTo(eventID);
+                                        const maybeRsvpList = await crud.getMaybeRSVPsTo(eventID);
                                         
                                         // yes, no, maybe buttons
                                         const yesButton = document.getElementById(`yes-${eventsAdded}`);
                                         const noButton = document.getElementById(`no-${eventsAdded}`);
                                         const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-                                        yesButton.addEventListener("click", () => {
+                                        // set initial active status for rsvp option buttons
+                                        let activeButton = undefined;
+
+                                        if (yesRsvpList.includes(__currentUserID__)) {
                                             yesButton.classList.add("active");
-                                            noButton.classList.remove("active");
-                                            maybeButton.classList.remove("active");
-                                            // plannedEvents[eventsAdded].yesDict[__currentUserID__] = 1;
-                                        });
-                                        noButton.addEventListener("click", () => {
-                                            yesButton.classList.remove("active");
+                                            activeButton = yesButton;
+                                        }
+                                        else if (noRsvpList.includes(__currentUserID__)) {
                                             noButton.classList.add("active");
-                                            maybeButton.classList.remove("active");
-                                            // plannedEvents[eventsAdded].noDict[__currentUserID__] = 1;
-                                        });
-                                        maybeButton.addEventListener("click", () => {
-                                            yesButton.classList.remove("active");
-                                            noButton.classList.remove("active");
+                                            activeButton = noButton;
+                                        }
+                                        else if (maybeRsvpList.includes(__currentUserID__)) {
                                             maybeButton.classList.add("active");
-                                            // plannedEvents[eventsAdded].maybeDict[__currentUserID__] = 1;
+                                            activeButton = maybeButton;
+                                        }
+
+                                        // FUNCTION: Updates RSVP list displays for event
+                                        async function updateAttendingLists() {
+                                            // reset innertexts
+                                            attendingYes.innerText = "Yes:";
+                                            attendingNo.innerText = "\nNo:";
+                                            attendingMaybe.innerText = "\nMaybe:";
+
+                                            // add all people attending events to the attendee info lists
+                                            for (const attendee of await crud.getYesRSVPsTo(eventID)) {
+                                                attendingYes.innerText += "\n" + attendee;
+                                            }
+                                            for (const attendee of await crud.getNoRSVPsTo(eventID)) {
+                                                attendingNo.innerText += "\n" + attendee;
+                                            }
+                                            for (const attendee of await crud.getMaybeRSVPsTo(eventID)) {
+                                                attendingMaybe.innerText += "\n" + attendee;
+                                            }
+                                        }
+
+                                        yesButton.addEventListener("click", async () => {
+                                            // if a button was active, remove user from RSVP list for event
+                                            if (activeButton !== undefined) {
+                                                await crud.deleteRSVP(eventID, __currentUserID__);
+                                            }
+
+                                            // if yes was active, remove it from active
+                                            if (activeButton === yesButton) {
+                                                yesButton.classList.remove("active");
+                                                activeButton = undefined;
+                                            }
+                                            else {
+                                                // add user to RSVP list
+                                                await crud.addRSVP(eventID, __currentUserID__, "YES");
+
+                                                // if another button was active, remove it
+                                                if (activeButton !== undefined) {
+                                                    activeButton.classList.remove("active");
+                                                }
+                                                yesButton.classList.add("active");
+                                                activeButton = yesButton;
+                                            }
+                                        });
+                                        noButton.addEventListener("click", async () => {
+                                            // if a button was active, remove user from RSVP list for event
+                                            if (activeButton !== undefined) {
+                                                await crud.deleteRSVP(eventID, __currentUserID__);
+                                            }
+
+                                            if (activeButton === noButton) {
+                                                noButton.classList.remove("active");
+                                                activeButton = undefined;
+                                            }
+                                            else {
+                                                // add user to RSVP list
+                                                await crud.addRSVP(eventID, __currentUserID__, "NO");
+
+                                                // if another button was active, remove it
+                                                if (activeButton !== undefined) {
+                                                    activeButton.classList.remove("active");
+                                                }
+                                                noButton.classList.add("active");
+                                                activeButton = noButton;
+                                            }
+                                        });
+                                        maybeButton.addEventListener("click", async () => {
+                                            // if a button was active, remove user from RSVP list for event
+                                            if (activeButton !== undefined) {
+                                                await crud.deleteRSVP(eventID, __currentUserID__);
+                                            }
+
+                                            if (activeButton === maybeButton) {
+                                                maybeButton.classList.remove("active");
+                                                activeButton = undefined;
+                                            }
+                                            else {
+                                                // add user to RSVP list
+                                                await crud.addRSVP(eventID, __currentUserID__, "MAYBE");
+
+                                                // if another button was active, remove it
+                                                if (activeButton !== undefined) {
+                                                    activeButton.classList.remove("active");
+                                                }
+                                                maybeButton.classList.add("active");
+                                                activeButton = maybeButton;
+                                            }
                                         });
 
+                                        // dropdown list items
                                         const attendingYes = document.getElementById(`attending-yes-${eventsAdded}`);
                                         const attendingNo = document.getElementById(`attending-no-${eventsAdded}`);
                                         const attendingMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
 
-                                        // reset innertexts
-                                        attendingYes.innerText = "Yes:";
-                                        attendingNo.innerText = "\nNo:";
-                                        attendingMaybe.innerText = "\nMaybe:";
-
-                                        // add all people attending events to the dropdown info lists
-                                        for (const attendee of await crud.getYesRSVPsTo(eventID)) {
-                                            attendingYes.innerText += "\n" + attendee;
-                                        }
-                                        // for (attendee in plannedEvents[eventsAdded].noDict) {
-                                        //     attendingNo.innerText += "\n" + attendee;
-                                        // }
-                                        // for (attendee in plannedEvents[eventsAdded].maybeDict) {
-                                        //     attendingMaybe.innerText += "\n" + attendee;
-                                        // }
+                                        await updateAttendingLists();
 
                                         eventsAdded += 1;
 }
@@ -179,6 +256,7 @@ async function renderPlannedEvents() {
 function getTime(hour, minute) {
     let suffix = 'am';
 
+    // set 'am' or 'pm' suffix
     if (hour == 12) {
         suffix = 'pm';
     }
@@ -187,7 +265,10 @@ function getTime(hour, minute) {
         suffix = 'pm';
     }
 
-    return hour + ':' + minute + suffix;
+    // if minute is less than 10, add a leading 0
+    const preMinuteZero = minute < 10 ? "0" : "";
+
+    return hour + ':' + preMinuteZero + minute + suffix;
 }
 
 function getDay(dayNum) {
