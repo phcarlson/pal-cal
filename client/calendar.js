@@ -68,6 +68,9 @@ function renderEventBlock(day, duration, type, text="", startHour, startMinute, 
         case "planned":
             eventDiv.classList.add("calendar-block", "calendar-planned");
             break;
+        case "busy":
+            eventDiv.classList.add("calendar-block", "calendar-busy");
+            break;
     }
     eventDiv.style.height = `calc((100%/12) * ${duration})`;
     eventDiv.dataset.day = day;

@@ -27,6 +27,12 @@ div.calendar-planned {
     background-color: skyblue;
 }
 
+div.calendar-busy {
+    background-color: maroon;
+    color: white;
+}
+
+
 div.calendar-filler {
     background-color: #00000000;
 }
