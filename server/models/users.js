@@ -30,7 +30,7 @@ export default class users extends Model {
       defaultValue: ""
     },
     image: {
-      type: DataTypes.BLOB,
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {
