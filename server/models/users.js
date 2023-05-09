@@ -32,6 +32,11 @@ export default class users extends Model {
     image: {
       type: DataTypes.BLOB,
       allowNull: true
+    },
+    major: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      defaultValue: ""
     }
   }, {
     sequelize,

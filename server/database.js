@@ -9,7 +9,8 @@ const models = initModels(sequelize);
 /**
  * Creates a user with the given properties
  * @param {Object} user MUST have a field called username.
- * Can have zero or more of these fields: firstName, lastName, college, bio, image
+ * Can have zero or more of these fields: firstName, lastName, college, major,
+ * bio, image
  * Missing fields will be given sane default values
  */
 export async function createUser(user) {
