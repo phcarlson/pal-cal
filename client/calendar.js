@@ -288,8 +288,46 @@ function rerender() {
     }
 }
 
-rerender();
+const newEventModalHtml = `
+    <div class="modal fade" id="modal-new-planned-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-planned-event-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modal-new-planned-event-label">Add event</h5>
+                    <button type="button" id="modal-new-planned-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="title-input" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="title-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="start-time-input" class="form-label">Start time</label>
+                            <input type="time" class="form-control" id="start-time-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="end-time-input" class="form-label">End time</label>
+                            <input type="time" class="form-control" id="end-time-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description-input" class="form-label">Description</label>
+                            <textarea id=description-input></textarea>
+                        </div>
+                    </form>
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-new-planned-event-close" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="modal-new-planned-event-save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`
+document.body.insertAdjacentHTML("afterbegin", newEventModalHtml);
 const newEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
 document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newEventModal.hide());
 document.getElementById("modal-new-planned-event-save").addEventListener("click", () => {
@@ -324,4 +362,6 @@ document.getElementById("modal-new-planned-event-save").addEventListener("click"
     addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
 });
 
-document.getElementById("modal-close-x").addEventListener("click", () => newEventModal.hide());
+document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newEventModal.hide());
+
+rerender();
