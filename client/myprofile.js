@@ -143,5 +143,5 @@ function saveProfile(mockCurrUsername){
     //crud.setBio(bioInput.value);
 }
 
-renderRequests(mockCurrUsername);
+renderRequests(mockCurrUsername); //do these need awaits?
 renderProfile(mockCurrUsername);
