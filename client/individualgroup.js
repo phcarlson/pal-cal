@@ -201,7 +201,7 @@ selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
 
 const calendarElement = document.getElementById("calendar");
-initializeCalendar(calendarElement);
+initializeCalendar(calendarElement, "group");
 rerender("group");
 
 // dummy data -- REST LOADED IN USING individualgroup.html, through loadmockdata.js file

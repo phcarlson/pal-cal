@@ -4,8 +4,10 @@ const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", 
 // TODO: get username dynamically
 const username = "user1";
 let newEventModalTime = {};
+let newPlannedEventModal;
+let newBusyEventModal;
 
-export function initializeCalendar(calendarDiv) {
+export function initializeCalendar(calendarDiv, type) {
     calendarDiv.classList.add("row", "d-flex");
     const hoursCol = document.createElement("div");
     hoursCol.innerText = "hours";
@@ -31,6 +33,173 @@ export function initializeCalendar(calendarDiv) {
         dayHeader.innerText = day[0].toUpperCase() + day.slice(1);
         dayDiv.appendChild(dayHeader);
         calendarDiv.appendChild(dayDiv);
+    }
+
+    if (type === "group") {
+        const newPlannedEventModalHtml = /*html*/`
+            <div class="modal fade" id="modal-new-planned-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-planned-event-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-new-planned-event-label">Add event</h5>
+                            <button type="button" id="modal-new-planned-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="title-input" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="new-planned-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="start-time-input" class="form-label">Start time</label>
+                                    <input type="time" class="form-control" id="new-planned-event-start-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-planned-event-end-time-input" class="form-label">End time</label>
+                                    <input type="time" class="form-control" id="new-planned-event-end-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="description-input" class="form-label">Description</label>
+                                    <textarea id="new-planned-event-description-input"></textarea>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modal-new-planned-event-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-new-planned-event-save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML("afterbegin", newPlannedEventModalHtml);
+        newPlannedEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
+        document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newPlannedEventModal.hide());
+        document.getElementById("modal-new-planned-event-save").addEventListener("click", () => {
+            const newPlannedEventStartTimeInput = document.getElementById("new-planned-event-start-time-input");
+            // TODO: support spanning multiple days
+            let startDay = newEventModalTime.day;
+            let endDay = newEventModalTime.day;
+            let [startHour, startMinute] = newPlannedEventStartTimeInput.value.split(":");
+            startHour = Number(startHour);
+            startMinute = Number(startMinute);
+
+            const newPlannedEventEndTimeInput = document.getElementById("new-planned-event-end-time-input");
+            let [endHour, endMinute] = newPlannedEventEndTimeInput.value.split(":");
+            endHour = Number(endHour);
+            endMinute = Number(endMinute);
+
+            if (compareTimes(0, endHour, endMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0 ||
+                compareTimes(0, endHour, endMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
+                compareTimes(0, startHour, startMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
+                compareTimes(0, startHour, startMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0
+            ) {
+                // If the start and end time aren't within this block
+                alert(`Select a time between ${toTwelveHour(newEventModalTime.startHour, newEventModalTime.startMinute)} and ${toTwelveHour(newEventModalTime.endHour, newEventModalTime.endMinute)} or select another block of free time`);
+                return;
+            }
+
+            const title = document.getElementById("new-planned-event-title-input").value;
+            const description = document.getElementById("new-planned-event-description-input").value;
+            const location = ""; // TODO
+
+            newPlannedEventModal.hide();
+            addPlannedEvent({ title: title, startDay: startDay, startHour: startHour, startMinute: startMinute, endDay: endDay, endHour: endHour, endMinute: endMinute, creatorUsername: username, location: location, description: description });
+        });
+
+        document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newPlannedEventModal.hide());
+
+    }
+
+    else {
+        const newBusyEventModalHtml = /*html*/ `
+            <div class="modal fade" id="modal-new-busy-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-busy-event-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-new-busy-event-label">Add event</h5>
+                            <button type="button" id="modal-new-busy-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="new-busy-event-title-input" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="new-busy-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-busy-event-day-input" class="form-label">Weekday</label>
+                                    <select class="custom-select"  id="new-busy-event-day-input">
+                                        <option value=0>Sunday</option>
+                                        <option value=1 selected>Monday</option>
+                                        <option value=2>Tuesday</option>
+                                        <option value=3>Wednesday</option>
+                                        <option value=4>Thursday</option>
+                                        <option value=5>Friday</option>
+                                        <option value=6>Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="start-time-input" class="form-label">Start time</label>
+                                    <input type="time" class="form-control" id="new-busy-event-start-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-busy-event-end-time-input" class="form-label">End time</label>
+                                    <input type="time" class="form-control" id="new-busy-event-end-time-input" required>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modal-new-busy-event-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-new-busy-event-save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML("afterbegin", newBusyEventModalHtml);
+        newBusyEventModal = new bootstrap.Modal(document.getElementById('modal-new-busy-event'));
+        document.getElementById("modal-new-busy-event-close").addEventListener("click", () => newBusyEventModal.hide());
+        document.getElementById("button-new-busy-event").addEventListener("click", () => newBusyEventModal.show());
+        document.getElementById("modal-new-busy-event-close-x").addEventListener("click", () => newBusyEventModal.hide());
+        document.getElementById("modal-new-busy-event-save").addEventListener("click", () => {
+            const startTimeInput = document.getElementById("new-busy-event-start-time-input");
+
+            let [startHour, startMinute] = startTimeInput.value.split(":");
+            startHour = Number(startHour);
+            startMinute = Number(startMinute);
+
+            const endTimeInput = document.getElementById("new-busy-event-end-time-input");
+            let [endHour, endMinute] = endTimeInput.value.split(":");
+            endHour = Number(endHour);
+            endMinute = Number(endMinute);
+
+            // TODO: support spanning multiple days
+            const startDay = document.getElementById("new-busy-event-day-input").value;
+            const endDay = startDay;
+
+            const title = document.getElementById("new-busy-event-title-input").value;
+
+            const newEvent = {
+                title: title,
+                startDay: startDay,
+                startHour: startHour,
+                startMinute: startMinute,
+                endDay: endDay,
+                endHour: endHour,
+                endMinute: endMinute
+            };
+            // TODO: add event with CRUD
+            busyEvents.push(newEvent);
+            newBusyEventModal.hide();
+            rerender(type);
+        });
     }
 }
 
@@ -289,9 +458,9 @@ export function rerender(type="group") {
 
             newEventModalTime = { day: Number(blockDay), startHour: Number(blockStartHour), startMinute: Number(blockStartMinute), endHour: Number(blockEndHour), endMinute: Number(blockEndMinute) };
 
-            const startTimeInput = document.getElementById("start-time-input");
+            const startTimeInput = document.getElementById("new-planned-event-start-time-input");
             startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
-            const endTimeInput = document.getElementById("end-time-input");
+            const endTimeInput = document.getElementById("new-planned-event-end-time-input");
             endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
 
             startTimeInput.min = startTimeInput.value;
@@ -299,83 +468,8 @@ export function rerender(type="group") {
             endTimeInput.min = startTimeInput.value;
             endTimeInput.max = endTimeInput.value;
 
-            newEventModal.show();
+            newPlannedEventModal.show();
         });
     }
 }
 
-const newEventModalHtml = `
-    <div class="modal fade" id="modal-new-planned-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-planned-event-label">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modal-new-planned-event-label">Add event</h5>
-                    <button type="button" id="modal-new-planned-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <form>
-                        <div class="mb-3">
-                            <label for="title-input" class="form-label">Title</label>
-                            <input type="text" class="form-control" id="title-input">
-                        </div>
-                        <div class="mb-3">
-                            <label for="start-time-input" class="form-label">Start time</label>
-                            <input type="time" class="form-control" id="start-time-input" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="end-time-input" class="form-label">End time</label>
-                            <input type="time" class="form-control" id="end-time-input" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="description-input" class="form-label">Description</label>
-                            <textarea id=description-input></textarea>
-                        </div>
-                    </form>
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="modal-new-planned-event-close" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary" id="modal-new-planned-event-save">Save changes</button>
-                </div>
-            </div>
-        </div>
-    </div>
-`
-document.body.insertAdjacentHTML("afterbegin", newEventModalHtml);
-const newEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
-document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newEventModal.hide());
-document.getElementById("modal-new-planned-event-save").addEventListener("click", () => {
-    const startTimeInput = document.getElementById("start-time-input");
-    // TODO: support spanning multiple days
-    let startDay = newEventModalTime.day;
-    let endDay = newEventModalTime.day;
-    let [ startHour, startMinute ] = startTimeInput.value.split(":");
-    startHour = Number(startHour);
-    startMinute = Number(startMinute);
-
-    const endTimeInput = document.getElementById("end-time-input");
-    let [ endHour, endMinute ] = endTimeInput.value.split(":");
-    endHour = Number(endHour);
-    endMinute = Number(endMinute);
-    
-    if ( compareTimes(0, endHour, endMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0 ||
-         compareTimes(0, endHour, endMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
-         compareTimes(0, startHour, startMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
-         compareTimes(0, startHour, startMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0
-    ) {
-        // If the start and end time aren't within this block
-        alert(`Select a time between ${toTwelveHour(newEventModalTime.startHour, newEventModalTime.startMinute)} and ${toTwelveHour(newEventModalTime.endHour, newEventModalTime.endMinute)} or select another block of free time`);
-        return;
-    }
-
-    const title = document.getElementById("title-input").value;
-    const description = document.getElementById("description-input").value;
-    const location = ""; // TODO
-
-    newEventModal.hide();
-    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
-});
-
-document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newEventModal.hide());
