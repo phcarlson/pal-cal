@@ -12,7 +12,6 @@ let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:
 function renderRequests(mockCurrUsername){
     let user = crud.getUser(mockCurrUsername);
     
-    //replace with user
     crud.getRequestsTo(user.username).forEach((usernameRequest)=>{
 
         //userNameRequest
@@ -64,12 +63,12 @@ function renderRequests(mockCurrUsername){
         button.addEventListener("click", (event)=>{
             button.className = `btn ${buttonClass} shadow btn-circle btn-lg d-flex align-items-center justify-content-center`;
             if(buttonClass === 'btn-success'){
-            crud.addFriend(user.username, /*----*/);
+            crud.addFriend(user.username, usernameRequest);
             }
             setTimeout(function() {   //  call a momentary setTimeout when the loop is called
                 requestListCol.removeChild(requestCard);
               }, 600);
-            deleteFriendRequest(usernameRequest, user.username)
+            crud.removeFriendRequest(usernameRequest, user.username); //or removeFriendRequest?
           });
       }
 
