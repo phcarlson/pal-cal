@@ -5,7 +5,8 @@ const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", 
 const username = "user1";
 let newEventModalTime = {};
 
-function initializeCalendar(calendarDiv) {
+export function initializeCalendar(calendarDiv) {
+    calendarDiv.classList.add("row", "d-flex");
     const hoursCol = document.createElement("div");
     hoursCol.innerText = "hours";
     hoursCol.classList.add("col", "m-2");
@@ -82,7 +83,7 @@ function renderEventBlock(day, duration, type, text="", startHour, startMinute, 
     weekdayCol.appendChild(eventDiv);
 }
 
-function renderEvents(events) {
+function renderEvents(events, type="group") {
     let prevEventEndDay = -1;
     let prevEventEndHour = -1;
     let prevEventEndMinute = -1;
@@ -95,7 +96,8 @@ function renderEvents(events) {
                 // the last event
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 if (fillerDuration > 0.25) {
-                    renderEventBlock(event.startDay, fillerDuration, "free", "", prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
+                    const blockType = type === "group" ? "free" : "filler";
+                    renderEventBlock(event.startDay, fillerDuration, blockType, "", prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
@@ -107,18 +109,21 @@ function renderEvents(events) {
                 prevEventEndMinute = event.endMinute;
             }
             else {
-                if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
-                    // Fill in free time at the end of the day
-                    const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-                    renderEventBlock(prevEventEndDay, eventDuration, "free", "", prevEventEndHour, prevEventEndMinute, 23, 59);
-                }
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
                     const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
-                    renderEventBlock(event.startDay, fillerDuration, "free", "", 0, 0, event.startHour, event.startMinute);
+                    const blockType = type === "group" ? "free" : "filler";
+                    renderEventBlock(event.startDay, fillerDuration, blockType, "", 0, 0, event.startHour, event.startMinute);
                 }
-                for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
-                    // Fill in free time on days in between
-                    renderEventBlock(day, 24, "free", "", 0, 0, 23, 59);
+                if (type === "group") {
+                    if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
+                        // Fill in free time at the end of the day
+                        const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
+                        renderEventBlock(prevEventEndDay, eventDuration, "free", "", prevEventEndHour, prevEventEndMinute, 23, 59);
+                    }
+                    for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
+                        // Fill in free time on days in between
+                        renderEventBlock(day, 24, "free", "", 0, 0, 23, 59);
+                    }
                 }
                 const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
@@ -131,14 +136,16 @@ function renderEvents(events) {
             }
         }
     }
-    if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
-        // Fill in free time at the end of the day
-        const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-        renderEventBlock(prevEventEndDay, eventDuration, "free");
-    }
-    for (let day = prevEventEndDay + 1; day <= 6; ++day) {
-        // Fill in free time on days after the last busy time
-        renderEventBlock(day, 24, "free");
+    if (type === "group") {
+        if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
+            // Fill in free time at the end of the day
+            const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
+            renderEventBlock(prevEventEndDay, eventDuration, "free");
+        }
+        for (let day = prevEventEndDay + 1; day <= 6; ++day) {
+            // Fill in free time on days after the last busy time
+            renderEventBlock(day, 24, "free");
+        }
     }
 
 }
@@ -225,14 +232,9 @@ function addPlannedEvent(event) {
     rerender();
 }
 
-
-initializeCalendar(document.getElementById("calendar"));
-
 // Some random test events
 let busyEvents = [
     {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
-    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute:  0},
-    {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute:  0},
     {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
     {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
     {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
@@ -251,19 +253,30 @@ function removeElementsByClass(className){
 }
 
 
-function rerender() {
+export function rerender(type="group") {
     removeElementsByClass("calendar-element");
-    let events = busyEvents.map(event => {
-        let newEvent = structuredClone(event);
-        newEvent.type = "filler";
-        return newEvent;
-    }).concat(plannedEvents.map(event => {
-        let newEvent = structuredClone(event);
-        newEvent.type = "planned";
-        return newEvent;
-    }));
+    let events;
+    if (type === "profile") {
+        // TODO: get busy events from CRUD
+        events = busyEvents.map(event => {
+            let newEvent = structuredClone(event);
+            newEvent.type = "busy";
+            return newEvent;
+        });
+    }
+    else {
+        events = busyEvents.map(event => {
+            let newEvent = structuredClone(event);
+            newEvent.type = "filler";
+            return newEvent;
+        }).concat(plannedEvents.map(event => {
+            let newEvent = structuredClone(event);
+            newEvent.type = "planned";
+            return newEvent;
+        }));
+    }
 
-    renderEvents(consolidateEvents(events));
+    renderEvents(consolidateEvents(events), type);
 
     for (let element of document.getElementsByClassName("calendar-free")) {
         element.addEventListener("click", (event) => {
@@ -366,5 +379,3 @@ document.getElementById("modal-new-planned-event-save").addEventListener("click"
 });
 
 document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newEventModal.hide());
-
-rerender();
