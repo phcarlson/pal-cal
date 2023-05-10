@@ -13,7 +13,7 @@ function renderRequests(mockCurrUsername){
     let user = crud.getUser(mockCurrUsername);
     
     //replace with user
-    crud.getRequestUsernamesTo(user.username).forEach((usernameRequest)=>{
+    crud.getRequestsTo(user.username).forEach((usernameRequest)=>{
 
         //userNameRequest
         //let requestObj = usercrud.getUser(userNameRequest);
