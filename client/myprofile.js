@@ -13,7 +13,7 @@ function renderRequests(mockCurrUsername){
     let user = crud.getUser(mockCurrUsername);
     
     //replace with user
-    mockCurrUser.getRequestUsernamesTo(user.username).forEach((usernameRequest)=>{
+    crud.getRequestUsernamesTo(user.username).forEach((usernameRequest)=>{
 
         //userNameRequest
         //let requestObj = usercrud.getUser(userNameRequest);
@@ -69,7 +69,7 @@ function renderRequests(mockCurrUsername){
             setTimeout(function() {   //  call a momentary setTimeout when the loop is called
                 requestListCol.removeChild(requestCard);
               }, 600);
-            deleteFriendRequest(usernameOfRequest, user.username)
+            deleteFriendRequest(usernameRequest, user.username)
           });
       }
 
