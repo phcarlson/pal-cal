@@ -96,14 +96,12 @@ export async function deleteUser(username) {
  * @returns A list of User objects
  */
 export async function getUsers(usernames) {
+    // Change array to comma separated usernames to send over GET req
+    const usernamesParam = usernames.join(',');
+
     try {
-        const response = await fetch(`/get/users`, {
-            headers: {
-                'Accept': 'application/json,text/html', 
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch(`/get/users?usernames=${usernamesParam}`, {
             method: 'GET',
-            body: JSON.stringify(usernames)
         });
         
         const data = await response.json();

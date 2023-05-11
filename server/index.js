@@ -124,10 +124,9 @@ app.get('/has/user', async (request, response) => {
 
 // Get all user objs from ids listed 
 app.get('/get/users', async (request, response) => {
-  const requestBody = request.body;
-  const usernames = requestBody.usernames;
-//{usernames:[     ]}
-
+  const options = request.query;
+  const usernames = options.usernames.split(',');
+  
   try{  
       const users = await database.getUsers(usernames); 
       response.status(200).json({users: users});
