@@ -125,11 +125,16 @@ app.get('/has/user', async (request, response) => {
 // Get all user objs from ids listed 
 app.get('/get/users', async (request, response) => {
   const options = request.query;
-  const usernames = options.usernames.split(',');
-  
+  const usernames = options.usernames;
+
   try{  
-      const users = await database.getUsers(usernames); 
-      response.status(200).json({users: users});
+      if(busyEventIds === undefined){
+        response.status(400).send('Bad request: comma separated busy events undefined')
+      }
+      else{
+        const users = await database.getUsers(usernames.split(',')); 
+        response.status(200).json({users: users});
+      }
     }
     catch(error){
       // TODO: error for user that doesn't exist?
@@ -208,11 +213,17 @@ app.get('/get/busyEvent', async (request, response) => {
 
 // Get busy events from id list 
 app.get('/get/busyEvents', async (request, response) => {
-  const requestBody = request.body;
-  const busyEventIds = requestBody.busyEventIds;
+  const options = request.query;
+  const busyEventIds = options.busyEventIds;
   try{  
-    const busyEvents = await database.getBusyEvents(busyEventIds); 
-    response.status(200).json({busyEvents: busyEvents});
+    if(busyEventIds === undefined){
+      response.status(400).send('Bad request: comma separated busy events undefined')
+    }
+    else{
+      const busyEvents = await database.getBusyEvents(busyEventIds.split(',')); 
+      response.status(200).json({busyEvents: busyEvents});
+    }
+
   }
   catch(error){
     // TODO have db check for bad busyeventids

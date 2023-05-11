@@ -236,14 +236,11 @@ export async function getBusyEvent(busyEventId) {
  * @returns a list of busyEvent objects
  */
 export async function getBusyEvents(busyEventIds) {
+        // Change array to comma separated usernames to send over GET req
+    const busyEventIdsParam = busyEventIds.join(',');
     try {
-        const response = await fetch(`/get/busyEvents`, {
-            headers: {
-                'Accept': 'application/json,text/html', 
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch(`/get/busyEvents?busyEventIds=${busyEventIdsParam}`, {
             method: 'GET',
-            body: JSON.stringify(busyEventIds)
         });
 
         await handleResponseStatus(response);
