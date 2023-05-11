@@ -236,7 +236,7 @@ export async function getBusyEvent(busyEventId) {
  * @returns a list of busyEvent objects
  */
 export async function getBusyEvents(busyEventIds) {
-        // Change array to comma separated usernames to send over GET req
+        // Change array to comma separated ids to send over GET req
     const busyEventIdsParam = busyEventIds.join(',');
     try {
         const response = await fetch(`/get/busyEvents?busyEventIds=${busyEventIdsParam}`, {
@@ -475,6 +475,7 @@ export async function getRequestsFrom(username) {
         const response = await fetch(`/get/friendRequests/from?username=${username}`, {
             method: 'GET',
         });
+
         await handleResponseStatus(response);
 
         const data = await response.json();
@@ -584,14 +585,11 @@ export async function deleteGroup(groupId) {
  * @returns an array of Group objects
  */
 export async function getGroups(groupIds) {
+    // Change array to comma separated ids to send over GET req
+    const groupIdsParam = groupIds.join(',');
     try {
-        const response = await fetch(`/get/groups`, {
-            headers: {
-                'Accept': 'application/json,text/html', 
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch(`/get/groups?groupIds=${groupIdsParam}`, {
             method: 'GET',
-            body: JSON.stringify(groupIds)
         });
 
         await handleResponseStatus(response);
@@ -749,14 +747,12 @@ export async function getPlannedEvent(plannedEventId) {
  * @returns a list of plannedEvent objects
  */
 export async function getPlannedEvents(plannedEventIds) {
+    // Change array to comma separated ids to send over GET req
+    const plannedEventIdsParam = plannedEventIds.join(',');
+
     try {
-        const response = await fetch(`/get/plannedEvents`, {
-            headers: {
-                'Accept': 'application/json,text/html', 
-                'Content-Type': 'application/json',
-            },
+        const response = await fetch(`/get/plannedEvents?plannedEventIds=${plannedEventIdsParam}`, {
             method: 'GET',
-            body: JSON.stringify(plannedEventIds)
         });
 
         await handleResponseStatus(response);

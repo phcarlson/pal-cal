@@ -128,8 +128,8 @@ app.get('/get/users', async (request, response) => {
   const usernames = options.usernames;
 
   try{  
-      if(busyEventIds === undefined){
-        response.status(400).send('Bad request: comma separated busy events undefined')
+      if(usernames === undefined){
+        response.status(400).send('Bad request: comma separated usernames undefined')
       }
       else{
         const users = await database.getUsers(usernames.split(',')); 
@@ -217,7 +217,7 @@ app.get('/get/busyEvents', async (request, response) => {
   const busyEventIds = options.busyEventIds;
   try{  
     if(busyEventIds === undefined){
-      response.status(400).send('Bad request: comma separated busy events undefined')
+      response.status(400).send('Bad request: comma separated busy event ids undefined')
     }
     else{
       const busyEvents = await database.getBusyEvents(busyEventIds.split(',')); 
@@ -546,11 +546,16 @@ app.delete('/delete/group', async (request, response) => {
 
 // Get groups by id list
 app.get('/get/groups', async (request, response) => {
-  const requestBody = request.body;
-  const groupIds = requestBody.groupIds;
+  const options = request.query;
+  const groupIds = options.groupIds;
   try{  
-    const groups = await database.getGroups(groupIds); 
-    response.status(200).json({groups: groups});
+    if(groupIds === undefined){
+      response.status(400).send('Bad request: comma separated group ids undefined')
+    }
+    else{
+      const groups = await database.getGroups(groupIds.split(',')); 
+      response.status(200).json({groups: groups});
+    }
   }
   catch(error){
     // TODO have db check for bad group ids
@@ -666,7 +671,7 @@ app.post('/create/plannedEvent', async (request, response) => {
 app.get('/get/plannedEvent', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
-   // Check if username is even specified in order retreive its group IDs
+   // Check if username is even specified in order retrieve its group IDs
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id is undefined");
   }
@@ -683,11 +688,17 @@ app.get('/get/plannedEvent', async (request, response) => {
 
 // Get planned event objs by id list
 app.get('/get/plannedEvents', async (request, response) => {
-  const requestBody = request.body;
-  const plannedEventIds = requestBody.plannedEventIds;
+  const options = request.query;
+  const plannedEventIds = options.plannedEventIds;
+
   try{  
-    const plannedEvents = await database.getPlannedEvents(plannedEventIds); 
-    response.status(200).json({plannedEvents: plannedEvents});
+    if(plannedEventIds === undefined){
+      response.status(400).send('Bad request: comma separated planned event ids undefined')
+    }
+    else{
+      const plannedEvents = await database.getPlannedEvents(plannedEventIds.split(',')); 
+      response.status(200).json({plannedEvents: plannedEvents});
+    }
   }
   catch(error){
     // TODO have db check for bad plannedEventIds
