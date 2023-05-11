@@ -10,15 +10,14 @@ let searchFriendButton = document.getElementById("searchFriendButton");
 let searchFriendModal = document.getElementById("friendSearchModalDialog");
 // Selection for making new group with members which starts empty
 let selectedMembers = [];
+
 // Our pretend user ID logged in currently
-// let currUser = "username1";
-
 document.cookie = "currUser=username1";
-
-const currUser = document.cookie
+const currUsername = document.cookie
   .split("; ")
   .find((row) => row.startsWith("currUser="))
   ?.split("=")[1];
+
 
 // FRIEND COLUMN RELATED FUNCTIONS:
 
@@ -36,11 +35,11 @@ async function renderFriends(username) {
         let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
         
         // For each friend username, retrieve fresh friend obj/data with their image to make card 
-        for(let friend of friendsList){
-            let friendObj = await crud.getUser(friend);
+        for(let friendUsername of friendsList){
+            let friendObj = await crud.getUser(friendUsername);
 
             let friendToInsert =
-            `<div id=${friend}FriendCard class="card my-3">` +
+            `<div id=${friendUsername}FriendCard class="card my-3">` +
                 '<div class="row g-0">' +
                     '<div class="col-md-2 d-flex">' +
                         `<img src=${image}` +
@@ -48,7 +47,7 @@ async function renderFriends(username) {
                     '</div>' +
                     '<div class="col-md-8 d-flex align-items-center">' +
                         '<div class="card-body">' +
-                            `<h5 class="card-title text-start">${friend}</h5>` +
+                            `<h5 class="card-title text-start">${friendUsername}</h5>` +
                         '</div>' +
                     '</div>' +
                     '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">' +
@@ -57,9 +56,9 @@ async function renderFriends(username) {
                                 'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
                                 'aria-expanded="false"></button>' +
                             '<ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">' +
-                                `<li><a id=${friend}Profile class="dropdown-item" href="/myprofile.html?profileUser=${friend}">Go to profile <i ` +
+                                `<li><a id=${friendUsername}Profile class="dropdown-item" href="/myprofile.html?profileUser=${friendUsername}">Go to profile <i ` +
                                     'class="bi bi-person-fill"></i></a></li>'+
-                                `<li><a id=${friend}RemoveCard class="dropdown-item" href="#">Remove friend` +
+                                `<li><a id=${friendUsername}RemoveCard class="dropdown-item" href="#">Remove friend` +
                                     '<i class="bi bi-trash"></i></a></li>' +
                             '</ul>'+
                         '</div>'+
@@ -68,12 +67,12 @@ async function renderFriends(username) {
             '</div>';
 
             // Push friend found to column
-            friendsCol.insertAdjacentHTML("beforeend", friendToInsert);
+            friendsCol.insertAdjacentHTML("afterbegin", friendToInsert);
 
             // Dropdown menu features: delete friend or navigate to their profile
-            let friendDeleteButton = document.getElementById(friend + 'RemoveCard');
+            let friendDeleteButton = document.getElementById(friendUsername + 'RemoveCard');
             friendDeleteButton.addEventListener('click', async (event) => {
-                await removeFriendFromUser(friend, currUser);
+                await removeFriendFromUser(friendUsername, currUsername);
             });
         }  
     }
@@ -95,14 +94,15 @@ async function renderFriends(username) {
  */
 async function searchForFriend(friendToFind, potentialFriends){
     try{
-        //reset friend search results before searching
+        // Reset friend search results before searching
         potentialFriends.innerHTML = "";
-        let exists = await crud.userExists(friendToFind.value);
 
-        if(exists && friendToFind.value !== currUser){
-            await renderPotentialFriend(friendToFind.value, currUser, potentialFriends);
+        // Only attempt rendering card found if user exists and it's not you
+        let exists = await crud.userExists(friendToFind.value);
+        if(exists && friendToFind.value !== currUsername){
+            await renderPotentialFriend(friendToFind.value, currUsername, potentialFriends);
         }
-        else if(friendToFind.value === currUser){
+        else if(friendToFind.value === currUsername){
             potentialFriends.innerHTML =  "<span style='color: red;'>Hey, that's your username.</span>";
         }
         else {
@@ -125,18 +125,18 @@ searchFriendButton.addEventListener('click', async (event) => {
 /**
  * Pushes friend search result card dynamically to current user's friend search column
  * Currently only provides card for exact username match, later if time could make load multiple similar to
- * @param {string} userIDToFriendRequest requested username to retrieve obj of
- * @param {string} currUserID current user's username
- * @param {Element} potentialFriends element to add card to
+ * @param {string} usernameToFriendRequest requested username to retrieve obj of
+ * @param {string} currUsername current user's username
+ * @param {Element} potentialFriends search results to add card to
  */
-async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentialFriends){
+async function renderPotentialFriend(usernameToFriendRequest, currUsername, potentialFriends){
     // Temp image while we sort out image upload
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     // User that we know exists to be found in friend search
-    let userToFriendRequest = await crud.getUser(userIDToFriendRequest);
+    let userToFriendRequest = await crud.getUser(usernameToFriendRequest);
     // If already friends, then indicate that in the card result. Otherwise allow us to add them!
-    let areFriends = await crud.areFriends(currUserID, userIDToFriendRequest);
-    let inRequestsAlready = userIDToFriendRequest in await crud.getRequestsFrom(currUserID);
+    let areFriends = await crud.areFriends(currUsername, usernameToFriendRequest);
+    let inRequestsAlready = usernameToFriendRequest in await crud.getRequestsFrom(currUsername);
     let buttonType = '';
     if(areFriends){
         buttonType = 'class="btn btn-success disabled">Already added';
@@ -157,11 +157,11 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
             '</div>' +
             '<div class="col-md-8 d-flex align-items-center">'+
                 '<div class="card-body">'+
-                    `<h5 class="card-title text-start">${userIDToFriendRequest}</h5>`+
+                    `<h5 class="card-title text-start">${usernameToFriendRequest}</h5>`+
                 '</div>'+
             '</div>'+
             '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">'+
-                `<button id="${userIDToFriendRequest}AddButton" type="button" ${buttonType}</button>`+
+                `<button id="${usernameToFriendRequest}AddButton" type="button" ${buttonType}</button>`+
             '</div>'+
         '</div>'+
     '</div>';
@@ -174,9 +174,9 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
         return;
     }
     else{
-        let addFriendButton = document.getElementById(`${userIDToFriendRequest}AddButton`);
+        let addFriendButton = document.getElementById(`${usernameToFriendRequest}AddButton`);
         addFriendButton.addEventListener('click', async (event) => {
-            await sendFriendRequestToUser(userIDToFriendRequest, currUserID, addFriendButton);
+            await sendFriendRequestToUser(usernameToFriendRequest, currUsername, addFriendButton);
         });
         return;
     }
@@ -189,15 +189,15 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
  * @param {string} currUserID current user's username
  * @param {Element} addFriendButton button to change based on result of action
  */
-async function sendFriendRequestToUser(userIDToFriendRequest, currUserID, addFriendButton){
+async function sendFriendRequestToUser(usernameToFriendRequest, currUsername, addFriendButton){
     // Try to send user found a friend request, as they are not yet friends with curr user
     // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
     try {
         // Testing purposes: Try to add user found as friend, as they are not yet friends with curr user
-        await crud.addFriend(currUserID, userIDToFriendRequest);
+        await crud.addFriend(currUsername, usernameToFriendRequest);
         // Reload relevant parts of the page 
-        await renderFriends(currUserID);
-        await renderPotentialMembers(currUserID);
+        await renderFriends(currUsername);
+        await renderPotentialMembers(currUsername);
 
         // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
 
@@ -221,15 +221,17 @@ async function sendFriendRequestToUser(userIDToFriendRequest, currUserID, addFri
 
 /**
  * Tries to delete friend and provides alert if issue
- * @param {string} friendUserID friend username to delete
- * @param {string} currUserID current user's username
+ * @param {string} friendUsername friend username to delete
+ * @param {string} currUsername current user's username
  */
-async function removeFriendFromUser(friendUserID, currUserID){
+async function removeFriendFromUser(friendUsername, currUsername){
     // Attempt to remove friend through friend card dropdown and rerender impacted elements
     try{
-        await crud.deleteFriend(currUserID, friendUserID);
-        await renderFriends(currUserID);
-        await renderPotentialMembers(currUserID);
+        await crud.deleteFriend(currUsername, friendUsername);
+        await renderPotentialMembers(currUsername);
+        // Remove single friend card without rerendering entire friends list
+        let friendToDelete = document.getElementById(friendUsername + 'FriendCard');
+        friendsCol.removeChild(friendToDelete);
     }
     // In the case that it cannot delete, there is either an error with DB or the server is offline so we alert of that
     catch(error){
@@ -239,16 +241,13 @@ async function removeFriendFromUser(friendUserID, currUserID){
                         'Try again later, possibly offline</div>';   
 
         // Alert added directly after card to delete, then short delay before removing alert
-        let friendCardToDelete = document.getElementById(`${friendUserID}FriendCard`);
+        let friendCardToDelete = document.getElementById(`${friendUsername}FriendCard`);
         friendCardToDelete.after(child);
         setTimeout(function(){
             let toRemove = document.getElementById(`deleteAlert`);
             toRemove.remove();
             },2500);
     }
-    // Remove single friend without rerendering entire friends list:
-    // let friendToDelete = document.getElementById(friendUsername + 'FriendCard');
-    // friendsCol.removeChild(friendToDelete);
 }
 
 
@@ -257,32 +256,18 @@ async function removeFriendFromUser(friendUserID, currUserID){
 
 /**
  * Pushes group cards dynamically to current user's group column
- * @param {string} username current user's username
+ * @param {string} currUsername current user's username
  */
-async function renderGroups(currUserID) {
+async function renderGroups(currUsername) {
     // Wipe stale group cards
     groupsCol.innerHTML = "";
 
     try{
-        let groupsList = await crud.getGroupIdsOfUser(currUserID);
-        for(let groupID of groupsList){
-            await renderGroup(groupID, currUserID);
+        // Iterate over groups current user is in and render cards
+        let groupsList = await crud.getGroupIdsOfUser(currUsername);
+        for(let groupId of groupsList){
+            await renderGroup(groupId, currUsername);
         }
-
-    // let groupToInsert =
-    // `<div id=blankGroupCard class="card my-3">` +
-    //     '<div class="row g-0">' +
-    //         '<div class="col-md-2 d-flex">' +
-    //         '</div>' +
-    //         '<div class="col-md-8 d-flex align-items-center">' +
-    //             '<div class="card-body">' +
-    //             '</div>' +
-    //         '</div>' +
-    //         '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">' +
-    //             '</div></div></div>';
-
-    // // Append group card to group col
-    // groupsCol.insertAdjacentHTML("beforeend", groupToInsert);
     }
     catch(error){
          // Create temp alert of issue
@@ -297,15 +282,15 @@ async function renderGroups(currUserID) {
 
 /**
  * Pushes group card dynamically to current user's group column
- * @param {string} groupID group to render
- * @param {string} currUserID current user's username
+ * @param {string} groupId group to render
+ * @param {string} currUsername current user's username
  */
-async function renderGroup(groupID, currUserID){
+async function renderGroup(groupId, currUsername){
     // Retrieve fresh group info 
-    let group = await crud.getGroup(groupID);
+    let group = await crud.getGroup(groupId);
     // Create card with fresh info
     let groupToInsert =
-    `<div id=${groupID}GroupCard class="card my-3">` +
+    `<div id=${groupId}GroupCard class="card my-3">` +
         '<div class="row g-0">' +
             '<div class="col-md-2 d-flex">' +
                 `<img src=${group.image} ` +
@@ -322,9 +307,9 @@ async function renderGroup(groupID, currUserID){
                         'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
                         'aria-expanded="false"></button>' +
                     '<ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">' +
-                    `<li><a id=${groupID}Route class="dropdown-item" href="/individualgroup.html?groupId=${groupID}">Go to group<i ` +
+                    `<li><a id=${groupId}Route class="dropdown-item" href="/individualgroup.html?groupId=${groupId}">Go to group<i ` +
                     'class="bi bi-person-fill"></i></a></li>'+
-                    `<li><a id=${groupID}RemoveCard class="dropdown-item" href="#">Leave group<i ` +
+                    `<li><a id=${groupId}RemoveCard class="dropdown-item" href="#">Leave group<i ` +
                                 'class="bi bi-trash"></i></a></li></ul>'+
                     '</ul></div></div></div></div>';
 
@@ -332,29 +317,30 @@ async function renderGroup(groupID, currUserID){
     groupsCol.insertAdjacentHTML("afterbegin", groupToInsert);
 
     // Allow deleting group from dropdown
-    let groupDeleteButton = document.getElementById(groupID + 'RemoveCard');
+    let groupDeleteButton = document.getElementById(groupId + 'RemoveCard');
     groupDeleteButton.addEventListener('click', async (event) => {
-        await removeGroupFromUser(currUserID, groupID);
+        await removeGroupFromUser(currUsername, groupId);
     });
 }
 
 
 /**
  * Pushes checkbox friend card dynamically to module for creating a group, as a possible member to add
- * @param {string} userToAdd friend username that could be made a member
+ * @param {string} usernameToAdd friend username that could be made a member
+ * @param {Element} potentialMembers modal column for search results
  */
-async function renderPotentialMember(userToAdd, potentialMembers){
+async function renderPotentialMember(usernameToAdd, potentialMembers){
     // Temp while we fig out
     let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     // Get fresh friend info like their image
-    let friend = await crud.getUser(userToAdd);
+    let friend = await crud.getUser(usernameToAdd);
     
     // Card with dynamic data for this one friend
     let potentialMember = '<div class="card my-3">' +
         '<div class="row g-0">' +
             '<div class="col-md-2 d-flex justify-content-center align-items-center">'+
                 '<div class="form-check checkbox-xl">'+
-                    `<input class="form-check-input" type="checkbox" value="" id=${userToAdd}Checkbox>`+
+                    `<input class="form-check-input" type="checkbox" value="" id=${usernameToAdd}Checkbox>`+
                 '</div>'+
             '</div>'+
             '<div class="col-md-2 d-flex">' +
@@ -363,7 +349,7 @@ async function renderPotentialMember(userToAdd, potentialMembers){
             '</div>' +
             '<div class="col-md-8 d-flex align-items-center">'+
                 '<div class="card-body">'+
-                    `<h5 class="card-title text-start">${userToAdd}</h5>`+
+                    `<h5 class="card-title text-start">${usernameToAdd}</h5>`+
                 '</div>'+
             '</div>'+
         '</div>'+
@@ -376,21 +362,21 @@ async function renderPotentialMember(userToAdd, potentialMembers){
 
 /**
  * Pushes each potential member to add to group to modal
- * @param {string} currUserID current user's username
+ * @param {string} currUsername current user's username
  */
-async function renderPotentialMembers(currUserID){
+async function renderPotentialMembers(currUsername){
     try{
         // Wipe stale potential members cards
         potentialMembers.innerHTML = "";
         // Retrieve fresh friends list of current user
-        let friendsList = await crud.getFriends(currUserID);
+        const friendsList = await crud.getFriends(currUsername);
         // Temp
         let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
         
         // For each friend, get card to insert
         for(let friend of friendsList){
             await renderPotentialMember(friend, potentialMembers);
-
+            // Listen for checking friend card to be a part of members to add to group when created
             let checkFriend = document.getElementById(`${friend}Checkbox`);
             checkFriend.addEventListener('click', (event) => {
                 if (checkFriend.checked == true){ 
@@ -416,16 +402,16 @@ async function renderPotentialMembers(currUserID){
 
 /**
  * Removes current user as a member of group, then rerenders fresh group list
- * @param {string} currUserID username to remove from group
- * @param {string} groupID group to remove user from
+ * @param {string} currUsername username to remove from group
+ * @param {string} groupId group to remove user from
  */
-async function removeGroupFromUser(currUserID, groupID){
+async function removeGroupFromUser(currUsername, groupId){
     try{
-        await crud.removeMember(groupID, currUserID);
-        // Alternate way to rerender, only removing the one element and not the entire column:
-        // let groupToDelete = document.getElementById(groupID + 'GroupCard');
-        // groupsCol.removeChild(groupToDelete);
-        await renderGroups(currUserID);
+        // First attempt to remove curr user from group specified
+        await crud.removeMember(groupId, currUsername);
+        // Rerender by only removing the one element and not the entire column to be smoother
+        let groupToDelete = document.getElementById(groupId + 'GroupCard');
+        groupsCol.removeChild(groupToDelete);
     }
     catch(error){
         // Create temp alert of issue
@@ -434,8 +420,8 @@ async function removeGroupFromUser(currUserID, groupID){
                         'Try again later, possibly offline</div>';   
 
         // Alert added directly after card to delete, then short delay before removing alert
-        let grooupCardToDelete = document.getElementById(`${groupID}GroupCard`);
-        grooupCardToDelete.after(child);
+        let groupCardToDelete = document.getElementById(`${groupId}GroupCard`);
+        groupCardToDelete.after(child);
         setTimeout(function(){
             let toRemove = document.getElementById(`deleteAlert`);
             toRemove.remove();
@@ -446,22 +432,24 @@ async function removeGroupFromUser(currUserID, groupID){
 
 /**
  * Adds all selected members to new group created 
- * @param {string} currUserID username as the group creator to be added
- * @param {Element} groupName group name input
+ * @param {string} currUsername username as the group creator to be added
  */
-async function createGroup(currUserID, groupName, image){
+async function createGroupForUser(currUsername){
     try{
+        let groupName = document.getElementById('groupNameInput');
+        let imageElem = document.getElementById("groupPhotoUpload")
+        let image =  await toBase64(imageElem.files[0]);
+    
         //TODO: collapse accordion of potential members on close always
         let accordionFriends = document.getElementById('flush-collapseOne');
 
         // Form new group with unique id returned, passing in name/image property 
-        // TODO: pass in image property when figured out
-        let newGroupID = await crud.createGroup({name: groupName.value, image: image});
+        let newGroupId = await crud.createGroup({name: groupName.value, image: image});
 
         // Add ourselves, the group creator, to the members list and then add others
-        await crud.addMember(newGroupID, currUserID);
+        await crud.addMember(newGroupId, currUsername);
         for(let memberToAdd of selectedMembers){
-            await crud.addMember(newGroupID, memberToAdd);
+            await crud.addMember(newGroupId, memberToAdd);
         }
 
         // Unselect selected members checkboxes for next group creation
@@ -473,16 +461,28 @@ async function createGroup(currUserID, groupName, image){
         // Wipe selected members for next group creation as well as  group input and accordion collapse
         selectedMembers = [];
         groupName.value = '';
+        imageElem.value = '';
         // accordionFriends.collapse('hide');
 
-        //Render fresh groups
-        await renderGroups(currUser);
+        //Rerender only the new group card to be added to be smoother
+        await renderGroup(newGroupId, currUsername);
     }
     catch(error){
-        // Create temp alert of issue
         let child = document.createElement('div')
-        child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
-                        'Refresh page as group creation failed, possibly offline</div>';   
+        console.log("Message is" + error.message);
+        if(error.message.startsWith("Unexpected error: Error: Payload Too Large")){
+            // Create temp alert of issue
+            child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                                'Image too large, failed to create group</div>';  
+            setTimeout(function(){
+                child.remove();
+                },2500); 
+        }
+        else{
+            // Create temp alert of issue
+            child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                                'Refresh page as group creation failed, possibly offline</div>';   
+        }
         // Alert added to friend column that has failed to render correctly
         groupsCol.prepend(child);
     }
@@ -499,15 +499,13 @@ const toBase64 = file => new Promise((resolve, reject) => {
 // Listens for group creation, when clicked to create, makes group with name/image/members provided
 let makeGroupButton = document.getElementById("makeGroupButton");
 makeGroupButton.addEventListener('click', async (event) => {
-    let groupName = document.getElementById('groupNameInput');
-    let file = document.getElementById("groupPhotoUpload").files[0];
-
-      await createGroup(currUser, groupName, await toBase64(file));
+    await createGroupForUser(currUsername);
 });
 
 let changedMindButton = document.getElementById("changedMindButton");
 changedMindButton.addEventListener('click', (event) => {
     // let accordionFriends = document.getElementById('accordionFriends');
+    let accordionButton = document.getElementById('accordionButton');
 
     //Wipe group name from mind changed
     document.getElementById('groupNameInput').value = '';
@@ -519,23 +517,14 @@ changedMindButton.addEventListener('click', (event) => {
 
     // Wipe selected members for next creation and collapse accordion
     selectedMembers = [];
-    // accordionFriends.collapse('hide');    
+    accordionButton.collapse('hide');
 });
-
-//TODO: Clear modal on hidden
-// $("#friendSearchModal").on("hidden.bs.modal", function () {
-//     alert("test");
-// });
-// searchFriendModal.addEventListener(gid, async (event) => {
-//     alert("test");
-
-// });
 
 
 // INITIAL RENDERING OF HOME PAGE LOGGED IN:
 
-await renderFriends(currUser);
+await renderFriends(currUsername);
 
-await renderGroups(currUser);
+await renderGroups(currUsername);
 
-await renderPotentialMembers(currUser);
+await renderPotentialMembers(currUsername);
