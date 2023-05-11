@@ -154,6 +154,7 @@ function saveProfile(mockCurrUsername){
     let user = crud.getUser(mockCurrUsername);
     crud.updateUser(user.username, {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, college: collegeInput.value, bio: bioInput.value});
     //crud.updateUser(user.username, {major: majorInput}); 
+    crud.updateUser(user.username, {image: majorInput}); 
 
     // crud.setFirstName(firstNameInput.value);
     // crud.setLastName(lastNameInput.value);
