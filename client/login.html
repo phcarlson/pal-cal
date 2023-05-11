@@ -17,6 +17,39 @@
         crossorigin="anonymous"></script>
     <script type="module" src="login.js"></script>
 
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <!--Image-->
+            <a class="navbar-brand" href="#">Image here!</a>
+
+            <!--Collapse Support-->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <!--Include this in the collapsed bar-->
+            <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+
+                <!--Navbar-->
+                <ul class="navbar-nav">
+
+                    <!--Login Button-->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-success me-1">Profile</button>
+                    </li>
+
+                    <!--Sign Up Button-->
+                    <li class="nav-item">
+                        <button type="button" class="btn btn-outline-primary">Log Out</button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
 <!--Flexbox-->
 <div class="vh-100 d-flex align-items-center">
 
@@ -26,7 +59,8 @@
             <div class="mb-3">
                 <label for="userEmail" class="form-label">Username</label>
                 <input type="email" class="form-control" id="usernameInput" aria-describedby="emailHelp">
-                <div id="user-not-found-warning" style="color: red;" hidden>User does not exist</div>
+                <div id="user-not-found-warning" style="color: red;" hidden>User does not exist, did you want to <a href="/signup.html">Register</a>?</div>
+                <div id="database-error-warning" hidden></div>
             </div>
             <div class="mb-3">
                 <label for="userPassword" class="form-label">Password</label>
