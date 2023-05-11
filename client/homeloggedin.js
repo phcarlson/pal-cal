@@ -8,13 +8,17 @@ let potentialMembers = document.getElementById('potentialMembers');
 // Collect some interactive elems
 let searchFriendButton = document.getElementById("searchFriendButton");
 let searchFriendModal = document.getElementById("friendSearchModalDialog");
-
 // Selection for making new group with members which starts empty
 let selectedMembers = [];
-
 // Our pretend user ID logged in currently
-let mockusername = "username1";
+// let currUser = "username1";
 
+document.cookie = "currUser=username1";
+
+const currUser = document.cookie
+  .split("; ")
+  .find((row) => row.startsWith("currUser="))
+  ?.split("=")[1];
 
 // FRIEND COLUMN RELATED FUNCTIONS:
 
@@ -53,7 +57,7 @@ async function renderFriends(username) {
                                 'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
                                 'aria-expanded="false"></button>' +
                             '<ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">' +
-                                `<li><a id=${friend}Profile class="dropdown-item" href="#">Go to profile <i ` +
+                                `<li><a id=${friend}Profile class="dropdown-item" href="/myprofile.html?profileUser=${friend}">Go to profile <i ` +
                                     'class="bi bi-person-fill"></i></a></li>'+
                                 `<li><a id=${friend}RemoveCard class="dropdown-item" href="#">Remove friend` +
                                     '<i class="bi bi-trash"></i></a></li>' +
@@ -69,12 +73,8 @@ async function renderFriends(username) {
             // Dropdown menu features: delete friend or navigate to their profile
             let friendDeleteButton = document.getElementById(friend + 'RemoveCard');
             friendDeleteButton.addEventListener('click', async (event) => {
-                await removeFriendFromUser(friend, mockusername);
+                await removeFriendFromUser(friend, currUser);
             });
-            let friendProfileButton = document.getElementById(friend + 'Profile');
-            friendProfileButton.addEventListener('click', (event) => {
-            //TODO route to friend's profile
-            });   
         }  
     }
     catch(error){
@@ -99,10 +99,10 @@ async function searchForFriend(friendToFind, potentialFriends){
         potentialFriends.innerHTML = "";
         let exists = await crud.userExists(friendToFind.value);
 
-        if(exists && friendToFind.value !== mockusername){
-            await renderPotentialFriend(friendToFind.value, mockusername, potentialFriends);
+        if(exists && friendToFind.value !== currUser){
+            await renderPotentialFriend(friendToFind.value, currUser, potentialFriends);
         }
-        else if(friendToFind.value === mockusername){
+        else if(friendToFind.value === currUser){
             potentialFriends.innerHTML =  "<span style='color: red;'>Hey, that's your username.</span>";
         }
         else {
@@ -136,7 +136,17 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
     let userToFriendRequest = await crud.getUser(userIDToFriendRequest);
     // If already friends, then indicate that in the card result. Otherwise allow us to add them!
     let areFriends = await crud.areFriends(currUserID, userIDToFriendRequest);
-    let buttonType = areFriends ? 'class="btn btn-success disabled">Already added' : 'class="btn btn-outline-secondary">Add';
+    let inRequestsAlready = userIDToFriendRequest in await crud.getRequestsFrom(currUserID);
+    let buttonType = '';
+    if(areFriends){
+        buttonType = 'class="btn btn-success disabled">Already added';
+    }
+    else if (!areFriends && inRequestsAlready){
+        buttonType = 'class="btn btn-success disabled">Already requested';
+    }
+    else{
+        buttonType = 'class="btn btn-outline-secondary">Add';
+    }
 
     // This is the card for each friend found by the username searched, dynamic to the userID's content in DB
     let potentialFriend = '<div class="card my-3">' +
@@ -163,7 +173,6 @@ async function renderPotentialFriend(userIDToFriendRequest, currUserID, potentia
     if(areFriends){
         return;
     }
-    // Otherwise we need to add listeners for adding friend
     else{
         let addFriendButton = document.getElementById(`${userIDToFriendRequest}AddButton`);
         addFriendButton.addEventListener('click', async (event) => {
@@ -189,7 +198,10 @@ async function sendFriendRequestToUser(userIDToFriendRequest, currUserID, addFri
         // Reload relevant parts of the page 
         await renderFriends(currUserID);
         await renderPotentialMembers(currUserID);
-        // Alert user after CRUD request that the friend adding worked
+
+        // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
+
+        // Alert user after CRUD request that the friend request worked
         addFriendButton.className = "btn btn-success";
         addFriendButton.innerText = "Request Sent"
         addFriendButton.disabled = true;
@@ -239,6 +251,7 @@ async function removeFriendFromUser(friendUserID, currUserID){
     // friendsCol.removeChild(friendToDelete);
 }
 
+
 // GROUP RELATED FUNCTIONS:
 
 
@@ -255,6 +268,21 @@ async function renderGroups(currUserID) {
         for(let groupID of groupsList){
             await renderGroup(groupID, currUserID);
         }
+
+    // let groupToInsert =
+    // `<div id=blankGroupCard class="card my-3">` +
+    //     '<div class="row g-0">' +
+    //         '<div class="col-md-2 d-flex">' +
+    //         '</div>' +
+    //         '<div class="col-md-8 d-flex align-items-center">' +
+    //             '<div class="card-body">' +
+    //             '</div>' +
+    //         '</div>' +
+    //         '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">' +
+    //             '</div></div></div>';
+
+    // // Append group card to group col
+    // groupsCol.insertAdjacentHTML("beforeend", groupToInsert);
     }
     catch(error){
          // Create temp alert of issue
@@ -275,17 +303,12 @@ async function renderGroups(currUserID) {
 async function renderGroup(groupID, currUserID){
     // Retrieve fresh group info 
     let group = await crud.getGroup(groupID);
-    // Temp until we figure out images
-    // let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     // Create card with fresh info
-    let image = new Image();
-    image.src = group.image;
-    // document.body.appendChild(image);
     let groupToInsert =
     `<div id=${groupID}GroupCard class="card my-3">` +
         '<div class="row g-0">' +
             '<div class="col-md-2 d-flex">' +
-                `<img src=${image}` +
+                `<img src=${group.image} ` +
                     'alt="generic profile pic" class="img-fluid rounded-start">' +
             '</div>' +
             '<div class="col-md-8 d-flex align-items-center">' +
@@ -299,6 +322,8 @@ async function renderGroup(groupID, currUserID){
                         'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
                         'aria-expanded="false"></button>' +
                     '<ul class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton1">' +
+                    `<li><a id=${groupID}Route class="dropdown-item" href="/individualgroup.html?groupId=${groupID}">Go to group<i ` +
+                    'class="bi bi-person-fill"></i></a></li>'+
                     `<li><a id=${groupID}RemoveCard class="dropdown-item" href="#">Leave group<i ` +
                                 'class="bi bi-trash"></i></a></li></ul>'+
                     '</ul></div></div></div></div>';
@@ -451,7 +476,7 @@ async function createGroup(currUserID, groupName, image){
         // accordionFriends.collapse('hide');
 
         //Render fresh groups
-        await renderGroups(mockusername);
+        await renderGroups(currUser);
     }
     catch(error){
         // Create temp alert of issue
@@ -463,29 +488,22 @@ async function createGroup(currUserID, groupName, image){
     }
 }
 
+// Allows us to convert uploaded group image to string
+const toBase64 = file => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+});
 
 // Listens for group creation, when clicked to create, makes group with name/image/members provided
 let makeGroupButton = document.getElementById("makeGroupButton");
 makeGroupButton.addEventListener('click', async (event) => {
     let groupName = document.getElementById('groupNameInput');
     let file = document.getElementById("groupPhotoUpload").files[0];
-    // let reader = new FileReader();
-    // reader.onloadend = async function() {
-    //   console.log('RESULT', reader.result)
-      await createGroup(mockusername, groupName, file.toString('base64'));
-    // }
-    // reader.readAsDataURL(file);
 
-    // let image = document.getElementById('groupPhotoUpload').value;
-    // console.log(image);
+      await createGroup(currUser, groupName, await toBase64(file));
 });
-
-// makeGroupButton.addEventListener('change', function (e) {
-//     let name = document.getElementById("groupPhotoUpload").files[0].name;
-//     let nextSibling = e.target.nextElementSibling
-//     nextSibling.innerText = name
-//   })
-
 
 let changedMindButton = document.getElementById("changedMindButton");
 changedMindButton.addEventListener('click', (event) => {
@@ -516,8 +534,8 @@ changedMindButton.addEventListener('click', (event) => {
 
 // INITIAL RENDERING OF HOME PAGE LOGGED IN:
 
-await renderFriends(mockusername);
+await renderFriends(currUser);
 
-await renderGroups(mockusername);
+await renderGroups(currUser);
 
-await renderPotentialMembers(mockusername);
+await renderPotentialMembers(currUser);

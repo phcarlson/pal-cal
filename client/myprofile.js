@@ -4,6 +4,16 @@ let requestListCol = document.getElementById("requestListCol");
 let mockCurrUsername = "ananya";
 let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
 
+const queryString = window.location.search; // Returns:'?q=123'
+const params = new URLSearchParams(queryString);
+try{
+    console.log(params.get("profileUser"));
+    const friendObj = await crud.getUser(params.get("profileUser"));
+}
+catch(error){
+    console.log(error);
+}
+
 function renderRequests(mockCurrUsername){
     // let user = crud.getUser(mockCurrUsername);
     mockCurrUser.requestsList.forEach((userRequest)=>{

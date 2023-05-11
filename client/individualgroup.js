@@ -1,6 +1,27 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
 import * as crud from './crudclient.js';
 
+const queryString = window.location.search; // Returns:'?q=123'
+const params = new URLSearchParams(queryString);
+let currGroupId = null;
+let groupObj = null;
+let currUser = null;
+
+try{
+    currGroupId = params.get("groupId");
+    const groupObj = await crud.getGroup(params.get("groupId"));
+
+    currUser = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUser="))
+    ?.split("=")[1];
+
+}
+catch(error){
+    console.log(error);
+    
+}
+
 // containers
 const membersContainer = document.getElementById("members-container");
 const plannedEventsContainer = document.getElementById("planned-events-container");
@@ -8,38 +29,44 @@ const plannedEventsContainer = document.getElementById("planned-events-container
 // buttons
 const selectAllButton = document.getElementById("select-all-button");
 const deselectAllButton = document.getElementById("deselect-all-button");
+const searchMemberButton = document.getElementById("searchMemberButton");
 
 membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
 
 let eventsAdded = 0;
 
-function addMember(screenName) {
-    membersContainer.innerHTML += `<div class="card my-3">
-                                        <div class="row g-0">
-                                            <div class="col-md-2 d-flex justify-content-center align-items-center">
-                                                <div class="form-check checkbox-xl">
-                                                    <input class="form-check-input member-checkbox" type="checkbox" value="" id="flexCheckDefault">
+let mockusername = "username1";
 
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 d-flex">
-                                                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
-                                                    alt="generic profile pic" class="img-fluid rounded-start">
-                                            </div>
-                                            <div class="col-md-8 d-flex align-items-center">
-                                                <div class="card-body">
-                                                    <h5 class="card-title text-start">${screenName}</h5>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>`;
+function addMember(userObj) {
+    
+    let memberToInsert = `<div class="card my-3">
+                            <div class="row g-0">
+                                <div class="col-md-2 d-flex justify-content-center align-items-center">
+                                    <div class="form-check checkbox-xl">
+                                        <input class="form-check-input member-checkbox" type="checkbox" value="" id="flexCheckDefault">
+
+                                    </div>
+                                </div>
+                                <div class="col-md-2 d-flex">
+                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                        alt="generic profile pic" class="img-fluid rounded-start">
+                                </div>
+                                <div class="col-md-8 d-flex align-items-center">
+                                    <div class="card-body">
+                                        <h5 class="card-title text-start">${userObj.username}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+
+    membersContainer.insertAdjacentHTML("beforeend", memberToInsert);
 
     //document.getElementById("flexCheckDefault").checked = true;
 }
 
 async function addPlannedEvent(startTime, endTime, startDay, title, location, description) {
-    plannedEventsContainer.innerHTML += `<div class="card card-margin">
+    let plannedEventToInsert =  `<div class="card card-margin">
                                             <div class="card-header no-border">
                                                 <h5 class="card-title">${title}</h5>
                                             </div>
@@ -92,6 +119,8 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                             </div>
                                         </div>`;
                                         
+                                        plannedEventsContainer.insertAdjacentHTML("afterbegin", plannedEventToInsert);
+
                                         const yesButton = document.getElementById(`yes-${eventsAdded}`);
                                         const noButton = document.getElementById(`no-${eventsAdded}`);
                                         const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
@@ -157,18 +186,128 @@ function deselectAllMembers() {
     }
 }
 
+
+/**
+ * Takes input and provides results based on whether friend who could be member is found, not, or error
+ * @param {string} username current user's username
+ * @param {Element} potentialMembers column for adding found user who must be a friend of current user
+ */
+async function searchForMember(memberToFind, potentialMembers){
+    try{
+        //reset friend search results before searching
+        potentialMembers.innerHTML = "";
+        let areFriends = await crud.areFriends(mockusername, memberToFind.value);
+
+        if(areFriends && memberToFind.value !== mockusername){
+            await renderPotentialMember(memberToFind.value, currGroupId, potentialMembers);
+        }
+        else if(memberToFind.value === mockusername){
+            potentialMembers.innerHTML =  "<span style='color: red;'>Hey, that's your username.</span>";
+        }
+        else {
+            potentialMembers.innerHTML =  "<span style='color: red;'>Sorry, there aren't any other users close to that name!</span>";
+        }
+    }
+    catch(error){
+        potentialMembers.innerHTML =  "<span style='color: red;'>An unexpected error occured, please try again!</span>";
+    }
+}
+
+// Add friend button waits to pop up search bar modal to
+searchMemberButton.addEventListener('click', async (event) => {
+    let memberToFind = document.getElementById("memberToFind");
+    let potentialMembers = document.getElementById("potentialMembers");
+    await searchForMember(memberToFind, potentialMembers);
+});
+
+
+/**
+ * Pushes friend search result card dynamically to current user's member search column
+ * Currently only provides card for exact username match, later if time could make load multiple similar to
+ * @param {string} userIDToAdd requested username to retrieve obj of
+ * @param {string} currGroupID current group's id
+ * @param {Element} potentialMembers element to add card to
+ */
+async function renderPotentialMember(userIDToAdd, currGroupId, potentialMembers){
+    // Temp image while we sort out image upload
+    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    // User that we know exists to be found in friend search
+    let userToAdd = await crud.getUser(userIDToAdd);
+    // If already friends, then indicate that in the card result. Otherwise allow us to add them!
+    let groupMembers = await crud.getGroupMemberUsernames(currGroupId);
+
+    let isMember = groupMembers.includes(userIDToAdd);
+    let buttonType = isMember ? 'class="btn btn-success disabled">Already a member' : 'class="btn btn-outline-secondary">Add';
+
+    // This is the card for each friend found by the username searched, dynamic to the userID's content in DB
+    let potentialMember = '<div class="card my-3">' +
+        '<div class="row g-0">' +
+            '<div class="col-md-2 d-flex">' +
+                `<img src=${image}` +
+                    'alt="generic profile pic" class="img-fluid rounded-start">'+
+            '</div>' +
+            '<div class="col-md-8 d-flex align-items-center">'+
+                '<div class="card-body">'+
+                    `<h5 class="card-title text-start">${userIDToAdd}</h5>`+
+                '</div>'+
+            '</div>'+
+            '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">'+
+                `<button id="${userIDToAdd}AddButton" type="button" ${buttonType}</button>`+
+            '</div>'+
+        '</div>'+
+    '</div>';
+    
+    // Whether or not they are already friends, add respective card to indicate that
+    potentialMembers.insertAdjacentHTML("afterbegin", potentialMember);
+
+    let addMemberButton = document.getElementById(`${userIDToAdd}AddButton`);
+    addMemberButton.addEventListener('click', async (event) => {
+        await addMemberToGroup(userIDToAdd, currGroupId, addMemberButton)
+    });
+}
+
+
+async function addMemberToGroup(userIdToAdd, currGroupId, addMemberButton){
+    // Try to send user found a friend request, as they are not yet friends with curr user
+    // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
+    try {
+        // Testing purposes: Try to add user found as member, as they are not yet a member in group
+        await crud.addMember(currGroupId, userIdToAdd);
+        // Reload relevant parts of the page 
+        await renderGroupMembers();
+
+        // Alert user after CRUD request that the friend request worked
+        addMemberButton.className = "btn btn-success";
+        addMemberButton.innerText = "Added"
+        addMemberButton.disabled = true;
+    }
+    catch(error){
+        // Indicate that some error occurred when trying to add
+        addMemberButton.className = "btn btn-danger";
+        addMemberButton.innerText = "Try again later";
+        // After certain amount of time, flip it back to Add button to try again
+        setTimeout(function() {   
+            addMemberButton.className = "btn btn-outline-primary";
+            addMemberButton.innerText = "Add";
+        }, 1000);
+    }
+}
+
+
 async function renderGroupMembers() {
-    const currentGroup = crud.getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
-    const groupMemberIDs = await currentGroup.getMemberList(); // get list of IDs in Group
+    // Wipe col to rerender
+    membersContainer.innerHTML = "";
+
+    const groupMemberIDs = await crud.getGroupMemberUsernames(currGroupId); // get list of IDs in Group
 
     for (const id of groupMemberIDs) { // for each ID, look up the member and add it to the display
-        const user = crud.getUser(id);
-        addMember(await user.getFirstName());
+        const user = await crud.getUser(id);
+        addMember(user);
     }
 }
 
 async function renderPlannedEvents() {
-    const currentGroup = crud.getGroup(__currentGroupID__); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
+    const currentGroup = crud.getGroup(currGroupId); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
     const plannedEventList = await currentGroup.getPlannedList(); // list of PlannedEvent objects
 
     for (const event of plannedEventList) { // for each PlannedEvent object in list
@@ -199,8 +338,8 @@ function getDay(dayNum) {
 selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
 
-// dummy data -- REST LOADED IN USING individualgroup.html, through loadmockdata.js file
-addMember("Screen Name");
-addMember("NAH");
-addPlannedEvent("1:00pm", "3:00pm", 3, "My Party", "My HOuseEEE", "Big fat party");
-addPlannedEvent("2:00pm", "4:00pm", 3, "Move in", "College Dorm", "College move in, drag stuff up a bunch of stairs");
+
+// INITIAL RENDERING OF INDIVIDUAL GROUP:
+await renderGroupMembers();
+
+await renderPlannedEvents();

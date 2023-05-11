@@ -11,7 +11,7 @@ const port = 3000;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use('/client', express.static('client'));
+app.use('/', express.static('client'));
 
 
 // HANDLE USER RELATED REQUESTS:
@@ -557,7 +557,9 @@ app.post('/add/member', async (request, response) => {
   const options = request.query;
   const groupId = options.groupId;
   const username = options.username;
-
+  console.log(groupId);
+  console.log(username);
+  console.log("HEREEEE");
   if(groupId === undefined){
     response.status(400).send("Bad request: Group id is undefined");
   }

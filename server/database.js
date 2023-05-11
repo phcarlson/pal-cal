@@ -188,6 +188,9 @@ export async function deleteGroup(groupId) {
 }
 
 export async function addGroupMember(groupId, username) {
+    console.log(groupId);
+    console.log(username);
+
     await models.groupMembers.create({groupId: groupId, username: username});
 }
 
