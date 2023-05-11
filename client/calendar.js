@@ -6,6 +6,7 @@ const username = "user1";
 let newEventModalTime = {};
 let newPlannedEventModal;
 let newBusyEventModal;
+let editBusyEventModal;
 
 export function initializeCalendar(calendarDiv, type) {
     calendarDiv.classList.add("row", "d-flex");
@@ -114,7 +115,6 @@ export function initializeCalendar(calendarDiv, type) {
         document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newPlannedEventModal.hide());
 
     }
-
     else {
         const newBusyEventModalHtml = /*html*/ `
             <div class="modal fade" id="modal-new-busy-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-busy-event-label">
@@ -199,6 +199,93 @@ export function initializeCalendar(calendarDiv, type) {
             busyEvents.push(newEvent);
             newBusyEventModal.hide();
             rerender(type);
+        });
+
+        const editBusyEventModalHtml = /*html*/ `
+            <div class="modal fade" id="modal-edit-busy-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-edit-busy-event-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-edit-busy-event-label">Add event</h5>
+                            <button type="button" id="modal-edit-busy-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-title-input" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="edit-busy-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-day-input" class="form-label">Weekday</label>
+                                    <select class="custom-select"  id="edit-busy-event-day-input">
+                                        <option value=0>Sunday</option>
+                                        <option value=1 selected>Monday</option>
+                                        <option value=2>Tuesday</option>
+                                        <option value=3>Wednesday</option>
+                                        <option value=4>Thursday</option>
+                                        <option value=5>Friday</option>
+                                        <option value=6>Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="start-time-input" class="form-label">Start time</label>
+                                    <input type="time" class="form-control" id="edit-busy-event-start-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-end-time-input" class="form-label">End time</label>
+                                    <input type="time" class="form-control" id="edit-busy-event-end-time-input" required>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modal-edit-busy-event-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" id="edit-busy-event-delete">Delete event</button>
+                            <button type="button" class="btn btn-primary" id="modal-edit-busy-event-save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML("afterbegin", editBusyEventModalHtml);
+        editBusyEventModal = new bootstrap.Modal(document.getElementById('modal-edit-busy-event'));
+        document.getElementById("modal-edit-busy-event-close").addEventListener("click", () => editBusyEventModal.hide());
+        document.getElementById("modal-edit-busy-event-close-x").addEventListener("click", () => editBusyEventModal.hide());
+        document.getElementById("modal-new-busy-event-save").addEventListener("click", () => {
+            const startTimeInput = document.getElementById("new-busy-event-start-time-input");
+
+            let [startHour, startMinute] = startTimeInput.value.split(":");
+            startHour = Number(startHour);
+            startMinute = Number(startMinute);
+
+            const endTimeInput = document.getElementById("new-busy-event-end-time-input");
+            let [endHour, endMinute] = endTimeInput.value.split(":");
+            endHour = Number(endHour);
+            endMinute = Number(endMinute);
+
+            // TODO: support spanning multiple days
+            const startDay = document.getElementById("new-busy-event-day-input").value;
+            const endDay = startDay;
+
+            const title = document.getElementById("new-busy-event-title-input").value;
+
+            const updatedEvent = {
+                title: title,
+                startDay: startDay,
+                startHour: startHour,
+                startMinute: startMinute,
+                endDay: endDay,
+                endHour: endHour,
+                endMinute: endMinute
+            };
+            // TODO: update event with CRUD
+            newBusyEventModal.hide();
+            rerender(type);
+        });
+        document.getElementById("edit-busy-event-delete").addEventListener("click", () => {
+            // TODO: delete event by ID
         });
     }
 }
@@ -471,5 +558,13 @@ export function rerender(type="group") {
             newPlannedEventModal.show();
         });
     }
-}
 
+    for (let element of document.getElementsByClassName("calendar-busy")) {
+        element.addEventListener("click", (event) => {
+            const clickedBlock = event.target;
+            // const busyEventId = event.dataset.busyEventId;
+            // TODO: populate with busy event data from CRUD
+            editBusyEventModal.show();
+        });
+    }
+}
