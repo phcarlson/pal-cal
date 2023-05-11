@@ -11,20 +11,23 @@ let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:
 //rendering friend requests
 function renderRequests(mockCurrUsername){
     let user = crud.getUser(mockCurrUsername);
-    
+                                              //username Of the f request
     crud.getRequestsTo(user.username).forEach((usernameRequest)=>{
-
-        //userNameRequest
-        //let requestObj = usercrud.getUser(userNameRequest);
-        //requestObj.image
-
-        let requestImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
-
+        
+      let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+      let currentImage = defaultImage;
+      let friendRequestedUser = crud.getUser(usernameRequest);
+      let requestImage = friendRequestedUser.image;
+      
+      if(requestImage !== ""){
+          currentImage = requestImage;
+      }
+        
         let requestCardToInsert =  `<div id="${usernameRequest}RequestCard" class="card my-3">`+
         '<div class="row g-0">'+
           '<div class="col-md-2 d-flex">'+
             '<img'+
-                `src=${requestImage}`+
+                `src=${currentImage}`+
               'alt="generic profile pic" class="img-fluid rounded-start">'+
           '</div>'+
           '<div class="col-md-4 d-flex align-items-center">'+
@@ -44,7 +47,6 @@ function renderRequests(mockCurrUsername){
                 '<i class="bi bi-x-lg"></i>'+
               '</button>'+
             '</div>'+
-
           '</div>'+
         '</div>'+
       '</div>';
@@ -85,6 +87,9 @@ let lastNameInput = document.getElementById("lastNameInput");
 let collegeInput = document.getElementById("collegeInput");
 let majorInput = document.getElementById("majorInput");
 let bioInput = document.getElementById("bioInput");
+//let imageInput = document.getElementbyId 
+
+//collect edit button
 let editProfileButton = document.getElementById("editProfileButton");
 
 //fill user's profile with their information
@@ -93,11 +98,13 @@ function renderProfile(mockCurrUsername){
     // let user = {username: "Me", fN: "Paige", lN: "Carlson", college:"Umas", major:"CS", bio:"AAAAAAAAAAAAAAAAAAAAAAAAA"};
 
     screenNameInput.value = user.username;
-    firstNameInput.value = user.fN;
-    lastNameInput.value = user.lN;
+    firstNameInput.value = user.firstName;
+    lastNameInput.value = user.lastName;
     collegeInput.value = user.college;
     majorInput.value = user.major;
     bioInput.value = user.bio;
+    //imageInput.value = user.image;
+
 }
 
 //click edit button, turns into save button when editing to then save info
@@ -105,7 +112,6 @@ editProfileButton.addEventListener("click", (event)=>{
     if(editProfileButton.innerHTML === '<i class="bi bi-pencil-square"></i>'){
         editProfile(mockCurrUsername);
     }
-
     else{
         saveProfile(mockCurrUsername);
     }
@@ -119,7 +125,8 @@ function editProfile(mockCurrUsername){
         lastNameInput,
         collegeInput,
         majorInput,
-        bioInput];
+        bioInput
+      ]; //and imageInput
 
     toEdit.forEach((editElem) =>{
         editElem.removeAttribute("readonly");
@@ -140,7 +147,7 @@ function saveProfile(mockCurrUsername){
         collegeInput,
         majorInput,
         bioInput
-    ];
+    ]; //and imageInput
 
     toEdit.forEach((editElem) =>{
         editElem.setAttribute("readonly", editElem.value);
@@ -153,8 +160,8 @@ function saveProfile(mockCurrUsername){
     // Once values are set in stone, perform CRUD updates:
     let user = crud.getUser(mockCurrUsername);
     crud.updateUser(user.username, {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, college: collegeInput.value, bio: bioInput.value});
-    //crud.updateUser(user.username, {major: majorInput}); 
-    crud.updateUser(user.username, {image: majorInput}); 
+    crud.updateUser(user.username, {major: majorInput}); 
+    //crud.updateUser(user.username, {image: imageInput}); 
 
     // crud.setFirstName(firstNameInput.value);
     // crud.setLastName(lastNameInput.value);
