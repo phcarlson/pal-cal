@@ -119,55 +119,55 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                             </div>
                                         </div>`;
                                         
-                                        plannedEventsContainer.insertAdjacentHTML("afterbegin", plannedEventToInsert);
+    plannedEventsContainer.insertAdjacentHTML("afterbegin", plannedEventToInsert);
 
-                                        const yesButton = document.getElementById(`yes-${eventsAdded}`);
-                                        const noButton = document.getElementById(`no-${eventsAdded}`);
-                                        const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
+    const yesButton = document.getElementById(`yes-${eventsAdded}`);
+    const noButton = document.getElementById(`no-${eventsAdded}`);
+    const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-                                        // const thisGroup = crud.getGroup(__currentGroupID__);
-                                        // const plannedEvents = await thisGroup.getPlannedEvents();
+    // const thisGroup = crud.getGroup(__currentGroupID__);
+    // const plannedEvents = await thisGroup.getPlannedEvents();
 
-                                        yesButton.addEventListener("click", () => {
-                                            yesButton.classList.add("active");
-                                            noButton.classList.remove("active");
-                                            maybeButton.classList.remove("active");
-                                            // plannedEvents[eventsAdded].yesDict[__currentUserID__] = 1;
-                                        });
-                                        noButton.addEventListener("click", () => {
-                                            yesButton.classList.remove("active");
-                                            noButton.classList.add("active");
-                                            maybeButton.classList.remove("active");
-                                            // plannedEvents[eventsAdded].noDict[__currentUserID__] = 1;
-                                        });
-                                        maybeButton.addEventListener("click", () => {
-                                            yesButton.classList.remove("active");
-                                            noButton.classList.remove("active");
-                                            maybeButton.classList.add("active");
-                                            // plannedEvents[eventsAdded].maybeDict[__currentUserID__] = 1;
-                                        });
+    yesButton.addEventListener("click", () => {
+        yesButton.classList.add("active");
+        noButton.classList.remove("active");
+        maybeButton.classList.remove("active");
+        // plannedEvents[eventsAdded].yesDict[__currentUserID__] = 1;
+    });
+    noButton.addEventListener("click", () => {
+        yesButton.classList.remove("active");
+        noButton.classList.add("active");
+        maybeButton.classList.remove("active");
+        // plannedEvents[eventsAdded].noDict[__currentUserID__] = 1;
+    });
+    maybeButton.addEventListener("click", () => {
+        yesButton.classList.remove("active");
+        noButton.classList.remove("active");
+        maybeButton.classList.add("active");
+        // plannedEvents[eventsAdded].maybeDict[__currentUserID__] = 1;
+    });
 
-                                        const attendingYes = document.getElementById(`attending-yes-${eventsAdded}`);
-                                        const attendingNo = document.getElementById(`attending-no-${eventsAdded}`);
-                                        const attendingMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
+    const attendingYes = document.getElementById(`attending-yes-${eventsAdded}`);
+    const attendingNo = document.getElementById(`attending-no-${eventsAdded}`);
+    const attendingMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
 
-                                        // reset innertexts
-                                        attendingYes.innerText = "Yes:";
-                                        attendingNo.innerText = "\nNo:";
-                                        attendingMaybe.innerText = "\nMaybe:";
+    // reset innertexts
+    attendingYes.innerText = "Yes:";
+    attendingNo.innerText = "\nNo:";
+    attendingMaybe.innerText = "\nMaybe:";
 
-                                        // add all people attending events to the dropdown info lists
-                                        for (attendee in plannedEvents[eventsAdded].yesDict) {
-                                            attendingYes.innerText += "\n" + attendee;
-                                        }
-                                        for (attendee in plannedEvents[eventsAdded].noDict) {
-                                            attendingNo.innerText += "\n" + attendee;
-                                        }
-                                        for (attendee in plannedEvents[eventsAdded].maybeDict) {
-                                            attendingMaybe.innerText += "\n" + attendee;
-                                        }
+    // add all people attending events to the dropdown info lists
+    for (attendee in plannedEvents[eventsAdded].yesDict) {
+        attendingYes.innerText += "\n" + attendee;
+    }
+    for (attendee in plannedEvents[eventsAdded].noDict) {
+        attendingNo.innerText += "\n" + attendee;
+    }
+    for (attendee in plannedEvents[eventsAdded].maybeDict) {
+        attendingMaybe.innerText += "\n" + attendee;
+    }
 
-                                        eventsAdded += 1;
+    eventsAdded += 1;
 }
 
 function selectAllMembers() {
