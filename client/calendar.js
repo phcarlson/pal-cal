@@ -199,7 +199,7 @@ export async function initializeCalendar(calendarDiv, type) {
             // TODO: add event with CRUD
             await crud.createBusyEvent(username, newEvent);
             newBusyEventModal.hide();
-            rerender(type);
+            await rerender(type);
         });
 
         const editBusyEventModalHtml = /*html*/ `
@@ -217,6 +217,18 @@ export async function initializeCalendar(calendarDiv, type) {
                                 <div class="mb-3">
                                     <label for="edit-busy-event-title-input" class="form-label">Title</label>
                                     <input type="text" class="form-control" id="edit-busy-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-day-input" class="form-label">Weekday</label>
+                                    <select class="custom-select"  id="edit-busy-event-day-input">
+                                        <option value=0>Sunday</option>
+                                        <option value=1 selected>Monday</option>
+                                        <option value=2>Tuesday</option>
+                                        <option value=3>Wednesday</option>
+                                        <option value=4>Thursday</option>
+                                        <option value=5>Friday</option>
+                                        <option value=6>Saturday</option>
+                                    </select>
                                 </div>
                                 <div class="mb-3">
                                     <label for="edit-busy-event-start-time-input" class="form-label">Start time</label>
@@ -242,7 +254,7 @@ export async function initializeCalendar(calendarDiv, type) {
         editBusyEventModal = new bootstrap.Modal(document.getElementById('modal-edit-busy-event'));
         document.getElementById("modal-edit-busy-event-close").addEventListener("click", () => editBusyEventModal.hide());
         document.getElementById("modal-edit-busy-event-close-x").addEventListener("click", () => editBusyEventModal.hide());
-        document.getElementById("modal-new-busy-event-save").addEventListener("click", () => {
+        document.getElementById("modal-new-busy-event-save").addEventListener("click", async () => {
             const startTimeInput = document.getElementById("new-busy-event-start-time-input");
 
             let [startHour, startMinute] = startTimeInput.value.split(":");
@@ -271,7 +283,7 @@ export async function initializeCalendar(calendarDiv, type) {
             };
             // TODO: update event with CRUD
             newBusyEventModal.hide();
-            rerender(type);
+            await rerender(type);
         });
         document.getElementById("edit-busy-event-delete").addEventListener("click", () => {
             // TODO: delete event by ID
@@ -465,11 +477,11 @@ function consolidateEvents(events) {
     return consolidated;
 }
 
-function addPlannedEvent(event) {
+async function addPlannedEvent(event) {
     // For now, just add to this list
     // Once CRUD is working, will add to the group's planned events database
     plannedEvents.push(event);
-    rerender();
+    await rerender();
 }
 
 /**
@@ -489,7 +501,8 @@ export async function rerender(type="group") {
     removeElementsByClass("calendar-element");
     let events;
     if (type === "profile") {
-        const busyEvents = await crud.getBusyEvents(await crud.getBusyEventIdsOfUser(username));            
+        const busyEventIds = await crud.getBusyEventIdsOfUser(username);
+        const busyEvents = await crud.getBusyEvents(busyEventIds);            
         events = busyEvents.map(event => {
             let newEvent = structuredClone(event);
             newEvent.type = "busy";
@@ -545,11 +558,57 @@ export async function rerender(type="group") {
     }
 
     for (let element of document.getElementsByClassName("calendar-busy")) {
-        element.addEventListener("click", (event) => {
+        element.addEventListener("click", async (event) => {
             const clickedBlock = event.target;
-            // const busyEventId = event.dataset.busyEventId;
+            const busyEventId = clickedBlock.dataset.busyEventId;
             // TODO: populate with busy event data from CRUD
+            await populateBusyEventModal(busyEventId);
             editBusyEventModal.show();
         });
     }
+}
+
+async function populateBusyEventModal(busyEventId) {
+    const busyEvent = await crud.getBusyEvent(busyEventId);
+    const dayInput = document.getElementById("edit-busy-event-day-input");
+    dayInput.value = busyEvent.startDay;
+
+    const titleInput = document.getElementById("edit-busy-event-title-input");
+    titleInput.value = busyEvent.title;
+
+    const startTimeInput = document.getElementById("edit-busy-event-start-time-input");
+    const endTimeInput = document.getElementById("edit-busy-event-end-time-input");
+    startTimeInput.value = `${String(busyEvent.startHour).padStart(2, 0)}:${String(busyEvent.startMinute).padStart(2, 0)}`;
+    endTimeInput.value = `${String(busyEvent.endHour).padStart(2, 0)}:${String(busyEvent.endMinute).padStart(2, 0)}`;
+
+    document.getElementById("modal-edit-busy-event-save").addEventListener("click", async () => {
+        await updateEventFromModal(busyEventId);
+        editBusyEventModal.hide();
+        await rerender("profile");
+    });
+}
+
+async function updateEventFromModal(busyEventId) {
+    const dayInput = document.getElementById("edit-busy-event-day-input");
+
+    const titleInput = document.getElementById("edit-busy-event-title-input");
+
+    const startTimeInput = document.getElementById("edit-busy-event-start-time-input");
+    const endTimeInput = document.getElementById("edit-busy-event-end-time-input");
+    let [startHour, startMinute] = startTimeInput.value.split(":");
+    startHour = Number(startHour);
+    startMinute = Number(startMinute);
+    let [endHour, endMinute] = endTimeInput.value.split(":");
+    endHour = Number(endHour);
+    endMinute = Number(endMinute);
+
+    await crud.updateBusyEvent(busyEventId, {
+        title: titleInput.value,
+        startDay: dayInput.value,
+        endDay: dayInput.value,
+        startHour: startHour,
+        startMinute: startMinute,
+        endHour: endHour, 
+        endMinute: endMinute
+    });
 }
