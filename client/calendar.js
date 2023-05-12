@@ -170,33 +170,7 @@ export async function initializeCalendar(calendarDiv, type) {
         document.getElementById("button-new-busy-event").addEventListener("click", () => newBusyEventModal.show());
         document.getElementById("modal-new-busy-event-close-x").addEventListener("click", () => newBusyEventModal.hide());
         document.getElementById("modal-new-busy-event-save").addEventListener("click", async () => {
-            const startTimeInput = document.getElementById("new-busy-event-start-time-input");
-
-            let [startHour, startMinute] = startTimeInput.value.split(":");
-            startHour = Number(startHour);
-            startMinute = Number(startMinute);
-
-            const endTimeInput = document.getElementById("new-busy-event-end-time-input");
-            let [endHour, endMinute] = endTimeInput.value.split(":");
-            endHour = Number(endHour);
-            endMinute = Number(endMinute);
-
-            // TODO: support spanning multiple days
-            const startDay = document.getElementById("new-busy-event-day-input").value;
-            const endDay = startDay;
-
-            const title = document.getElementById("new-busy-event-title-input").value;
-
-            const newEvent = {
-                title: title,
-                startDay: startDay,
-                startHour: startHour,
-                startMinute: startMinute,
-                endDay: endDay,
-                endHour: endHour,
-                endMinute: endMinute
-            };
-            await crud.createBusyEvent(username, newEvent);
+            await createBusyEventFromModal();
             newBusyEventModal.hide();
             await rerender(type);
         });
@@ -548,11 +522,20 @@ async function populateBusyEventModal(busyEventId) {
     startTimeInput.value = `${String(busyEvent.startHour).padStart(2, 0)}:${String(busyEvent.startMinute).padStart(2, 0)}`;
     endTimeInput.value = `${String(busyEvent.endHour).padStart(2, 0)}:${String(busyEvent.endMinute).padStart(2, 0)}`;
 
-    document.getElementById("modal-edit-busy-event-save").addEventListener("click", async () => {
+
+    let saveButton = document.getElementById("modal-edit-busy-event-save");
+    const handler = async function() {
         await updateEventFromModal(busyEventId);
-        editBusyEventModal.hide();
+        await editBusyEventModal.hide();
         await rerender("profile");
-    });
+
+    }
+    // Recreate save button to clear event listeners
+    // source: https://stackoverflow.com/a/73409567
+    saveButton.replaceWith(saveButton.cloneNode(true));
+
+    saveButton = document.getElementById("modal-edit-busy-event-save");
+    saveButton.addEventListener("click", handler);
 }
 
 async function updateEventFromModal(busyEventId) {
@@ -578,4 +561,34 @@ async function updateEventFromModal(busyEventId) {
         endHour: endHour, 
         endMinute: endMinute
     });
+}
+
+async function createBusyEventFromModal() {
+    const startTimeInput = document.getElementById("new-busy-event-start-time-input");
+
+    let [startHour, startMinute] = startTimeInput.value.split(":");
+    startHour = Number(startHour);
+    startMinute = Number(startMinute);
+
+    const endTimeInput = document.getElementById("new-busy-event-end-time-input");
+    let [endHour, endMinute] = endTimeInput.value.split(":");
+    endHour = Number(endHour);
+    endMinute = Number(endMinute);
+
+    // TODO: support spanning multiple days
+    const startDay = document.getElementById("new-busy-event-day-input").value;
+    const endDay = startDay;
+
+    const title = document.getElementById("new-busy-event-title-input").value;
+
+    const newEvent = {
+        title: title,
+        startDay: startDay,
+        startHour: startHour,
+        startMinute: startMinute,
+        endDay: endDay,
+        endHour: endHour,
+        endMinute: endMinute
+    };
+    await crud.createBusyEvent(username, newEvent);
 }
