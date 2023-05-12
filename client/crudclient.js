@@ -758,7 +758,7 @@ export async function getPlannedEvents(plannedEventIds) {
         await handleResponseStatus(response);
 
         const data = await response.json();
-        return data.PlannedEvents
+        return data.plannedEvents
     }
     catch (err) {
         throw Error(`Unexpected error: ${err}`);
