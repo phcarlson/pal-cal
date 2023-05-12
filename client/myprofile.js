@@ -147,5 +147,5 @@ function saveProfile(mockCurrUsername){
 renderRequests(mockCurrUsername);
 renderProfile(mockCurrUsername);
 
-initializeCalendar(document.getElementById("calendar"), "profile");
-rerender("profile");
+await initializeCalendar(document.getElementById("calendar"), "profile");
+await rerender("profile");
