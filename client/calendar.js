@@ -3,6 +3,7 @@ import * as crud from './crudclient.js';
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
 const username = "user1";
+const groupId = "343fef37-8bbc-42f8-88b2-911b488ccd08";
 let newEventModalTime = {};
 let newPlannedEventModal;
 let newBusyEventModal;
@@ -359,20 +360,21 @@ function renderEvents(events, type="group") {
                     const blockType = type === "group" ? "free" : "filler";
                     renderEventBlock({startDay: event.startDay, startHour: 0, startMinute: 0, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
+                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
+                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
+                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
+                renderEventBlock(event, event.type, label);
                 if (type === "group") {
                     if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
                         // Fill in free time at the end of the day
                         renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: 23, endMinute: 59}, "free", "");
                     }
+
                     for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
                         // Fill in free time on days in between
                         renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endHour: 23, endMinute: 59}, "free");
                     }
                 }
-                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
-                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
-                renderEventBlock(event, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -463,24 +465,12 @@ function consolidateEvents(events) {
     return consolidated;
 }
 
-let plannedEvents = [
-    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute: 0, title: "this is a planned event with a long title"}
-]
-
 function addPlannedEvent(event) {
     // For now, just add to this list
     // Once CRUD is working, will add to the group's planned events database
     plannedEvents.push(event);
     rerender();
 }
-
-// Some random test events
-let busyEvents = [
-    {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
-    {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
-    {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
-    {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
-];
 
 /**
  * Delete every element with the given classname
@@ -495,11 +485,11 @@ function removeElementsByClass(className){
 }
 
 
-export function rerender(type="group") {
+export async function rerender(type="group") {
     removeElementsByClass("calendar-element");
     let events;
     if (type === "profile") {
-        // TODO: get busy events from CRUD
+        const busyEvents = await crud.getBusyEvents(await crud.getBusyEventIdsOfUser(username));            
         events = busyEvents.map(event => {
             let newEvent = structuredClone(event);
             newEvent.type = "busy";
@@ -507,6 +497,15 @@ export function rerender(type="group") {
         });
     }
     else {
+        const usernames = await crud.getGroupMemberUsernames(groupId);
+        const busyEventIds = [];
+        for (let username of usernames) {
+            const userEventIds = await crud.getBusyEventIdsOfUser(username);
+            busyEventIds.push(...userEventIds);
+        }
+        const busyEvents = await crud.getBusyEvents(busyEventIds);
+        const groupPlannedEventIds = await crud.getGroupPlannedEventIds(groupId);
+        const plannedEvents = await crud.getPlannedEvents(groupPlannedEventIds);
         events = busyEvents.map(event => {
             let newEvent = structuredClone(event);
             newEvent.type = "filler";
