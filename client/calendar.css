@@ -34,7 +34,9 @@ div.calendar-busy {
 
 
 div.calendar-filler {
-    background-color: #00000000;
+    /* TODO - change back, this is just for debugging */
+    /* background-color: #00000000; */
+    background-color: orangered;
 }
 
 #start-time-input:invalid {
