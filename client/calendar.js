@@ -196,7 +196,6 @@ export async function initializeCalendar(calendarDiv, type) {
                 endHour: endHour,
                 endMinute: endMinute
             };
-            // TODO: add event with CRUD
             await crud.createBusyEvent(username, newEvent);
             newBusyEventModal.hide();
             await rerender(type);
@@ -254,37 +253,6 @@ export async function initializeCalendar(calendarDiv, type) {
         editBusyEventModal = new bootstrap.Modal(document.getElementById('modal-edit-busy-event'));
         document.getElementById("modal-edit-busy-event-close").addEventListener("click", () => editBusyEventModal.hide());
         document.getElementById("modal-edit-busy-event-close-x").addEventListener("click", () => editBusyEventModal.hide());
-        document.getElementById("modal-new-busy-event-save").addEventListener("click", async () => {
-            const startTimeInput = document.getElementById("new-busy-event-start-time-input");
-
-            let [startHour, startMinute] = startTimeInput.value.split(":");
-            startHour = Number(startHour);
-            startMinute = Number(startMinute);
-
-            const endTimeInput = document.getElementById("new-busy-event-end-time-input");
-            let [endHour, endMinute] = endTimeInput.value.split(":");
-            endHour = Number(endHour);
-            endMinute = Number(endMinute);
-
-            // TODO: support spanning multiple days
-            const startDay = document.getElementById("new-busy-event-day-input").value;
-            const endDay = startDay;
-
-            const title = document.getElementById("new-busy-event-title-input").value;
-
-            const updatedEvent = {
-                title: title,
-                startDay: startDay,
-                startHour: startHour,
-                startMinute: startMinute,
-                endDay: endDay,
-                endHour: endHour,
-                endMinute: endMinute
-            };
-            // TODO: update event with CRUD
-            newBusyEventModal.hide();
-            await rerender(type);
-        });
         document.getElementById("edit-busy-event-delete").addEventListener("click", () => {
             // TODO: delete event by ID
         });
@@ -356,7 +324,7 @@ function renderEvents(events, type="group") {
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 if (fillerDuration > 0.25) {
                     const blockType = type === "group" ? "free" : "filler";
-                    renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
+                    renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
@@ -370,7 +338,7 @@ function renderEvents(events, type="group") {
                 // Add padding between midnight and the first event of the day
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
                     const blockType = type === "group" ? "free" : "filler";
-                    renderEventBlock({startDay: event.startDay, startHour: 0, startMinute: 0, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
+                    renderEventBlock({startDay: event.startDay, startHour: 0, startMinute: 0, endDay: event.endDay, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
@@ -379,12 +347,12 @@ function renderEvents(events, type="group") {
                 if (type === "group") {
                     if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
                         // Fill in free time at the end of the day
-                        renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: 23, endMinute: 59}, "free", "");
+                        renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: 23, endMinute: 59}, "free", "");
                     }
 
                     for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
                         // Fill in free time on days in between
-                        renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endHour: 23, endMinute: 59}, "free");
+                        renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endDay: day, endHour: 23, endMinute: 59}, "free");
                     }
                 }
                 prevEventEndDay = event.endDay;
@@ -396,11 +364,11 @@ function renderEvents(events, type="group") {
     if (type === "group") {
         if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
             // Fill in free time at the end of the day
-            renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: 23, endMinute: 59}, "free");
+            renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: 23, endMinute: 59}, "free");
         }
         for (let day = prevEventEndDay + 1; day <= 6; ++day) {
             // Fill in free time on days after the last busy time
-            renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endHour: 23, endMinute: 59}, "free");
+            renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endDay: day, endHour: 23, endMinute: 59}, "free");
         }
     }
 
@@ -561,7 +529,6 @@ export async function rerender(type="group") {
         element.addEventListener("click", async (event) => {
             const clickedBlock = event.target;
             const busyEventId = clickedBlock.dataset.busyEventId;
-            // TODO: populate with busy event data from CRUD
             await populateBusyEventModal(busyEventId);
             editBusyEventModal.show();
         });
