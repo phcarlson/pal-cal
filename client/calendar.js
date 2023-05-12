@@ -576,7 +576,7 @@ async function createBusyEventFromModal() {
     endMinute = Number(endMinute);
 
     // TODO: support spanning multiple days
-    const startDay = document.getElementById("new-busy-event-day-input").value;
+    const startDay = Number(document.getElementById("new-busy-event-day-input").value);
     const endDay = startDay;
 
     const title = document.getElementById("new-busy-event-title-input").value;
@@ -588,7 +588,9 @@ async function createBusyEventFromModal() {
         startMinute: startMinute,
         endDay: endDay,
         endHour: endHour,
-        endMinute: endMinute
+        endMinute: endMinute,
+        creatorUsername: username
     };
     await crud.createBusyEvent(username, newEvent);
+    await rerender("profile");
 }
