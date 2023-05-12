@@ -227,9 +227,6 @@ export async function initializeCalendar(calendarDiv, type) {
         editBusyEventModal = new bootstrap.Modal(document.getElementById('modal-edit-busy-event'));
         document.getElementById("modal-edit-busy-event-close").addEventListener("click", () => editBusyEventModal.hide());
         document.getElementById("modal-edit-busy-event-close-x").addEventListener("click", () => editBusyEventModal.hide());
-        document.getElementById("edit-busy-event-delete").addEventListener("click", () => {
-            // TODO: delete event by ID
-        });
     }
 }
 
