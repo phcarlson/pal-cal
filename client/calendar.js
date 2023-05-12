@@ -1,4 +1,4 @@
-import { PlannedEvent } from "./datatypes.js";
+import * as crud from './crudclient.js';
 
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
@@ -8,7 +8,7 @@ let newPlannedEventModal;
 let newBusyEventModal;
 let editBusyEventModal;
 
-export function initializeCalendar(calendarDiv, type) {
+export async function initializeCalendar(calendarDiv, type) {
     calendarDiv.classList.add("row", "d-flex");
     const hoursCol = document.createElement("div");
     hoursCol.innerText = "hours";
@@ -168,7 +168,7 @@ export function initializeCalendar(calendarDiv, type) {
         document.getElementById("modal-new-busy-event-close").addEventListener("click", () => newBusyEventModal.hide());
         document.getElementById("button-new-busy-event").addEventListener("click", () => newBusyEventModal.show());
         document.getElementById("modal-new-busy-event-close-x").addEventListener("click", () => newBusyEventModal.hide());
-        document.getElementById("modal-new-busy-event-save").addEventListener("click", () => {
+        document.getElementById("modal-new-busy-event-save").addEventListener("click", async () => {
             const startTimeInput = document.getElementById("new-busy-event-start-time-input");
 
             let [startHour, startMinute] = startTimeInput.value.split(":");
@@ -196,7 +196,7 @@ export function initializeCalendar(calendarDiv, type) {
                 endMinute: endMinute
             };
             // TODO: add event with CRUD
-            busyEvents.push(newEvent);
+            await crud.createBusyEvent(username, newEvent);
             newBusyEventModal.hide();
             rerender(type);
         });
@@ -218,19 +218,7 @@ export function initializeCalendar(calendarDiv, type) {
                                     <input type="text" class="form-control" id="edit-busy-event-title-input">
                                 </div>
                                 <div class="mb-3">
-                                    <label for="edit-busy-event-day-input" class="form-label">Weekday</label>
-                                    <select class="custom-select"  id="edit-busy-event-day-input">
-                                        <option value=0>Sunday</option>
-                                        <option value=1 selected>Monday</option>
-                                        <option value=2>Tuesday</option>
-                                        <option value=3>Wednesday</option>
-                                        <option value=4>Thursday</option>
-                                        <option value=5>Friday</option>
-                                        <option value=6>Saturday</option>
-                                    </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="start-time-input" class="form-label">Start time</label>
+                                    <label for="edit-busy-event-start-time-input" class="form-label">Start time</label>
                                     <input type="time" class="form-control" id="edit-busy-event-start-time-input" required>
                                 </div>
                                 <div class="mb-3">
@@ -311,9 +299,10 @@ function toTwelveHour(hour, minute=0) {
  * @param {string} type One of "busy", "planned", or "filler"
  * @param {string} text Text to display on the event block
  */
-function renderEventBlock(day, duration, type, text="", startHour, startMinute, endHour, endMinute) {
-    const weekdayCol = document.getElementById(`column-${days[day]}`);
+function renderEventBlock(event, type, text="") {
+    const weekdayCol = document.getElementById(`column-${days[event.startDay]}`);
     const eventDiv = document.createElement("div");
+    const duration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
     eventDiv.classList.add("row", "calendar-element");
     switch (type) {
         case "filler":
@@ -321,20 +310,21 @@ function renderEventBlock(day, duration, type, text="", startHour, startMinute, 
             break;
         case "free":
             eventDiv.classList.add("calendar-block", "calendar-free");
+            eventDiv.dataset.day = event.startDay;
+            eventDiv.dataset.startHour = event.startHour;
+            eventDiv.dataset.startMinute = event.startMinute;
+            eventDiv.dataset.endHour = event.endHour;
+            eventDiv.dataset.endMinute = event.endMinute;
             break;
         case "planned":
             eventDiv.classList.add("calendar-block", "calendar-planned");
             break;
         case "busy":
             eventDiv.classList.add("calendar-block", "calendar-busy");
+            eventDiv.dataset.busyEventId = event.busyEventId;
             break;
     }
     eventDiv.style.height = `calc((100%/12) * ${duration})`;
-    eventDiv.dataset.day = day;
-    eventDiv.dataset.startHour = startHour;
-    eventDiv.dataset.startMinute = startMinute;
-    eventDiv.dataset.endHour = endHour;
-    eventDiv.dataset.endMinute = endMinute;
     eventDiv.innerText = text;
     weekdayCol.appendChild(eventDiv);
 }
@@ -353,39 +343,36 @@ function renderEvents(events, type="group") {
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 if (fillerDuration > 0.25) {
                     const blockType = type === "group" ? "free" : "filler";
-                    renderEventBlock(event.startDay, fillerDuration, blockType, "", prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
+                    renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
-                const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
                 const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
-                renderEventBlock(event.startDay, eventDuration, event.type, label);
+                renderEventBlock(event, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
             }
             else {
+                // Add padding between midnight and the first event of the day
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
-                    const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
                     const blockType = type === "group" ? "free" : "filler";
-                    renderEventBlock(event.startDay, fillerDuration, blockType, "", 0, 0, event.startHour, event.startMinute);
+                    renderEventBlock({startDay: event.startDay, startHour: 0, startMinute: 0, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
                 if (type === "group") {
                     if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
                         // Fill in free time at the end of the day
-                        const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-                        renderEventBlock(prevEventEndDay, eventDuration, "free", "", prevEventEndHour, prevEventEndMinute, 23, 59);
+                        renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: 23, endMinute: 59}, "free", "");
                     }
                     for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
                         // Fill in free time on days in between
-                        renderEventBlock(day, 24, "free", "", 0, 0, 23, 59);
+                        renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endHour: 23, endMinute: 59}, "free");
                     }
                 }
-                const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
                 const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
                 const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
                 const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
-                renderEventBlock(event.startDay, eventDuration, event.type, label);
+                renderEventBlock(event, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
@@ -395,12 +382,11 @@ function renderEvents(events, type="group") {
     if (type === "group") {
         if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
             // Fill in free time at the end of the day
-            const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-            renderEventBlock(prevEventEndDay, eventDuration, "free");
+            renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endHour: 23, endMinute: 59}, "free");
         }
         for (let day = prevEventEndDay + 1; day <= 6; ++day) {
             // Fill in free time on days after the last busy time
-            renderEventBlock(day, 24, "free");
+            renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endHour: 23, endMinute: 59}, "free");
         }
     }
 
