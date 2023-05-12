@@ -536,6 +536,15 @@ async function populateBusyEventModal(busyEventId) {
 
     saveButton = document.getElementById("modal-edit-busy-event-save");
     saveButton.addEventListener("click", handler);
+
+    let deleteButton = document.getElementById("edit-busy-event-delete");
+    deleteButton.replaceWith(deleteButton.cloneNode(true));
+    deleteButton = document.getElementById("edit-busy-event-delete");
+    deleteButton.addEventListener("click", async () => {
+        await crud.deleteBusyEvent(busyEventId);
+        await editBusyEventModal.hide();
+        await rerender("profile");
+    });
 }
 
 async function updateEventFromModal(busyEventId) {
