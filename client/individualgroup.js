@@ -60,7 +60,7 @@ function addMember(userObj) {
                             </div>
                         </div>`;
 
-    membersContainer.insertAdjacentHTML("beforeend", memberToInsert);
+    membersContainer.insertAdjacentHTML("afterbegin", memberToInsert);
 
     //document.getElementById("flexCheckDefault").checked = true;
 }
@@ -267,14 +267,19 @@ async function renderPotentialMember(userIDToAdd, currGroupId, potentialMembers)
 }
 
 
+/**
+ * Adds user found from current user's friends list to current group 
+ * @param {string} userIdToAdd username to add
+ * @param {string} currGroupId current group's id to add to
+ * @param {Element} addMemberButton button to change based on result of action
+ */
 async function addMemberToGroup(userIdToAdd, currGroupId, addMemberButton){
-    // Try to send user found a friend request, as they are not yet friends with curr user
-    // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
     try {
-        // Testing purposes: Try to add user found as member, as they are not yet a member in group
+        // Try to add user found as member, as they are not yet a member in group
         await crud.addMember(currGroupId, userIdToAdd);
-        // Reload relevant parts of the page 
-        await renderGroupMembers();
+        // Add just the new member card to smoothly update page rendered
+        const userToAdd = await crud.getUser(userIdToAdd);
+        addMember(userToAdd);
 
         // Alert user after CRUD request that the friend request worked
         addMemberButton.className = "btn btn-success";
