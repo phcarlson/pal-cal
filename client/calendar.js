@@ -3,14 +3,34 @@ import * as crud from './crudclient.js';
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
 
-const username = "user1";
-const groupId = "343fef37-8bbc-42f8-88b2-911b488ccd08";
-
+let username = null;
+let groupId = null;
 
 let newEventModalTime = {};
 let newPlannedEventModal;
 let newBusyEventModal;
 let editBusyEventModal;
+
+// Snag current group we are in and user in session
+try{
+    const queryString = window.location.search; // Returns:'?q=123'
+    const params = new URLSearchParams(queryString);
+
+    groupId = params.get("groupId");
+    console.log(groupId);
+
+    username = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUser="))
+    ?.split("=")[1];
+}
+catch(error){
+    // Create alert of issue
+    let child = document.createElement('div')
+    child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                    'Refresh page, possibly offline</div>';   
+    calendarCol.before(child);
+}
 
 export async function initializeCalendar(calendarDiv, type) {
     calendarDiv.classList.add("row", "d-flex");

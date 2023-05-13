@@ -131,6 +131,9 @@ app.get('/get/users', async (request, response) => {
       if(usernames === undefined){
         response.status(400).send('Bad request: comma separated usernames undefined')
       }
+      else if(usernames === ''){
+        response.status(200).json({users: []});
+      }
       else{
         const users = await database.getUsers(usernames.split(',')); 
         response.status(200).json({users: users});
@@ -218,6 +221,9 @@ app.get('/get/busyEvents', async (request, response) => {
   try{  
     if(busyEventIds === undefined){
       response.status(400).send('Bad request: comma separated busy event ids undefined')
+    }
+    else if(busyEventIds === ''){
+      response.status(200).json({busyEvents: []});
     }
     else{
       const busyEvents = await database.getBusyEvents(busyEventIds.split(',')); 
@@ -553,6 +559,9 @@ app.get('/get/groups', async (request, response) => {
     if(groupIds === undefined){
       response.status(400).send('Bad request: comma separated group ids undefined')
     }
+    else if(groupIds === ''){
+      response.status(200).json({groups: []});
+    }
     else{
       const groups = await database.getGroups(groupIds.split(',')); 
       response.status(200).json({groups: groups});
@@ -695,6 +704,9 @@ app.get('/get/plannedEvents', async (request, response) => {
   try{  
     if(plannedEventIds === undefined){
       response.status(400).send('Bad request: comma separated planned event ids undefined')
+    }
+    else if(plannedEventIds === ''){
+      response.status(200).json({plannedEvents: []});
     }
     else{
       const plannedEvents = await database.getPlannedEvents(plannedEventIds.split(',')); 
