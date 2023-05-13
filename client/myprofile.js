@@ -1,4 +1,5 @@
 import * as crud from './crudclient.js';
+import { initializeCalendar, rerender } from './calendar.js';
 let requestListCol = document.getElementById("requestListCol");
 
 let mockCurrUsername = "ananya";
@@ -145,3 +146,6 @@ function saveProfile(mockCurrUsername){
 
 renderRequests(mockCurrUsername);
 renderProfile(mockCurrUsername);
+
+await initializeCalendar(document.getElementById("calendar"), "profile");
+await rerender("profile");

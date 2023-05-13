@@ -1,4 +1,5 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
+import { initializeCalendar, rerender } from './calendar.js';
 import * as crud from './crudclient.js';
 
 // containers
@@ -198,6 +199,10 @@ function getDay(dayNum) {
 // event listeners
 selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
+
+const calendarElement = document.getElementById("calendar");
+initializeCalendar(calendarElement, "group");
+rerender("group");
 
 // dummy data -- REST LOADED IN USING individualgroup.html, through loadmockdata.js file
 addMember("Screen Name");
