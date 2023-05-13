@@ -294,6 +294,7 @@ async function renderGroup(groupId, currUsername){
     let image = group.image !== '' ? group.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
 
     // Create card with fresh info
+    //TODO: Hover effect when image hovered over to know you can go to group that way
     let groupToInsert =
     `<div id=${groupId}GroupCard class="card my-3">` +
         '<div class="row g-0">' +
