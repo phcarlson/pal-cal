@@ -110,8 +110,8 @@
                 <div class="row d-flex">
                     <div class="col d-flex flex-column justify-content-start">
 
-                        <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">Group Schedule
-                                <div class="dropdown">
+                        <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">
+                                <div id=groupNameLabel class="dropdown">
                         </h1>
                     </div>
 
@@ -130,9 +130,9 @@
                         </button>
                     </div>
                 </div>
-                <!-- Container for holding groups added dynamically -->
+                <!-- Container for holding calendar loaded dynamically -->
                 <div class="row v-100">
-                    <div class="col v-100" style="overflow-y: auto">
+                    <div id="calendarCol" class="col v-100" style="height: 85%; overflow-y: auto;">
                         <div class="row d-flex" id="calendar">
                         </div>
                     </div>
@@ -224,9 +224,9 @@
                     </div>
                 </div>
 
-                <!-- Row for holding scrollable group -->
+                <!-- Row for holding scrollable planned events -->
                 <div class="row d-flex" style="height:40%">
-                    <!-- Column of groups that scroll -->
+                    <!-- Column of planned events that scroll -->
                     <div id="planned-events-container" class="col d-flex flex-column h-100 scrollIt">
 
                     </div>

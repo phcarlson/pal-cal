@@ -1,27 +1,6 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
 import * as crud from './crudclient.js';
 
-const queryString = window.location.search; // Returns:'?q=123'
-const params = new URLSearchParams(queryString);
-let currGroupId = null;
-let groupObj = null;
-let currUser = null;
-
-try{
-    currGroupId = params.get("groupId");
-    const groupObj = await crud.getGroup(params.get("groupId"));
-
-    currUser = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith("currUser="))
-    ?.split("=")[1];
-
-}
-catch(error){
-    console.log(error);
-    
-}
-
 // containers
 const membersContainer = document.getElementById("members-container");
 const plannedEventsContainer = document.getElementById("planned-events-container");
@@ -31,12 +10,48 @@ const selectAllButton = document.getElementById("select-all-button");
 const deselectAllButton = document.getElementById("deselect-all-button");
 const searchMemberButton = document.getElementById("searchMemberButton");
 
+// label above calendar for group name 
+const groupNameLabel = document.getElementById("groupNameLabel");
+const calendarCol = document.getElementById("calendarCol");
 membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
 
 let eventsAdded = 0;
-
 let mockusername = "username1";
+
+let currGroupId = null;
+let groupObj = null;
+let currUser = null;
+
+try{
+    const queryString = window.location.search; // Returns:'?q=123'
+    const params = new URLSearchParams(queryString);
+
+    currGroupId = params.get("groupId");
+    groupObj = await crud.getGroup(params.get("groupId"));
+
+    currUser = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUser="))
+    ?.split("=")[1];
+
+    if(groupObj.name !== null && 
+        groupObj.name !== undefined &&
+        groupObj.name !== ''){
+            groupNameLabel.innerText = `${groupObj.name}'s Schedule`;
+    }
+    else{
+        groupNameLabel.innerText = `Group's Schedule`;
+    }
+}
+catch(error){
+    console.log(error);
+    // Create alert of issue
+    let child = document.createElement('div')
+    child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                    'Refresh page, possibly offline</div>';   
+    calendarCol.after(child);
+}
 
 function addMember(userObj) {
     

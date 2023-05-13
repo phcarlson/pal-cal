@@ -291,6 +291,7 @@ async function renderGroup(groupId, currUsername){
     // Create card with fresh info
     let groupToInsert =
     `<div id=${groupId}GroupCard class="card my-3">` +
+    `<a href="/individualgroup.html?groupId=${groupId}" class="stretched-link"></a>` +
         '<div class="row g-0">' +
             '<div class="col-md-2 d-flex">' +
                 `<img src=${group.image} ` +
