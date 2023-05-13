@@ -1,4 +1,5 @@
 import { User, Group, BusyEvent, PlannedEvent } from './datatypes.js';
+import { initializeCalendar, rerender } from './calendar.js';
 import * as crud from './crudclient.js';
 
 // containers
@@ -17,7 +18,7 @@ membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
 
 let eventsAdded = 0;
-let mockusername = "username1";
+// let mockusername = "username1";
 
 let currGroupId = null;
 let groupObj = null;
@@ -359,6 +360,10 @@ deselectAllButton.addEventListener("click", deselectAllMembers);
 
 
 // INITIAL RENDERING OF INDIVIDUAL GROUP:
+const calendarElement = document.getElementById("calendar");
+await initializeCalendar(calendarElement, "group");
+await rerender("group");
+
 await renderGroupMembers();
 
 await renderPlannedEvents();

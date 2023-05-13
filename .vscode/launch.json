@@ -1,0 +1,51 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run server",
+            "program": "${workspaceFolder}/server/index.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "name": "Run current file",
+            "program": "${workspaceFolder}/${relativeFile}",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Debug individual group",
+            "url": "http://localhost:3000/individualgroup.html",
+            "webRoot": "${workspaceFolder}/client"
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Debug myprofile",
+            "url": "http://localhost:3000/myprofile.html",
+            "webRoot": "${workspaceFolder}/client"
+        },
+
+    ],
+    "compounds": [
+        {
+            "name": "individualgroup",
+            "configurations": ["Run server", "Debug individual group"]
+        },
+        {
+            "name": "myprofile",
+            "configurations": ["Run server", "Debug myprofile"]
+        }
+    ]
+}
