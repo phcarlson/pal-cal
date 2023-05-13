@@ -38,15 +38,14 @@ async function renderFriends(username) {
         // For each friend username, retrieve fresh friend obj/data with their image to make card 
         for(let friendUsername of friendsList){
             let friendObj = await crud.getUser(friendUsername);
-            // Temp for all friends until we figure out images
             let image = friendObj.image !== '' && friendObj.image !== null &&  friendObj.image !== '\\x' ? friendObj.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
         
             let friendToInsert =
             `<div id=${friendUsername}FriendCard class="card my-3">` +
                 '<div class="row g-0">' +
                     `<a class="col-md-2 d-flex" href="/myprofile.html?profileUser=${friendUsername}">` +
-                        `<img src=${image}` +
-                            'alt="generic profile pic" class="img-fluid rounded-start">' +
+                        `<img src=${image} style="width: 100%; height: 5vw; object-fit: cover;"` +
+                            'alt="friend pic" class="img-fluid rounded-start">' +
                     '</a>' +
                     '<div class="col-md-8 d-flex align-items-center">' +
                         '<div class="card-body">' +
@@ -306,7 +305,7 @@ async function renderGroup(groupId, currUsername){
         '<div class="row g-0">' +
             `<a class="col-md-2 d-flex flex-column" href="/individualgroup.html?groupId=${groupId}">`+
                 `<img src=${image} style="width: 100%; height: 10vw; object-fit: cover;"` +
-                    'alt="generic profile pic" class="img-fluid rounded-start">' +
+                    'alt="group pic" class="img-fluid rounded-start">' +
             '</a>' +
             '<div class="col-md-8 d-flex justify-content-center align-items-center">' +
                 '<div class="card-body">' +
