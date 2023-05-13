@@ -218,6 +218,7 @@ app.get('/get/busyEvent', async (request, response) => {
 app.get('/get/busyEvents', async (request, response) => {
   const options = request.query;
   const busyEventIds = options.busyEventIds;
+  
   try{  
     if(busyEventIds === undefined){
       response.status(400).send('Bad request: comma separated busy event ids undefined')

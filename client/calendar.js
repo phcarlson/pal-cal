@@ -16,20 +16,28 @@ try{
     const queryString = window.location.search; // Returns:'?q=123'
     const params = new URLSearchParams(queryString);
 
+    // In case we are in an individual group
     groupId = params.get("groupId");
-    console.log(groupId);
 
+    // To have, and in case we are on our profile
     username = document.cookie
     .split("; ")
     .find((row) => row.startsWith("currUser="))
     ?.split("=")[1];
+
+    // In case we routed to someone else's profile
+    let profileUser = params.get("profileUser");
+    if(profileUser !== null){
+        username = profileUser;
+    }
 }
 catch(error){
     // Create alert of issue
+    let calendarDiv = document.getElementById("calendar");
     let child = document.createElement('div')
     child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
                     'Refresh page, possibly offline</div>';   
-    calendarCol.before(child);
+    calendarDiv.before(child);
 }
 
 export async function initializeCalendar(calendarDiv, type) {
