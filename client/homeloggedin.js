@@ -7,7 +7,10 @@ let groupsCol = document.getElementById('scrollableGroupList');
 let potentialMembers = document.getElementById('potentialMembers');
 // Collect some interactive elems
 let searchFriendButton = document.getElementById("searchFriendButton");
-let searchFriendModal = document.getElementById("friendSearchModalDialog");
+// let searchFriendModal = document.getElementById("friendSearchModalDialog");
+let friendSearchClose = document.getElementById("friendSearchClose");
+let friendSearchBar = document.getElementById("friendToFind");
+
 // Selection for making new group with members which starts empty
 let selectedMembers = [];
 
@@ -41,12 +44,10 @@ async function renderFriends(username) {
             let friendToInsert =
             `<div id=${friendUsername}FriendCard class="card my-3">` +
                 '<div class="row g-0">' +
-                    '<div class="col-md-2 d-flex">' +
-                        `<a href="/myprofile.html?profileUser=${friendUsername}" class="stretched-link"></a>` +
-
+                    `<a class="col-md-2 d-flex" href="/myprofile.html?profileUser=${friendUsername}">` +
                         `<img src=${image}` +
                             'alt="generic profile pic" class="img-fluid rounded-start">' +
-                    '</div>' +
+                    '</a>' +
                     '<div class="col-md-8 d-flex align-items-center">' +
                         '<div class="card-body">' +
                             `<h5 class="card-title text-start">${friendUsername}</h5>` +
@@ -251,6 +252,12 @@ async function removeFriendFromUser(friendUsername, currUsername){
             },2500);
     }
 }
+
+// Wipe search results on close
+friendSearchClose.addEventListener('click', (event) => {
+    potentialFriends.innerHTML = '';
+    friendSearchBar.value = '';
+});
 
 
 // GROUP RELATED FUNCTIONS:
@@ -524,7 +531,6 @@ function wipeGroupCreateModal(){
 
     // let accordion = document.getElementById("flush-collapseOne");
     // accordion.classList.remove("show");
-
 }
 
 // Allows us to convert uploaded group image to string
