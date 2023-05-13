@@ -42,6 +42,8 @@ async function renderFriends(username) {
             `<div id=${friendUsername}FriendCard class="card my-3">` +
                 '<div class="row g-0">' +
                     '<div class="col-md-2 d-flex">' +
+                        `<a href="/myprofile.html?profileUser=${friendUsername}" class="stretched-link"></a>` +
+
                         `<img src=${image}` +
                             'alt="generic profile pic" class="img-fluid rounded-start">' +
                     '</div>' +
@@ -288,22 +290,32 @@ async function renderGroups(currUsername) {
 async function renderGroup(groupId, currUsername){
     // Retrieve fresh group info 
     let group = await crud.getGroup(groupId);
+    let members = await crud.getGroupMemberUsernames(groupId);
+    let image = group.image !== '' ? group.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+
     // Create card with fresh info
     let groupToInsert =
     `<div id=${groupId}GroupCard class="card my-3">` +
-    `<a href="/individualgroup.html?groupId=${groupId}" class="stretched-link"></a>` +
         '<div class="row g-0">' +
-            '<div class="col-md-2 d-flex">' +
-                `<img src=${group.image} ` +
+            `<a class="col-md-2 d-flex flex-column" href="/individualgroup.html?groupId=${groupId}">`+
+                `<img src=${image} style="width: 100%; height: 15vw; object-fit: cover;"` +
                     'alt="generic profile pic" class="img-fluid rounded-start">' +
-            '</div>' +
-            '<div class="col-md-8 d-flex align-items-center">' +
+            '</a>' +
+            '<div class="col-md-8 d-flex justify-content-center align-items-center">' +
                 '<div class="card-body">' +
-                    `<h5 class="card-title text-start">${group.name}</h5>` +
+                    `<h3 class="card-title text-center">${group.name}</h3>` +
                 '</div>' +
             '</div>' +
-            '<div class="col-md-2 d-flex flex-column align-items-end justify-content-end">' +
-                '<div class="dropdown">' +
+
+            '<div class="col-md-2 d-flex flex-column align-items-center justify-content-center">' +
+                `<div class="row d-flex mx-0 pt-1">`+
+                    '<div class="col d-flex flex-column align-items-center justify-content-center">' +
+                    `<h6 class="card-text">${members.length} Joined</h6>` +
+                    '</div>'+
+                    '</div>'+
+                `<div class="row d-flex mx-0 px-0">`+
+
+                '<div class="dropdown align-items-center justify-content-center">' +
                     '<button class="btn btn btn-lg btn-flash-border-primary dropdown-toggle"' +
                         'type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"' +
                         'aria-expanded="false"></button>' +
@@ -312,7 +324,7 @@ async function renderGroup(groupId, currUsername){
                     'class="bi bi-person-fill"></i></a></li>'+
                     `<li><a id=${groupId}RemoveCard class="dropdown-item" href="#">Leave group<i ` +
                                 'class="bi bi-trash"></i></a></li></ul>'+
-                    '</ul></div></div></div></div>';
+                    '</ul></div></div></div></div></div>';
 
     // Append group card to group col
     groupsCol.insertAdjacentHTML("afterbegin", groupToInsert);
@@ -439,7 +451,14 @@ async function createGroupForUser(currUsername){
     try{
         let groupName = document.getElementById('groupNameInput');
         let imageElem = document.getElementById("groupPhotoUpload")
-        let image =  await toBase64(imageElem.files[0]);
+        let image = null;
+        // If image uploaded, sent that in base64, otherwise empty string
+        if(imageElem.files[0] !== undefined){
+            image =  await toBase64(imageElem.files[0]);
+        }
+        else{
+            image = '';
+        }
     
         //TODO: collapse accordion of potential members on close always
         let accordionFriends = document.getElementById('flush-collapseOne');
