@@ -194,15 +194,14 @@ async function renderPotentialFriend(usernameToFriendRequest, currUsername, pote
  */
 async function sendFriendRequestToUser(usernameToFriendRequest, currUsername, addFriendButton){
     // Try to send user found a friend request, as they are not yet friends with curr user
-    // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
     try {
-        // Testing purposes: Try to add user found as friend, as they are not yet friends with curr user
-        await crud.addFriend(currUsername, usernameToFriendRequest);
+        // Testing purposes ONLY: Try to add user found as friend, as they are not yet friends with curr user
+        // await crud.addFriend(currUsername, usernameToFriendRequest);
         // Reload relevant parts of the page 
-        await renderFriends(currUsername);
-        await renderPotentialMembers(currUsername);
+        // await renderFriends(currUsername);
+        // await renderPotentialMembers(currUsername);
 
-        // await crud.addFriendRequest(currUserID, userIDToFriendRequest);
+        await crud.addFriendRequest(currUsername, usernameToFriendRequest);
 
         // Alert user after CRUD request that the friend request worked
         addFriendButton.className = "btn btn-success";
