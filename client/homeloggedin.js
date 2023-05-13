@@ -299,7 +299,7 @@ async function renderGroup(groupId, currUsername){
     `<div id=${groupId}GroupCard class="card my-3">` +
         '<div class="row g-0">' +
             `<a class="col-md-2 d-flex flex-column" href="/individualgroup.html?groupId=${groupId}">`+
-                `<img src=${image} style="width: 100%; height: 15vw; object-fit: cover;"` +
+                `<img src=${image} style="width: 100%; height: 10vw; object-fit: cover;"` +
                     'alt="generic profile pic" class="img-fluid rounded-start">' +
             '</a>' +
             '<div class="col-md-8 d-flex justify-content-center align-items-center">' +
@@ -451,7 +451,7 @@ async function removeGroupFromUser(currUsername, groupId){
 async function createGroupForUser(currUsername){
     try{
         let groupName = document.getElementById('groupNameInput');
-        let imageElem = document.getElementById("groupPhotoUpload")
+        let imageElem = document.getElementById("groupPhotoUpload");
         let image = null;
         // If image uploaded, sent that in base64, otherwise empty string
         if(imageElem.files[0] !== undefined){
@@ -473,17 +473,8 @@ async function createGroupForUser(currUsername){
             await crud.addMember(newGroupId, memberToAdd);
         }
 
-        // Unselect selected members checkboxes for next group creation
-        selectedMembers.forEach((member)=>{
-            let box = document.getElementById(`${member}Checkbox`);
-            box.checked = false;
-        });
-
         // Wipe selected members for next group creation as well as  group input and accordion collapse
-        selectedMembers = [];
-        groupName.value = '';
-        imageElem.value = '';
-        // accordionFriends.collapse('hide');
+        wipeGroupCreateModal();
 
         //Rerender only the new group card to be added to be smoother
         await renderGroup(newGroupId, currUsername);
@@ -506,7 +497,34 @@ async function createGroupForUser(currUsername){
         }
         // Alert added to friend column that has failed to render correctly
         groupsCol.prepend(child);
+
+        // Clear modal because of error
+        wipeGroupCreateModal();
     }
+}
+
+// Helper to clear group create modal inputs on create or cancel
+function wipeGroupCreateModal(){
+    let groupName = document.getElementById('groupNameInput');
+    let imageElem = document.getElementById("groupPhotoUpload");
+
+    // Uncheck everybody
+    selectedMembers.forEach((member)=>{
+        let box = document.getElementById(`${member}Checkbox`);
+        box.checked = false;
+    });
+
+    // Wipe inputs
+    selectedMembers = [];
+    groupName.value = '';
+    imageElem.value = '';
+
+    // Collapse potental members accordion, uses jQuery but possibly a way to do it faster with just JS in future
+    $("#flush-collapseOne").collapse('hide');
+
+    // let accordion = document.getElementById("flush-collapseOne");
+    // accordion.classList.remove("show");
+
 }
 
 // Allows us to convert uploaded group image to string
@@ -525,20 +543,7 @@ makeGroupButton.addEventListener('click', async (event) => {
 
 let changedMindButton = document.getElementById("changedMindButton");
 changedMindButton.addEventListener('click', (event) => {
-    // let accordionFriends = document.getElementById('accordionFriends');
-    let accordionButton = document.getElementById('accordionButton');
-
-    //Wipe group name from mind changed
-    document.getElementById('groupNameInput').value = '';
-
-    selectedMembers.forEach((member)=>{
-        let box = document.getElementById(`${member}Checkbox`);
-        box.checked = false;
-    });
-
-    // Wipe selected members for next creation and collapse accordion
-    selectedMembers = [];
-    accordionButton.collapse('hide');
+    wipeGroupCreateModal();
 });
 
 

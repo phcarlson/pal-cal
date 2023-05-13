@@ -15,11 +15,14 @@
 </head>
 
 <body>
+    
     <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
 
     <!-- <script  type="module" src="loadmockdata.js"></script> -->
 
@@ -93,7 +96,7 @@
                 </div>
 
                 <!-- Row container for holding scrollable group column -->
-                <div class="row d-flex" style="height:70%">
+                <div class="row d-flex" style="height:75%">
                     <!-- Scrollable column of groups populated dynamically-->
                     <div id="scrollableGroupList" class="col d-flex flex-column h-100 scrollIt">
 
@@ -114,7 +117,7 @@
 
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Make A New Group</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-label="Close"></button> -->
                         </div>
 
                         <!-- Body holds a form  -->
@@ -135,7 +138,7 @@
                                 <!-- Take in selected members to add input  -->
                                 <div class="form-group">
                                     <!-- Collapsible friends list -->
-                                    <div class="accordion accordion-flush">
+                                    <div class="accordion">
                                         <div id="accordionFriends" class="accordion-item">
                                             <h2 class="accordion-header" id="flush-headingOne">
                                                 <!-- Instructs to add members when collapsed -->
@@ -147,7 +150,7 @@
                                                 </button>
                                             </h2>
 
-                                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                            <div id="flush-collapseOne" class="collapse"
                                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFriends">
                                                 <!-- Dynamically populate body with user's friends to select as new members -->
                                                 <div id="potentialMembers" class="accordion-body">
