@@ -45,7 +45,6 @@ try{
     }
 }
 catch(error){
-    console.log(error);
     // Create alert of issue
     let child = document.createElement('div')
     child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+

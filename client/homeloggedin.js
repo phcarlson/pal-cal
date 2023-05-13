@@ -34,13 +34,13 @@ async function renderFriends(username) {
         friendsCol.innerHTML = "";
         // Retrieve fresh friends list for current user
         const friendsList = await crud.getFriends(username);
-        // Temp for all friends until we figure out images
-        let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
-        
+
         // For each friend username, retrieve fresh friend obj/data with their image to make card 
         for(let friendUsername of friendsList){
             let friendObj = await crud.getUser(friendUsername);
-
+            // Temp for all friends until we figure out images
+            let image = friendObj.image !== '' && friendObj.image !== null &&  friendObj.image !== '\\x' ? friendObj.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+        
             let friendToInsert =
             `<div id=${friendUsername}FriendCard class="card my-3">` +
                 '<div class="row g-0">' +
@@ -487,7 +487,7 @@ async function createGroupForUser(currUsername){
     }
     catch(error){
         let child = document.createElement('div')
-        console.log("Message is" + error.message);
+
         if(error.message.startsWith("Unexpected error: Error: Payload Too Large")){
             // Create temp alert of issue
             child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
