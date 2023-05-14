@@ -33,7 +33,7 @@ try{
 
     currUser = document.cookie
     .split("; ")
-    .find((row) => row.startsWith("currUser="))
+    .find((row) => row.startsWith("currUsername="))
     ?.split("=")[1];
 
     if(groupObj.name !== null && 

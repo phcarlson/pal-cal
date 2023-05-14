@@ -22,7 +22,7 @@ try{
     // To have, and in case we are on our profile
     username = document.cookie
     .split("; ")
-    .find((row) => row.startsWith("currUser="))
+    .find((row) => row.startsWith("currUsername="))
     ?.split("=")[1];
 
     // In case we routed to someone else's profile

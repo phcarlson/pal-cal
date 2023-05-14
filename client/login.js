@@ -10,7 +10,7 @@ submitButton.addEventListener('click', async () => {
     const usernameText = usernameInput.value; // get username from text area
     try {
         if (await crud.userExists(usernameText)) { // if user exists, set cookie and redirect
-            document.cookie = `username=${usernameText}`;
+            document.cookie = `currUsername=${usernameText}`;
             window.location.pathname = '/homeloggedin.html';
         }
         else {

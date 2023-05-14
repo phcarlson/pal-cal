@@ -17,7 +17,7 @@ let selectedMembers = [];
 // Our pretend user ID logged in currently
 const currUsername = document.cookie
   .split("; ")
-  .find((row) => row.startsWith("username="))
+  .find((row) => row.startsWith("currUsername="))
   ?.split("=")[1];
 
 
