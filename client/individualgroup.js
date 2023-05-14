@@ -18,7 +18,7 @@ membersContainer.innerHTML = ''; // clear all members
 plannedEventsContainer.innerHTML = ''; // clear all planned events
 
 let eventsAdded = 0;
-// let mockusername = "username1";
+// let currUser = "username1";
 
 let currGroupId = null;
 let groupObj = null;
@@ -33,7 +33,7 @@ try{
 
     currUser = document.cookie
     .split("; ")
-    .find((row) => row.startsWith("currUser="))
+    .find((row) => row.startsWith("currUsername="))
     ?.split("=")[1];
 
     if(groupObj.name !== null && 
@@ -80,7 +80,7 @@ function addMember(userObj) {
     //document.getElementById("flexCheckDefault").checked = true;
 }
 
-async function addPlannedEvent(startTime, endTime, startDay, title, location, description) {
+async function addPlannedEvent(eventID, startTime, endTime, startDay, title, location, description) {
     let plannedEventToInsert =  `<div class="card card-margin">
                                             <div class="card-header no-border">
                                                 <h5 class="card-title">${title}</h5>
@@ -90,7 +90,6 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                                     <div class="widget-49-title-wrapper">
                                                         <div class="widget-49-date-primary">
                                                             <span class="widget-49-date-day">${startDay}</span>
-                                                            <span class="widget-49-date-month">mar</span>
                                                         </div>
                                                         <div class="widget-49-meeting-info">
                                                             <span class="widget-49-pro-title">${location}</span>
@@ -101,7 +100,7 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                                     ${description}
 
                                                     <div class="widget-49-meeting-action">
-                                                        <div class="dropdown">
+                                                        <div class="dropup">
                                                             <button class="btn btn-lg btn-flash-border-primary dropdown-toggle"
                                                                 type="button" id="dropdownMenuButton-${eventsAdded}-0" data-bs-toggle="dropdown"
                                                                 aria-expanded="false">
@@ -136,51 +135,140 @@ async function addPlannedEvent(startTime, endTime, startDay, title, location, de
                                         
     plannedEventsContainer.insertAdjacentHTML("afterbegin", plannedEventToInsert);
 
+
+    // initial RSVP lists for this event
+    const yesRsvpList = await crud.getYesRSVPsTo(eventID);
+    const noRsvpList = await crud.getNoRSVPsTo(eventID);
+    const maybeRsvpList = await crud.getMaybeRSVPsTo(eventID);
+    
+    // yes, no, maybe buttons
     const yesButton = document.getElementById(`yes-${eventsAdded}`);
     const noButton = document.getElementById(`no-${eventsAdded}`);
     const maybeButton = document.getElementById(`maybe-${eventsAdded}`);
 
-    // const thisGroup = crud.getGroup(__currentGroupID__);
-    // const plannedEvents = await thisGroup.getPlannedEvents();
+    // set initial active status for rsvp option buttons
+    let activeButton = undefined;
 
-    yesButton.addEventListener("click", () => {
+    if (yesRsvpList.includes(currUser)) {
         yesButton.classList.add("active");
-        noButton.classList.remove("active");
-        maybeButton.classList.remove("active");
-        // plannedEvents[eventsAdded].yesDict[__currentUserID__] = 1;
-    });
-    noButton.addEventListener("click", () => {
-        yesButton.classList.remove("active");
+        activeButton = yesButton;
+    }
+    else if (noRsvpList.includes(currUser)) {
         noButton.classList.add("active");
-        maybeButton.classList.remove("active");
-        // plannedEvents[eventsAdded].noDict[__currentUserID__] = 1;
-    });
-    maybeButton.addEventListener("click", () => {
-        yesButton.classList.remove("active");
-        noButton.classList.remove("active");
+        activeButton = noButton;
+    }
+    else if (maybeRsvpList.includes(currUser)) {
         maybeButton.classList.add("active");
-        // plannedEvents[eventsAdded].maybeDict[__currentUserID__] = 1;
+        activeButton = maybeButton;
+    }
+
+    // FUNCTION: Updates RSVP list displays for event
+    async function updateAttendingLists() {
+        let yesRsvpList = await crud.getYesRSVPsTo(eventID);
+        let noRsvpList = await crud.getNoRSVPsTo(eventID);
+        let maybeRsvpList = await crud.getMaybeRSVPsTo(eventID);
+
+        // reset innertexts
+        attendingYes.innerHTML = "<b>Yes:</b>";
+        attendingNo.innerHTML = "<br><b>No:</b>";
+        attendingMaybe.innerHTML = "<br><b>Maybe:</b>";
+
+        // add all people attending events to the attendee info lists
+        yesRsvpList = await crud.getYesRSVPsTo(eventID);
+        for (const attendee of yesRsvpList) {
+            attendingYes.innerHTML += "<br>" + attendee;
+        }
+        noRsvpList = await crud.getNoRSVPsTo(eventID);
+        for (const attendee of noRsvpList) {
+            attendingNo.innerHTML += "<br>" + attendee;
+        }
+
+        maybeRsvpList = await crud.getMaybeRSVPsTo(eventID);
+        for (const attendee of maybeRsvpList) {
+            attendingMaybe.innerHTML += "<br>" + attendee;
+        }
+        // console.log("|"+attendingYes.innerText+"|");
+        // console.log("|"+attendingNo.innerText+"|");
+        // console.log("|"+attendingMaybe.innerText+"|");
+    }
+
+    yesButton.addEventListener("click", async () => {
+        // if any button was active, remove user from RSVP list for event
+        if (activeButton !== undefined) {
+            await crud.deleteRSVP(eventID, currUser);
+        }
+
+        // if yes was active, remove it from active
+        if (activeButton === yesButton) {
+            yesButton.classList.remove("active");
+            activeButton = undefined;
+        }
+        else {
+            // add user to RSVP list
+            await crud.addRSVP(eventID, currUser, "YES");
+
+            // if another button was active, remove it
+            if (activeButton !== undefined) {
+                activeButton.classList.remove("active");
+            }
+            yesButton.classList.add("active");
+            activeButton = yesButton;
+        }
+        await updateAttendingLists();
+    });
+    noButton.addEventListener("click", async () => {
+        // if a button was active, remove user from RSVP list for event
+        if (activeButton !== undefined) {
+            await crud.deleteRSVP(eventID, currUser);
+        }
+
+        if (activeButton === noButton) {
+            noButton.classList.remove("active");
+            activeButton = undefined;
+        }
+        else {
+            // add user to RSVP list
+            await crud.addRSVP(eventID, currUser, "NO");
+
+            // if another button was active, remove it
+            if (activeButton !== undefined) {
+                activeButton.classList.remove("active");
+            }
+            noButton.classList.add("active");
+            activeButton = noButton;
+        }
+        await updateAttendingLists();
+    });
+    maybeButton.addEventListener("click", async () => {
+        // if a button was active, remove user from RSVP list for event
+        if (activeButton !== undefined) {
+            await crud.deleteRSVP(eventID, currUser);
+        }
+
+        if (activeButton === maybeButton) {
+            maybeButton.classList.remove("active");
+            activeButton = undefined;
+        }
+        else {
+            // add user to RSVP list
+            await crud.addRSVP(eventID, currUser, "MAYBE");
+
+            // if another button was active, remove it
+            if (activeButton !== undefined) {
+                activeButton.classList.remove("active");
+            }
+            maybeButton.classList.add("active");
+            activeButton = maybeButton;
+        }
+        await updateAttendingLists();
     });
 
+    // dropdown list items
     const attendingYes = document.getElementById(`attending-yes-${eventsAdded}`);
     const attendingNo = document.getElementById(`attending-no-${eventsAdded}`);
     const attendingMaybe = document.getElementById(`attending-maybe-${eventsAdded}`);
 
-    // reset innertexts
-    attendingYes.innerText = "Yes:";
-    attendingNo.innerText = "\nNo:";
-    attendingMaybe.innerText = "\nMaybe:";
-
-    // add all people attending events to the dropdown info lists
-    for (attendee in plannedEvents[eventsAdded].yesDict) {
-        attendingYes.innerText += "\n" + attendee;
-    }
-    for (attendee in plannedEvents[eventsAdded].noDict) {
-        attendingNo.innerText += "\n" + attendee;
-    }
-    for (attendee in plannedEvents[eventsAdded].maybeDict) {
-        attendingMaybe.innerText += "\n" + attendee;
-    }
+    await updateAttendingLists();
 
     eventsAdded += 1;
 }
@@ -211,12 +299,12 @@ async function searchForMember(memberToFind, potentialMembers){
     try{
         //reset friend search results before searching
         potentialMembers.innerHTML = "";
-        let areFriends = await crud.areFriends(mockusername, memberToFind.value);
+        let areFriends = await crud.areFriends(currUser, memberToFind.value);
 
-        if(areFriends && memberToFind.value !== mockusername){
+        if(areFriends && memberToFind.value !== currUser){
             await renderPotentialMember(memberToFind.value, currGroupId, potentialMembers);
         }
-        else if(memberToFind.value === mockusername){
+        else if(memberToFind.value === currUser){
             potentialMembers.innerHTML =  "<span style='color: red;'>Hey, that's your username.</span>";
         }
         else {
@@ -224,6 +312,7 @@ async function searchForMember(memberToFind, potentialMembers){
         }
     }
     catch(error){
+        console.log(error);
         potentialMembers.innerHTML =  "<span style='color: red;'>An unexpected error occured, please try again!</span>";
     }
 }
@@ -327,17 +416,19 @@ async function renderGroupMembers() {
 }
 
 async function renderPlannedEvents() {
-    const currentGroup = crud.getGroup(currGroupId); // get Group object -- CURRENT_GROUP_ID_CURRENTLY_NOT_DETERMINED
-    const plannedEventList = await currentGroup.getPlannedList(); // list of PlannedEvent objects
+    eventsAdded = 0;
+    const plannedEventIDs = await crud.getGroupPlannedEventIds(currGroupId); // list of PlannedEvent IDs
 
-    for (const event of plannedEventList) { // for each PlannedEvent object in list
-        addPlannedEvent(getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description);
+    for (const eventID of plannedEventIDs) { // for each PlannedEventID in list
+        const event = await crud.getPlannedEvent(eventID);
+        await addPlannedEvent(eventID, getTime(event.startHour, event.startMinute), getTime(event.endHour, event.endMinute), getDay(event.startDay), event.title, event.location, event.description);
     }
 }
 
 function getTime(hour, minute) {
     let suffix = 'am';
 
+    // set 'am' or 'pm' suffix
     if (hour == 12) {
         suffix = 'pm';
     }
@@ -346,7 +437,13 @@ function getTime(hour, minute) {
         suffix = 'pm';
     }
 
-    return hour + ':' + minute + suffix;
+    // if minute is less than 10, add a leading 0
+    const preMinuteZero = minute < 10 ? "0" : "";
+
+    // if hour is 0, change it to 12
+    if (hour === 0) { hour = 12; }
+
+    return hour + ':' + preMinuteZero + minute + suffix;
 }
 
 function getDay(dayNum) {

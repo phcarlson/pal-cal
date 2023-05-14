@@ -13,7 +13,7 @@ const params = new URLSearchParams(queryString);
 try{
     mockCurrUsername = document.cookie
     .split("; ")
-    .find((row) => row.startsWith("currUser="))
+    .find((row) => row.startsWith("currUsername="))
     ?.split("=")[1];
 
     let profileUser = params.get("profileUser");
