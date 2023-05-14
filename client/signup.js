@@ -10,9 +10,10 @@ const databaseErrorWarning = document.getElementById('database-error-warning');
 submitButton.addEventListener('click', async () => {
     const usernameText = usernameInput.value; // get username from text area
     try {
-        if (await crud.userExists(usernameText)) { // if user exists, set cookie and redirect
-            document.cookie = `username=${usernameText}`;
-            window.location.pathname = '/homeloggedin.html';
+        if (!(await crud.userExists(usernameText))) { // if user does not exist, set cookie and redirect
+            await crud.createUser({'username':usernameText}); // create user in database
+            document.cookie = `username=${usernameText}`; // set cookie
+            window.location.pathname = '/homeloggedin.html'; // redirect
         }
         else {
             databaseErrorWarning.hidden = true; // hide "database error" warning
