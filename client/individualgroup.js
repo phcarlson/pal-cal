@@ -10,6 +10,7 @@ const plannedEventsContainer = document.getElementById("planned-events-container
 const selectAllButton = document.getElementById("select-all-button");
 const deselectAllButton = document.getElementById("deselect-all-button");
 const searchMemberButton = document.getElementById("searchMemberButton");
+const logoutButton = document.getElementById('logout-button');
 
 // label above calendar for group name 
 const groupNameLabel = document.getElementById("groupNameLabel");
@@ -33,7 +34,7 @@ try{
 
     currUser = document.cookie
     .split("; ")
-    .find((row) => row.startsWith("currUser="))
+    .find((row) => row.startsWith("username="))
     ?.split("=")[1];
 
     if(groupObj.name !== null && 
@@ -454,6 +455,11 @@ function getDay(dayNum) {
 // event listeners
 selectAllButton.addEventListener("click", selectAllMembers);
 deselectAllButton.addEventListener("click", deselectAllMembers);
+
+logoutButton.addEventListener('click', () => {
+    document.cookie = "username=;" // clear username cookie
+    window.location.pathname = '/homepageloggedout.html'; // redirect to homepageloggedout.html
+});
 
 
 // INITIAL RENDERING OF INDIVIDUAL GROUP:
