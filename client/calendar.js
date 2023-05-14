@@ -1,7 +1,6 @@
 import * as crud from './crudclient.js';
 
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-// TODO: get username dynamically
 
 let username = null;
 let groupId = null;
@@ -119,7 +118,7 @@ export async function initializeCalendar(calendarDiv, type) {
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-planned-event-title" id="modal-planned-event-info-label">Event Title</h5>
+                    <h5 id="modal-planned-event-title"  aria-labelledby="modal-planned-event-info-label">Event Title</h5>
                     <button type="button" id="modal-planned-event-info-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -754,6 +753,10 @@ async function createBusyEventFromModal() {
 
 async function populatePlannedEventInfoModal(plannedEventId) {
     const plannedEvent = await crud.getPlannedEvent(plannedEventId);
+
+    const modalTitle = document.getElementById("modal-planned-event-title");
+    modalTitle.innerHTML = plannedEvent.title;
+
     const dayInput = document.getElementById("planned-event-info-day-input");
     dayInput.value = plannedEvent.startDay;
 
@@ -771,26 +774,54 @@ async function populatePlannedEventInfoModal(plannedEventId) {
     location.value = plannedEvent.location;
     description.value = plannedEvent.description;
 
+
+    // Only the creator should be able to modify or remove the event, so let's manipulate that access
     let saveButton = document.getElementById("modal-planned-event-info-save");
-    const handler = async function() {
-        await updateEventFromModal(plannedEventId, 'planned');
-        await plannedEventInfoModal.hide();
-        await rerender("group");
-
-    }
-    // Recreate save button to clear event listeners
-    // source: https://stackoverflow.com/a/73409567
-    saveButton.replaceWith(saveButton.cloneNode(true));
-
-    saveButton = document.getElementById("modal-planned-event-info-save");
-    saveButton.addEventListener("click", handler);
-
     let deleteButton = document.getElementById("planned-event-info-delete");
-    deleteButton.replaceWith(deleteButton.cloneNode(true));
-    deleteButton = document.getElementById("planned-event-info-delete");
-    deleteButton.addEventListener("click", async () => {
-        await crud.deletePlannedEvent(plannedEventId);
-        await plannedEventInfoModal.hide();
-        await rerender("group");
-    });
+
+    let toEdit = [
+        startTimeInput, 
+        endTimeInput,
+        titleInput,
+        location,
+        description];
+
+    // If you are not the creator, you can only read the info
+    if(plannedEvent.creatorUsername !== username){
+        toEdit.forEach((editElem) =>{
+            editElem.setAttribute("readonly", editElem.value);
+        });
+        deleteButton.setAttribute("disabled", true);
+        saveButton.setAttribute("disabled", true);
+        dayInput.setAttribute("disabled", true);
+    }
+    else{
+        toEdit.forEach((editElem) =>{
+            editElem.removeAttribute("readonly");
+        });
+        deleteButton.removeAttribute("disabled");
+        saveButton.removeAttribute("disabled");
+        dayInput.removeAttribute("disabled");
+
+        const handler = async function() {
+            await updateEventFromModal(plannedEventId, 'planned');
+            await plannedEventInfoModal.hide();
+            await rerender("group");
+    
+        }    
+        // Recreate save button to clear event listeners
+        // source: https://stackoverflow.com/a/73409567
+        saveButton.replaceWith(saveButton.cloneNode(true));
+
+        saveButton = document.getElementById("modal-planned-event-info-save");
+        saveButton.addEventListener("click", handler);
+
+        deleteButton.replaceWith(deleteButton.cloneNode(true));
+        deleteButton = document.getElementById("planned-event-info-delete");
+        deleteButton.addEventListener("click", async () => {
+            await crud.deletePlannedEvent(plannedEventId);
+            await plannedEventInfoModal.hide();
+            await rerender("group");
+        });
+    }
 }
