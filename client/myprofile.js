@@ -1,4 +1,3 @@
-import { deleteFriendRequest } from '../server/database.js';
 import * as crud from './crudclient.js';
 
 // collect column of friend request lists to render in
@@ -70,7 +69,7 @@ function renderRequests(mockCurrUsername){
             setTimeout(function() {   //  call a momentary setTimeout when the loop is called
                 requestListCol.removeChild(requestCard);
               }, 600);
-            crud.removeFriendRequest(usernameRequest, user.username); //or removeFriendRequest?
+            crud.removeFriendRequest(usernameRequest, user.username);
           });
       }
 
