@@ -11,7 +11,7 @@ const port = 3000;
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-// app.use('/client', express.static('client'));
+app.use('/', express.static('client'));
 
 
 // HANDLE USER RELATED REQUESTS:
@@ -124,13 +124,20 @@ app.get('/has/user', async (request, response) => {
 
 // Get all user objs from ids listed 
 app.get('/get/users', async (request, response) => {
-  const requestBody = request.body;
-  const usernames = requestBody.usernames;
-//{usernames:[     ]}
+  const options = request.query;
+  const usernames = options.usernames;
 
   try{  
-      const users = await database.getUsers(usernames); 
-      response.status(200).json({users: users});
+      if(usernames === undefined){
+        response.status(400).send('Bad request: comma separated usernames undefined')
+      }
+      else if(usernames === ''){
+        response.status(200).json({users: []});
+      }
+      else{
+        const users = await database.getUsers(usernames.split(',')); 
+        response.status(200).json({users: users});
+      }
     }
     catch(error){
       // TODO: error for user that doesn't exist?
@@ -209,11 +216,21 @@ app.get('/get/busyEvent', async (request, response) => {
 
 // Get busy events from id list 
 app.get('/get/busyEvents', async (request, response) => {
-  const requestBody = request.body;
-  const busyEventIds = requestBody.busyEventIds;
+  const options = request.query;
+  const busyEventIds = options.busyEventIds;
+  
   try{  
-    const busyEvents = await database.getBusyEvents(busyEventIds); 
-    response.status(200).json({busyEvents: busyEvents});
+    if(busyEventIds === undefined){
+      response.status(400).send('Bad request: comma separated busy event ids undefined')
+    }
+    else if(busyEventIds === ''){
+      response.status(200).json({busyEvents: []});
+    }
+    else{
+      const busyEvents = await database.getBusyEvents(busyEventIds.split(',')); 
+      response.status(200).json({busyEvents: busyEvents});
+    }
+
   }
   catch(error){
     // TODO have db check for bad busyeventids
@@ -468,6 +485,7 @@ app.get('/get/friendRequests/from', async (request, response) => {
 // Create group from obj provided, must return in response new group id
 app.post('/create/group', async (request, response) => {
   const requestBody = request.body;
+  
   try{
     const groupId = await database.createGroup(requestBody);
     response.status(200).send({groupId: groupId});
@@ -536,11 +554,19 @@ app.delete('/delete/group', async (request, response) => {
 
 // Get groups by id list
 app.get('/get/groups', async (request, response) => {
-  const requestBody = request.body;
-  const groupIds = requestBody.groupIds;
+  const options = request.query;
+  const groupIds = options.groupIds;
   try{  
-    const groups = await database.getGroups(groupIds); 
-    response.status(200).json({groups: groups});
+    if(groupIds === undefined){
+      response.status(400).send('Bad request: comma separated group ids undefined')
+    }
+    else if(groupIds === ''){
+      response.status(200).json({groups: []});
+    }
+    else{
+      const groups = await database.getGroups(groupIds.split(',')); 
+      response.status(200).json({groups: groups});
+    }
   }
   catch(error){
     // TODO have db check for bad group ids
@@ -656,7 +682,7 @@ app.post('/create/plannedEvent', async (request, response) => {
 app.get('/get/plannedEvent', async (request, response) => {
   const options = request.query;
   const plannedEventId = options.plannedEventId;
-   // Check if username is even specified in order retreive its group IDs
+   // Check if username is even specified in order retrieve its group IDs
   if(plannedEventId === undefined){
     response.status(400).send("Bad request: plannedEvent id is undefined");
   }
@@ -673,11 +699,20 @@ app.get('/get/plannedEvent', async (request, response) => {
 
 // Get planned event objs by id list
 app.get('/get/plannedEvents', async (request, response) => {
-  const requestBody = request.body;
-  const plannedEventIds = requestBody.plannedEventIds;
+  const options = request.query;
+  const plannedEventIds = options.plannedEventIds;
+
   try{  
-    const plannedEvents = await database.getPlannedEvents(plannedEventIds); 
-    response.status(200).json({plannedEvents: plannedEvents});
+    if(plannedEventIds === undefined){
+      response.status(400).send('Bad request: comma separated planned event ids undefined')
+    }
+    else if(plannedEventIds === ''){
+      response.status(200).json({plannedEvents: []});
+    }
+    else{
+      const plannedEvents = await database.getPlannedEvents(plannedEventIds.split(',')); 
+      response.status(200).json({plannedEvents: plannedEvents});
+    }
   }
   catch(error){
     // TODO have db check for bad plannedEventIds

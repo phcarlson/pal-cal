@@ -1,4 +1,36 @@
 import * as crud from './crudclient.js';
+import { initializeCalendar, rerender } from './calendar.js';
+let requestListCol = document.getElementById("requestListCol");
+
+let mockCurrUsername = "ananya";
+let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
+let profileUserObj = null;
+let calendarDiv = document.getElementById("calendar");
+
+
+const queryString = window.location.search; // Returns:'?q=123'
+const params = new URLSearchParams(queryString);
+try{
+    mockCurrUsername = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUsername="))
+    ?.split("=")[1];
+
+    let profileUser = params.get("profileUser");
+    if(profileUser === null){
+      profileUserObj = await crud.getUser(mockCurrUsername);
+    }
+    else{
+      profileUserObj = await crud.getUser(params.get("profileUser"));
+    }
+}
+catch(error){
+    // Create alert of issue
+    let child = document.createElement('div')
+    child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                    'Refresh page, possibly offline</div>';   
+    calendarDiv.after(child);
+}
 
 // collect column of friend request lists to render in
 let requestListCol = document.getElementById("requestListCol");
@@ -163,3 +195,6 @@ async function saveProfile(mockCurrUsername){
 
 await renderRequests(mockCurrUsername);
 await renderProfile(mockCurrUsername);
+
+await initializeCalendar(document.getElementById("calendar"), "profile");
+await rerender("profile");

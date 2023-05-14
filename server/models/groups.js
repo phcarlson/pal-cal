@@ -16,7 +16,7 @@ export default class groups extends Model {
       defaultValue: ""
     },
     image: {
-      type: DataTypes.BLOB,
+      type: DataTypes.STRING,
       allowNull: true
     }
   }, {
