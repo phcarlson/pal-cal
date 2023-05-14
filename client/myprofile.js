@@ -11,7 +11,7 @@ let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:
 //rendering friend requests
 function renderRequests(mockCurrUsername){
     let user = crud.getUser(mockCurrUsername);
-                                              //username Of the f request
+
     crud.getRequestsTo(user.username).forEach((usernameRequest)=>{
         
       let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
@@ -139,8 +139,7 @@ function editProfile(mockCurrUsername){
 
 //makes input areas readonly
 function saveProfile(mockCurrUsername){
-
-    let toEdit = [
+    let toSave = [
         screenNameInput, 
         firstNameInput,
         lastNameInput,
@@ -149,26 +148,19 @@ function saveProfile(mockCurrUsername){
         bioInput
     ]; //and imageInput
 
-    toEdit.forEach((editElem) =>{
-        editElem.setAttribute("readonly", editElem.value);
+    toSave.forEach((saveElem) =>{
+        saveElem.setAttribute("readonly", saveElem.value);
     });
     
     //switches back to edit button icon
     editProfileButton.innerHTML = '<i class="bi bi-pencil-square"></i>';
-
  
     // Once values are set in stone, perform CRUD updates:
     let user = crud.getUser(mockCurrUsername);
     crud.updateUser(user.username, {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, college: collegeInput.value, bio: bioInput.value});
     crud.updateUser(user.username, {major: majorInput}); 
     //crud.updateUser(user.username, {image: imageInput}); 
-
-    // crud.setFirstName(firstNameInput.value);
-    // crud.setLastName(lastNameInput.value);
-    // crud.setCollege(collegeInput.value);
-    // crud.setMajor(majorInput.value); //--> not currently a property in crud??
-    // crud.setBio(bioInput.value);
 }
 
-renderRequests(mockCurrUsername); //do these need awaits?
+renderRequests(mockCurrUsername);
 renderProfile(mockCurrUsername);
