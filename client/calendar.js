@@ -10,6 +10,7 @@ let newEventModalTime = {};
 let newPlannedEventModal;
 let newBusyEventModal;
 let editBusyEventModal;
+let plannedEventInfoModal;
 
 // Snag current group we are in and user in session
 try{
@@ -108,6 +109,72 @@ export async function initializeCalendar(calendarDiv, type) {
                 </div>
             </div>
         `;
+
+        const plannedEventInfoModalHTML = /*html*/`
+        <div class="modal fade" id="modal-planned-event-info" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-planned-event-info-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-planned-event-title" id="modal-planned-event-info-label">Event Title</h5>
+                    <button type="button" id="modal-planned-event-info-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="planned-event-info-title-input" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="planned-event-info-title-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="planned-event-info-day-input" class="form-label">Weekday</label>
+                            <select class="custom-select"  id="planned-event-info-day-input">
+                                <option value=0>Sunday</option>
+                                <option value=1 selected>Monday</option>
+                                <option value=2>Tuesday</option>
+                                <option value=3>Wednesday</option>
+                                <option value=4>Thursday</option>
+                                <option value=5>Friday</option>
+                                <option value=6>Saturday</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="planned-event-info-start-time-input" class="form-label">Start time</label>
+                            <input type="time" class="form-control" id="planned-event-info-start-time-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="planned-event-info-end-time-input" class="form-label">End time</label>
+                            <input type="time" class="form-control" id="planned-event-info-end-time-input" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="planned-event-info-location-input" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="planned-event-info-location-input" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="planned-event-info-description-input" class="form-label">Description</label>
+                            <textarea id="planned-event-info-description-input"></textarea>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-planned-event-info-close" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="planned-event-info-delete">Delete event</button>
+                    <button type="button" class="btn btn-primary" id="modal-planned-event-info-save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+document.body.insertAdjacentHTML("afterbegin", plannedEventInfoModalHTML);
+plannedEventInfoModal = new bootstrap.Modal(document.getElementById('modal-planned-event-info'));
+document.getElementById("modal-planned-event-info-close").addEventListener("click", () => plannedEventInfoModal.hide());
+document.getElementById("modal-planned-event-info-close-x").addEventListener("click", () => plannedEventInfoModal.hide());
+
+
+
 
         document.body.insertAdjacentHTML("afterbegin", newPlannedEventModalHtml);
         newPlannedEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
@@ -301,6 +368,7 @@ function renderEventBlock(event, type, text="") {
             break;
         case "planned":
             eventDiv.classList.add("calendar-block", "calendar-planned");
+            eventDiv.dataset.plannedEventId = event.plannedEventId;
             break;
         case "busy":
             eventDiv.classList.add("calendar-block", "calendar-busy");
@@ -496,6 +564,9 @@ export async function rerender(type="group") {
             newEvent.type = "planned";
             return newEvent;
         }));
+
+        console.log(events);
+
     }
 
     renderEvents(consolidateEvents(events), type);
@@ -533,6 +604,18 @@ export async function rerender(type="group") {
             editBusyEventModal.show();
         });
     }
+
+    
+    for (let element of document.getElementsByClassName("calendar-planned")) {
+        console.log(element);
+        element.addEventListener("click", async (event) => {
+            const clickedBlock = event.target;
+            const plannedEventId = clickedBlock.dataset.plannedEventId;
+            console.log(plannedEventId);
+            await populatePlannedEventInfoModal(plannedEventId);
+            plannedEventInfoModal.show();
+        });
+    }
 }
 
 async function populateBusyEventModal(busyEventId) {
@@ -551,7 +634,7 @@ async function populateBusyEventModal(busyEventId) {
 
     let saveButton = document.getElementById("modal-edit-busy-event-save");
     const handler = async function() {
-        await updateEventFromModal(busyEventId);
+        await updateEventFromModal(busyEventId, 'busy');
         await editBusyEventModal.hide();
         await rerender("profile");
 
@@ -573,29 +656,62 @@ async function populateBusyEventModal(busyEventId) {
     });
 }
 
-async function updateEventFromModal(busyEventId) {
-    const dayInput = document.getElementById("edit-busy-event-day-input");
+async function updateEventFromModal(eventId, type) {
+    if(type === 'planned'){
+        const dayInput = document.getElementById("planned-event-info-day-input");
 
-    const titleInput = document.getElementById("edit-busy-event-title-input");
+        const titleInput = document.getElementById("planned-event-info-title-input");
+    
+        const startTimeInput = document.getElementById("planned-event-info-start-time-input");
+        const endTimeInput = document.getElementById("planned-event-info-end-time-input");
 
-    const startTimeInput = document.getElementById("edit-busy-event-start-time-input");
-    const endTimeInput = document.getElementById("edit-busy-event-end-time-input");
-    let [startHour, startMinute] = startTimeInput.value.split(":");
-    startHour = Number(startHour);
-    startMinute = Number(startMinute);
-    let [endHour, endMinute] = endTimeInput.value.split(":");
-    endHour = Number(endHour);
-    endMinute = Number(endMinute);
+        const location = document.getElementById("planned-event-info-location-input");
 
-    await crud.updateBusyEvent(busyEventId, {
-        title: titleInput.value,
-        startDay: dayInput.value,
-        endDay: dayInput.value,
-        startHour: startHour,
-        startMinute: startMinute,
-        endHour: endHour, 
-        endMinute: endMinute
-    });
+        const description = document.getElementById("planned-event-info-description-input");
+
+        let [startHour, startMinute] = startTimeInput.value.split(":");
+        startHour = Number(startHour);
+        startMinute = Number(startMinute);
+        let [endHour, endMinute] = endTimeInput.value.split(":");
+        endHour = Number(endHour);
+        endMinute = Number(endMinute);
+    
+        await crud.updatePlannedEvent(eventId, {
+            title: titleInput.value,
+            startDay: dayInput.value,
+            endDay: dayInput.value,
+            startHour: startHour,
+            startMinute: startMinute,
+            endHour: endHour, 
+            endMinute: endMinute,
+            location: location.value,
+            description:description.value
+        });
+    }
+    else if (type === 'busy'){
+        const dayInput = document.getElementById("edit-busy-event-day-input");
+
+        const titleInput = document.getElementById("edit-busy-event-title-input");
+    
+        const startTimeInput = document.getElementById("edit-busy-event-start-time-input");
+        const endTimeInput = document.getElementById("edit-busy-event-end-time-input");
+        let [startHour, startMinute] = startTimeInput.value.split(":");
+        startHour = Number(startHour);
+        startMinute = Number(startMinute);
+        let [endHour, endMinute] = endTimeInput.value.split(":");
+        endHour = Number(endHour);
+        endMinute = Number(endMinute);
+    
+        await crud.updateBusyEvent(eventId, {
+            title: titleInput.value,
+            startDay: dayInput.value,
+            endDay: dayInput.value,
+            startHour: startHour,
+            startMinute: startMinute,
+            endHour: endHour, 
+            endMinute: endMinute
+        });
+    }
 }
 
 async function createBusyEventFromModal() {
@@ -628,4 +744,42 @@ async function createBusyEventFromModal() {
     };
     await crud.createBusyEvent(username, newEvent);
     await rerender("profile");
+}
+
+async function populatePlannedEventInfoModal(plannedEventId) {
+    const plannedEvent = await crud.getPlannedEvent(plannedEventId);
+    const dayInput = document.getElementById("planned-event-info-day-input");
+    dayInput.value = plannedEvent.startDay;
+
+    const titleInput = document.getElementById("planned-event-info-title-input");
+    titleInput.value = plannedEvent.title;
+
+    const startTimeInput = document.getElementById("planned-event-info-start-time-input");
+    const endTimeInput = document.getElementById("planned-event-info-end-time-input");
+    startTimeInput.value = `${String(plannedEvent.startHour).padStart(2, 0)}:${String(plannedEvent.startMinute).padStart(2, 0)}`;
+    endTimeInput.value = `${String(plannedEvent.endHour).padStart(2, 0)}:${String(plannedEvent.endMinute).padStart(2, 0)}`;
+
+
+    let saveButton = document.getElementById("modal-planned-event-info-save");
+    const handler = async function() {
+        await updateEventFromModal(plannedEventId, 'planned');
+        await plannedEventInfoModal.hide();
+        await rerender("group");
+
+    }
+    // Recreate save button to clear event listeners
+    // source: https://stackoverflow.com/a/73409567
+    saveButton.replaceWith(saveButton.cloneNode(true));
+
+    saveButton = document.getElementById("modal-planned-event-info-save");
+    saveButton.addEventListener("click", handler);
+
+    let deleteButton = document.getElementById("planned-event-info-delete");
+    deleteButton.replaceWith(deleteButton.cloneNode(true));
+    deleteButton = document.getElementById("planned-event-info-delete");
+    deleteButton.addEventListener("click", async () => {
+        await crud.deletePlannedEvent(plannedEventId);
+        await plannedEventInfoModal.hide();
+        await rerender("group");
+    });
 }
