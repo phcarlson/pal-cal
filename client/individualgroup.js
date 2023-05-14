@@ -274,6 +274,9 @@ function getTime(hour, minute) {
     // if minute is less than 10, add a leading 0
     const preMinuteZero = minute < 10 ? "0" : "";
 
+    // if hour is 0, change it to 12
+    if (hour === 0) { hour = 12; }
+
     return hour + ':' + preMinuteZero + minute + suffix;
 }
 
