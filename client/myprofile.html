@@ -67,7 +67,7 @@
       <div class="col-8 d-flex flex-column h-100 border bg-light">
 
         <!-- Group Schedule label -->
-        <div class="row d-flex">
+        <div class="row d-flex" style="height:10%">
           <div class="col d-flex flex-column justify-content-start">
 
             <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">My Schedule
@@ -95,7 +95,7 @@
         </div>
 
         <!-- Container for holding schedule edited dynamically -->
-      <div class="row v-100" style="overflow-y: scroll;">
+      <div class="row" style="overflow-y: scroll; height:80%">
               <div id="calendar"></div>
       </div>
       </div>
@@ -121,14 +121,13 @@
           </div>
         </div>
 
-        <!-- Container for holding groups added dynamically -->
+        <!-- Container for holding profile info added dynamically -->
         <div class="row d-flex" style="height:40%">
           <div class="col d-flex flex-column h-100 scrollIt">
             <div class="card my-3">
               <div class="card-body">
                 <div class="input-group">
                   <span class="input-group-text">Screen Name</span>
-                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
                   <input id="screenNameInput" type="text" readonly class="form-control" value="">
 
                 </div>

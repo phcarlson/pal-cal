@@ -2,12 +2,43 @@ import * as crud from './crudclient.js';
 
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
 // TODO: get username dynamically
-const username = "user1";
-const groupId = "343fef37-8bbc-42f8-88b2-911b488ccd08";
+
+let username = null;
+let groupId = null;
+
 let newEventModalTime = {};
 let newPlannedEventModal;
 let newBusyEventModal;
 let editBusyEventModal;
+
+// Snag current group we are in and user in session
+try{
+    const queryString = window.location.search; // Returns:'?q=123'
+    const params = new URLSearchParams(queryString);
+
+    // In case we are in an individual group
+    groupId = params.get("groupId");
+
+    // To have, and in case we are on our profile
+    username = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUser="))
+    ?.split("=")[1];
+
+    // In case we routed to someone else's profile
+    let profileUser = params.get("profileUser");
+    if(profileUser !== null){
+        username = profileUser;
+    }
+}
+catch(error){
+    // Create alert of issue
+    let calendarDiv = document.getElementById("calendar");
+    let child = document.createElement('div')
+    child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                    'Refresh page, possibly offline</div>';   
+    calendarDiv.before(child);
+}
 
 export async function initializeCalendar(calendarDiv, type) {
     calendarDiv.classList.add("row", "d-flex");
@@ -81,7 +112,7 @@ export async function initializeCalendar(calendarDiv, type) {
         document.body.insertAdjacentHTML("afterbegin", newPlannedEventModalHtml);
         newPlannedEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
         document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newPlannedEventModal.hide());
-        document.getElementById("modal-new-planned-event-save").addEventListener("click", () => {
+        document.getElementById("modal-new-planned-event-save").addEventListener("click", async () => {
             const newPlannedEventStartTimeInput = document.getElementById("new-planned-event-start-time-input");
             // TODO: support spanning multiple days
             let startDay = newEventModalTime.day;
@@ -110,7 +141,7 @@ export async function initializeCalendar(calendarDiv, type) {
             const location = ""; // TODO
 
             newPlannedEventModal.hide();
-            addPlannedEvent({ title: title, startDay: startDay, startHour: startHour, startMinute: startMinute, endDay: endDay, endHour: endHour, endMinute: endMinute, creatorUsername: username, location: location, description: description });
+            await addPlannedEvent({ title: title, startDay: startDay, startHour: startHour, startMinute: startMinute, endDay: endDay, endHour: endHour, endMinute: endMinute, creatorUsername: username, location: location, description: description, groupId: groupId});
         });
 
         document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newPlannedEventModal.hide());
@@ -417,9 +448,7 @@ function consolidateEvents(events) {
 }
 
 async function addPlannedEvent(event) {
-    // For now, just add to this list
-    // Once CRUD is working, will add to the group's planned events database
-    plannedEvents.push(event);
+    await crud.createPlannedEvent(event);
     await rerender();
 }
 

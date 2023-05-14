@@ -699,7 +699,7 @@ export async function removeMember(groupId, username) {
  * Missing fields will be given sane default values
  * @returns A unique string ID for the new event
  */
-export async function createPlannedEvent(groupId, plannedEvent) {
+export async function createPlannedEvent(plannedEvent) {
     try {
         const response = await fetch(`/create/plannedEvent`, {
             headers: {

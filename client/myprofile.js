@@ -4,6 +4,33 @@ let requestListCol = document.getElementById("requestListCol");
 
 let mockCurrUsername = "ananya";
 let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
+let profileUserObj = null;
+let calendarDiv = document.getElementById("calendar");
+
+
+const queryString = window.location.search; // Returns:'?q=123'
+const params = new URLSearchParams(queryString);
+try{
+    mockCurrUsername = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUser="))
+    ?.split("=")[1];
+
+    let profileUser = params.get("profileUser");
+    if(profileUser === null){
+      profileUserObj = await crud.getUser(mockCurrUsername);
+    }
+    else{
+      profileUserObj = await crud.getUser(params.get("profileUser"));
+    }
+}
+catch(error){
+    // Create alert of issue
+    let child = document.createElement('div')
+    child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                    'Refresh page, possibly offline</div>';   
+    calendarDiv.after(child);
+}
 
 function renderRequests(mockCurrUsername){
     // let user = crud.getUser(mockCurrUsername);
