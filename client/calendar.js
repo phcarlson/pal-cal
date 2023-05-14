@@ -95,7 +95,11 @@ export async function initializeCalendar(calendarDiv, type) {
                                     <input type="time" class="form-control" id="new-planned-event-end-time-input" required>
                                 </div>
                                 <div class="mb-3">
-                                    <label for="description-input" class="form-label">Description</label>
+                                    <label for="new-planned-event-location-input" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="new-planned-event-location-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-planned-event-description-input" class="form-label">Description</label>
                                     <textarea id="new-planned-event-description-input"></textarea>
                                 </div>
                             </form>
@@ -168,14 +172,14 @@ export async function initializeCalendar(calendarDiv, type) {
         </div>
     </div>
 `;
-document.body.insertAdjacentHTML("afterbegin", plannedEventInfoModalHTML);
-plannedEventInfoModal = new bootstrap.Modal(document.getElementById('modal-planned-event-info'));
-document.getElementById("modal-planned-event-info-close").addEventListener("click", () => plannedEventInfoModal.hide());
-document.getElementById("modal-planned-event-info-close-x").addEventListener("click", () => plannedEventInfoModal.hide());
 
+        // This modal is for us to see the information of any planned event in the group schedule
+        document.body.insertAdjacentHTML("afterbegin", plannedEventInfoModalHTML);
+        plannedEventInfoModal = new bootstrap.Modal(document.getElementById('modal-planned-event-info'));
+        document.getElementById("modal-planned-event-info-close").addEventListener("click", () => plannedEventInfoModal.hide());
+        document.getElementById("modal-planned-event-info-close-x").addEventListener("click", () => plannedEventInfoModal.hide());
 
-
-
+        // This modal is for us to create an entirely new planned event
         document.body.insertAdjacentHTML("afterbegin", newPlannedEventModalHtml);
         newPlannedEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
         document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newPlannedEventModal.hide());
@@ -205,8 +209,10 @@ document.getElementById("modal-planned-event-info-close-x").addEventListener("cl
 
             const title = document.getElementById("new-planned-event-title-input").value;
             const description = document.getElementById("new-planned-event-description-input").value;
-            const location = ""; // TODO
+            const location = document.getElementById("new-planned-event-location-input").value; // TODO
 
+            console.log(description);
+            console.log(location);
             newPlannedEventModal.hide();
             await addPlannedEvent({ title: title, startDay: startDay, startHour: startHour, startMinute: startMinute, endDay: endDay, endHour: endHour, endMinute: endMinute, creatorUsername: username, location: location, description: description, groupId: groupId});
         });
@@ -759,6 +765,11 @@ async function populatePlannedEventInfoModal(plannedEventId) {
     startTimeInput.value = `${String(plannedEvent.startHour).padStart(2, 0)}:${String(plannedEvent.startMinute).padStart(2, 0)}`;
     endTimeInput.value = `${String(plannedEvent.endHour).padStart(2, 0)}:${String(plannedEvent.endMinute).padStart(2, 0)}`;
 
+    const location = document.getElementById("planned-event-info-location-input");
+    const description = document.getElementById("planned-event-info-description-input");
+
+    location.value = plannedEvent.location;
+    description.value = plannedEvent.description;
 
     let saveButton = document.getElementById("modal-planned-event-info-save");
     const handler = async function() {
