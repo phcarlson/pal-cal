@@ -15,10 +15,9 @@ let friendSearchBar = document.getElementById("friendToFind");
 let selectedMembers = [];
 
 // Our pretend user ID logged in currently
-document.cookie = "currUser=username1";
 const currUsername = document.cookie
   .split("; ")
-  .find((row) => row.startsWith("currUser="))
+  .find((row) => row.startsWith("username="))
   ?.split("=")[1];
 
 
