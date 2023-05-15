@@ -5,7 +5,7 @@ let requestListCol = document.getElementById("requestListCol");
 
 let mockCurrUsername = "username1";
 
-let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
+// let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
 
 //rendering friend requests
 async function renderRequests(mockCurrUsername){
@@ -111,18 +111,37 @@ const toBase64 = file => new Promise((resolve, reject) => {
 
 let savePhotoButton = document.getElementById("savePhotoButton");
 savePhotoButton.addEventListener("click", async (event)=>{
-  let uploadedImage = document.getElementById("profilePhotoUpload");
-  let image = null;
-  if(uploadedImage.files[0] !== undefined){
-    image =  await toBase64(uploadedImage.files[0]);
-  }
-  else{
-    image = '';
-  }
+  try {
+    let uploadedImage = document.getElementById("profilePhotoUpload");
+    let image = null;
+    if(uploadedImage.files[0] !== undefined){
+      image =  await toBase64(uploadedImage.files[0]);
+    }
+    else{
+      image = '';
+    }
 
-  let user = await crud.getUser(mockCurrUsername);
-  await crud.updateUser(user.username, {image: image}); 
-  imageInput.src = image;
+    let user = await crud.getUser(mockCurrUsername);
+    await crud.updateUser(user.username, {image: image}); 
+    imageInput.src = image;
+  } catch (error) {
+    let child = document.createElement('div')
+
+    if(error.message.startsWith("Unexpected error: Error: Payload Too Large")){
+        // Create temp alert of issue
+        child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                            'Image too large, failed to upload</div>';     
+        image.after(child);
+        setTimeout(function(){
+            child.remove();
+            },2500); 
+    }
+    else{
+        // Create temp alert of issue
+        child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                            'Refresh page as upload failed, possibly offline</div>';   
+    }
+  }
 });
 
 
