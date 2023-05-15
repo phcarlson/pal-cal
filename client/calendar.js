@@ -495,7 +495,14 @@ function consolidateEvents(events) {
     const eventsSorted = events.slice(0);
     // Sort events by increasing start time
     eventsSorted.sort((a, b) => 
-        compareTimes(a.startDay, a.startHour, a.startMinute, b.startDay, b.startHour, b.startMinute)
+        {
+            if (a.startHour === b.startHour && a.startMinute === b.startMinute) {
+                return compareTimes(a.endDay, a.endHour, a.endMinute, b.endDay, b.endHour, b.endMinute)
+            }
+            else {
+                return compareTimes(a.startDay, a.startHour, a.startMinute, b.startDay, b.startHour, b.startMinute)
+            }
+        }
     );
 
     for (let event of eventsSorted) {
