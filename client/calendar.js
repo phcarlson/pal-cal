@@ -551,7 +551,16 @@ export async function rerender(type="group") {
         });
     }
     else {
-        const usernames = await crud.getGroupMemberUsernames(groupId);
+        let usernames = [];
+        const checkBoxes = document.getElementsByClassName("member-checkbox");
+        
+        for(let checkBox of checkBoxes){
+            // Include in our busyEvent rendering if user is checked
+            if(checkBox.checked === true){
+                usernames.push(checkBox.id.split('-')[0]);
+            }
+        }
+
         const busyEventIds = [];
         for (let username of usernames) {
             const userEventIds = await crud.getBusyEventIdsOfUser(username);
@@ -569,9 +578,6 @@ export async function rerender(type="group") {
             newEvent.type = "planned";
             return newEvent;
         }));
-
-        console.log(events);
-
     }
 
     renderEvents(consolidateEvents(events), type);
@@ -612,11 +618,9 @@ export async function rerender(type="group") {
 
     
     for (let element of document.getElementsByClassName("calendar-planned")) {
-        console.log(element);
         element.addEventListener("click", async (event) => {
             const clickedBlock = event.target;
             const plannedEventId = clickedBlock.dataset.plannedEventId;
-            console.log(plannedEventId);
             await populatePlannedEventInfoModal(plannedEventId);
             plannedEventInfoModal.show();
         });

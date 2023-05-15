@@ -59,7 +59,7 @@ function addMember(userObj) {
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
                                     <div class="form-check checkbox-xl">
-                                        <input class="form-check-input member-checkbox" type="checkbox" value="" id="flexCheckDefault">
+                                        <input class="form-check-input member-checkbox" type="checkbox" value="" id="${userObj.username}-checkbox">
 
                                     </div>
                                 </div>
@@ -76,8 +76,6 @@ function addMember(userObj) {
                         </div>`;
 
     membersContainer.insertAdjacentHTML("afterbegin", memberToInsert);
-
-    //document.getElementById("flexCheckDefault").checked = true;
 }
 
 async function addPlannedEvent(eventID, startTime, endTime, startDay, title, location, description) {
@@ -273,20 +271,23 @@ async function addPlannedEvent(eventID, startTime, endTime, startDay, title, loc
     eventsAdded += 1;
 }
 
-function selectAllMembers() {
+async function selectAllMembers() {
     const checkBoxes = document.getElementsByClassName("member-checkbox");
     
     for (const box of checkBoxes) {
         box.checked = true;
     }
+
+    await rerender('group');
 }
 
-function deselectAllMembers() {
+async function deselectAllMembers() {
     const checkBoxes = document.getElementsByClassName("member-checkbox");
     
     for (const box of checkBoxes) {
         box.checked = false;
     }
+    await rerender('group');
 }
 
 
@@ -413,6 +414,14 @@ async function renderGroupMembers() {
         const user = await crud.getUser(id);
         addMember(user);
     }
+
+    const memberChecks = document.getElementsByClassName("member-checkbox");
+
+    for (let i = 0; i < memberChecks.length; i++) {
+        memberChecks[i].addEventListener('click', async (event) => {
+            await rerender('group');
+        });
+    }
 }
 
 async function renderPlannedEvents() {
@@ -452,8 +461,12 @@ function getDay(dayNum) {
 }
 
 // event listeners
-selectAllButton.addEventListener("click", selectAllMembers);
-deselectAllButton.addEventListener("click", deselectAllMembers);
+selectAllButton.addEventListener("click", async (event) => {
+    await selectAllMembers();
+});
+deselectAllButton.addEventListener("click", async (event) => {
+    await deselectAllMembers();
+});
 
 
 // INITIAL RENDERING OF INDIVIDUAL GROUP:
