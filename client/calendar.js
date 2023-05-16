@@ -275,6 +275,7 @@ export async function initializeCalendar(calendarDiv, type) {
         document.getElementById("modal-new-busy-event-save").addEventListener("click", async () => {
             await createBusyEventFromModal();
             newBusyEventModal.hide();
+            clearBusyEventModal();
             await rerender(type);
         });
 
@@ -667,6 +668,19 @@ async function populateBusyEventModal(busyEventId) {
         await editBusyEventModal.hide();
         await rerender("profile");
     });
+}
+
+function clearBusyEventModal() {
+    const dayInput = document.getElementById("new-busy-event-day-input");
+    dayInput.value = 0;
+
+    const titleInput = document.getElementById("new-busy-event-title-input");
+    titleInput.value = "";
+
+    const startTimeInput = document.getElementById("new-busy-event-start-time-input");
+    const endTimeInput = document.getElementById("new-busy-event-end-time-input");
+    startTimeInput.value = "";
+    endTimeInput.value = "";
 }
 
 async function updateEventFromModal(eventId, type) {
