@@ -20,6 +20,12 @@ const currUsername = document.cookie
   .find((row) => row.startsWith("currUsername="))
   ?.split("=")[1];
 
+// Set up log out mech from home page
+const logoutButton = document.getElementById('logout-button');
+logoutButton.addEventListener('click', () => {
+    document.cookie = "currUsername=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    window.location.pathname = '/homepageloggedout.html'; // redirect to homepageloggedout.html
+});
 
 // FRIEND COLUMN RELATED FUNCTIONS:
 
@@ -37,8 +43,14 @@ async function renderFriends(username) {
         // For each friend username, retrieve fresh friend obj/data with their image to make card 
         for(let friendUsername of friendsList){
             let friendObj = await crud.getUser(friendUsername);
-            let image = friendObj.image !== '' && friendObj.image !== null &&  friendObj.image !== '\\x' ? friendObj.image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
-        
+            let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+            let image = 
+            friendObj.image !== '' && 
+            friendObj.image !== null && 
+            friendObj.image !== undefined &&
+            friendObj.image !== "/x" ? 
+            friendObj.image : defaultImage;
+              
             let friendToInsert =
             `<div id=${friendUsername}FriendCard class="card my-3">` +
                 '<div class="row g-0">' +
@@ -131,10 +143,17 @@ searchFriendButton.addEventListener('click', async (event) => {
  * @param {Element} potentialFriends search results to add card to
  */
 async function renderPotentialFriend(usernameToFriendRequest, currUsername, potentialFriends){
-    // Temp image while we sort out image upload
-    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     // User that we know exists to be found in friend search
     let userToFriendRequest = await crud.getUser(usernameToFriendRequest);
+
+    let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let image = 
+    userToFriendRequest.image !== '' && 
+    userToFriendRequest.image !== null && 
+    userToFriendRequest.image !== undefined &&
+    userToFriendRequest.image !== "\\x" ? 
+    userToFriendRequest.image : defaultImage;   
+
     // If already friends, then indicate that in the card result. Otherwise allow us to add them!
     let areFriends = await crud.areFriends(currUsername, usernameToFriendRequest);
     let inRequestsAlready = usernameToFriendRequest in await crud.getRequestsFrom(currUsername);
@@ -153,8 +172,8 @@ async function renderPotentialFriend(usernameToFriendRequest, currUsername, pote
     let potentialFriend = '<div class="card my-3">' +
         '<div class="row g-0">' +
             '<div class="col-md-2 d-flex">' +
-                `<img src=${image}` +
-                    'alt="generic profile pic" class="img-fluid rounded-start">'+
+                `<img src=${image} ` +
+                    ' alt="generic profile pic" class="img-fluid rounded-start">'+
             '</div>' +
             '<div class="col-md-8 d-flex align-items-center">'+
                 '<div class="card-body">'+
@@ -349,9 +368,16 @@ async function renderGroup(groupId, currUsername){
  */
 async function renderPotentialMember(usernameToAdd, potentialMembers){
     // Temp while we fig out
-    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
     // Get fresh friend info like their image
     let friend = await crud.getUser(usernameToAdd);
+    
+    let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let image = 
+    friend.image !== '' && 
+    friend.image !== null && 
+    friend.image !== undefined &&
+    friend.image !== "\\x" ? 
+    friend.image : defaultImage;
     
     // Card with dynamic data for this one friend
     let potentialMember = '<div class="card my-3">' +
@@ -362,8 +388,8 @@ async function renderPotentialMember(usernameToAdd, potentialMembers){
                 '</div>'+
             '</div>'+
             '<div class="col-md-2 d-flex">' +
-                `<img src=${image}` +
-                    'alt="generic profile pic" class="img-fluid rounded-start">'+
+                `<img src=${image} style="width: 100%; height: 5vw; object-fit: cover;` +
+                    'alt="generic profile pic" class="img-fluid">'+
             '</div>' +
             '<div class="col-md-8 d-flex align-items-center">'+
                 '<div class="card-body">'+
