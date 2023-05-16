@@ -87,7 +87,7 @@ function addMember(userObj) {
 
     membersContainer.insertAdjacentHTML("afterbegin", memberToInsert);
 
-    //document.getElementById("flexCheckDefault").checked = true;
+    // document.getElementById("flexCheckDefault").checked = true;
 }
 
 async function addPlannedEvent(eventID, startTime, endTime, startDay, title, location, description) {
@@ -494,3 +494,5 @@ await rerender("group");
 
 await renderGroupMembers();
 await renderPlannedEvents();
+
+selectAllMembers();
