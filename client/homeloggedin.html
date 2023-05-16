@@ -7,7 +7,7 @@
     <title>Pal Cal Home</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"F
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" F
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
     <link rel="stylesheet" type="text/css" href="./custom.css">
@@ -15,13 +15,16 @@
 </head>
 
 <body>
+    
     <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN"
         crossorigin="anonymous"></script>
 
-    <script  type="module" src="loadmockdata.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.js" integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM=" crossorigin="anonymous"></script>
+
+    <!-- <script  type="module" src="loadmockdata.js"></script> -->
 
     <script type="module" src="./homeloggedin.js"></script>
 
@@ -29,7 +32,7 @@
     <nav class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <!--Image-->
-            <a class="navbar-brand" href="#">Image here!</a>
+            <a class="navbar-brand" href="/homeloggedin.html">Image here!</a>
 
             <!--Collapse Support-->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -46,12 +49,14 @@
 
                     <!--Login Button-->
                     <li class="nav-item">
-                        <button type="button" class="btn btn-outline-success me-1">Profile</button>
+                        <a type="button" class="btn btn-outline-success me-1" href="/myprofile.html"
+                            role="button">Profile</a>
                     </li>
 
                     <!--Sign Up Button-->
                     <li class="nav-item">
-                        <button type="button" class="btn btn-outline-primary">Log Out</button>
+                        <div id="logout-button" type="button" class="btn btn-outline-primary"
+                            role="button">Log Out</div>
                     </li>
                 </ul>
             </div>
@@ -63,23 +68,22 @@
         <div class="row vh-100 justify-content-evenly bg-light">
 
             <!-- 2/3 of view on the left -->
-            <div class="col-8 d-flex flex-column h-100 border bg-light">
+            <div class="col-8 d-flex flex-column h-100 bg-light shadow">
 
-                <!-- Group Schedule label -->
+                <!-- Groups label -->
                 <div class="row d-flex">
                     <div class="col d-flex flex-column justify-content-start">
 
-                        <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">My Groups <div
-                                    class="dropdown">
+                        <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">My Groups </span>
                         </h1>
                     </div>
                 </div>
-                <!-- Buttons for pushing a new member to the rows -->
+                <!-- Buttons for pushing a new group to the rows -->
                 <div class="row d-flex">
                     <div class="col d-flex flex-row justify-content-start">
 
                         <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                            <button type="button" class="btn btn-outline-primary btn-rounded btn-sm shadow-sm"
+                            <button type="button" class="btn btn-outline-primary btn-rounded btn-sm shadow mb-1"
                                 data-bs-toggle="modal" data-bs-target="#staticBackdrop">Make a group <i
                                     class="bi bi-plus-circle"></i> </button>
                             <!-- 
@@ -92,9 +96,9 @@
                 </div>
 
                 <!-- Row container for holding scrollable group column -->
-                <div class="row d-flex h-100 shadow">
+                <div class="row d-flex" style="height:75%">
                     <!-- Scrollable column of groups populated dynamically-->
-                    <div id="scrollableGroupList" class="col scrollIt" style="height: 90%">
+                    <div id="scrollableGroupList" class="col d-flex flex-column h-100 scrollIt">
 
                     </div>
                 </div>
@@ -113,7 +117,7 @@
 
                         <div class="modal-header">
                             <h5 class="modal-title" id="staticBackdropLabel">Make A New Group</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-label="Close"></button> -->
                         </div>
 
                         <!-- Body holds a form  -->
@@ -134,18 +138,19 @@
                                 <!-- Take in selected members to add input  -->
                                 <div class="form-group">
                                     <!-- Collapsible friends list -->
-                                    <div class="accordion accordion-flush">
+                                    <div class="accordion">
                                         <div id="accordionFriends" class="accordion-item">
                                             <h2 class="accordion-header" id="flush-headingOne">
                                                 <!-- Instructs to add members when collapsed -->
-                                                <button class="accordion-button collapsed" type="button"
-                                                    data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
-                                                    aria-expanded="false" aria-controls="flush-collapseOne">
+                                                <button id="accordionButton" class="accordion-button collapsed"
+                                                    type="button" data-bs-toggle="collapse"
+                                                    data-bs-target="#flush-collapseOne" aria-expanded="false"
+                                                    aria-controls="flush-collapseOne">
                                                     Add members to start
                                                 </button>
                                             </h2>
 
-                                            <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                            <div id="flush-collapseOne" class="collapse"
                                                 aria-labelledby="flush-headingOne" data-bs-parent="#accordionFriends">
                                                 <!-- Dynamically populate body with user's friends to select as new members -->
                                                 <div id="potentialMembers" class="accordion-body">
@@ -191,17 +196,17 @@
                 <div class="row d-flex">
                     <div class="col d-flex flex-row justify-content-start">
                         <div class="btn-group me-2" role="group" aria-label="First group">
-                            <button type="button" class="btn btn-outline-primary btn-sm btn-rounded shadow-sm" data-bs-toggle="modal" data-bs-target="#friendSearchModal">
-                                Add friend <i
-                                class="bi bi-plus-circle"></i>
+                            <button type="button" class="btn btn-outline-primary btn-sm btn-rounded shadow"
+                                data-bs-toggle="modal" data-bs-target="#friendSearchModal">
+                                Add friend <i class="bi bi-plus-circle"></i>
                             </button>
-                           
+
                         </div>
                     </div>
                 </div>
 
                 <!-- Row container for holding scrollable friend column -->
-                <div class="row d-flex" style="height: 90%">
+                <div class="row d-flex" style="height:80%">
 
                     <!-- Scrollable column of friends populated dynamically-->
                     <div id="scrollableFriendsList" class="col d-flex flex-column h-100 scrollIt">
@@ -212,27 +217,29 @@
             </div>
 
             <!-- Modal triggered to pop up when adding a friend, can be x'd out without exiting -->
-            <div class="modal fade" id="friendSearchModal" tabindex="-1" aria-labelledby="friendSearchModalLabel" aria-hidden="true">
+            <div class="modal fade" id="friendSearchModal" tabindex="-1" aria-labelledby="friendSearchModalLabel"
+                aria-hidden="true">
                 <div id="friendSearchModalDialog" class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                    <h5 class="modal-title" id="friendSearchModalLabel">Search For Friend</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="input-group input-group-lg">
-                            <input id="friendToFind" type="search" class="form-control"  id="form1" class="form-control"  placeholder="Friend's username"/>
-                            <!-- <label class="form-label" for="form1">Search</label> -->
-                            <button id="searchFriendButton" type="button" class="btn btn-primary">
-                                <i class="bi bi-search"></i>
-                            </button>
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="friendSearchModalLabel">Search For Friend</h5>
+                            <button id="friendSearchClose" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
-                        <!-- Potential friends populated dynamically based on results found from username input -->
-                        <div id="potentialFriends" class="scrollIt">
-                           
+                        <div class="modal-body">
+                            <div class="input-group input-group-lg">
+                                <input id="friendToFind" type="search" class="form-control" id="form1"
+                                    class="form-control" placeholder="Friend's username" />
+                                <!-- <label class="form-label" for="form1">Search</label> -->
+                                <button id="searchFriendButton" type="button" class="btn btn-primary">
+                                    <i class="bi bi-search"></i>
+                                </button>
+                            </div>
+                            <!-- Potential friends populated dynamically based on results found from username input -->
+                            <div id="potentialFriends" class="scrollIt">
+
+                            </div>
                         </div>
                     </div>
-                </div>
                 </div>
             </div>
 
@@ -240,4 +247,5 @@
     </div>
 
 </body>
+
 </html>

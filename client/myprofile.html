@@ -17,7 +17,7 @@
 </head>
 
 <body>
-  <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script> 
+  <script src="//cdn.jsdelivr.net/npm/pouchdb@8.0.1/dist/pouchdb.min.js"></script>
 
   <!-- <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script> -->
 
@@ -31,7 +31,7 @@
   <nav class="navbar navbar-expand-lg bg-body-tertiary">
     <div class="container-fluid">
       <!--Image-->
-      <a class="navbar-brand" href="#">Image here!</a>
+      <a class="navbar-brand" href="/homeloggedin.html">Image here!</a>
 
       <!--Collapse Support-->
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
@@ -45,14 +45,14 @@
         <!--Navbar-->
         <ul class="navbar-nav">
 
-          <!--Login Button-->
+          <!--Home page Button-->
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-success me-1">Profile</button>
+            <a type="button" class="btn btn-outline-success me-1" href="/homeloggedin.html" role="button">Home</a>
           </li>
 
-          <!--Sign Up Button-->
+          <!--Log out Button-->
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-primary">Log Out</button>
+            <a id="logout-button" type="button" class="btn btn-outline-primary" role="button">Log Out</a>
           </li>
         </ul>
       </div>
@@ -67,17 +67,16 @@
       <div class="col-8 d-flex flex-column h-100 border bg-light">
 
         <!-- Group Schedule label -->
-        <div class="row d-flex">
+        <div class="row d-flex" style="height:10%">
           <div class="col d-flex flex-column justify-content-start">
 
-            <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">My Schedule
-                <div class="dropdown">
+            <h1 class="display-2"><span  id="scheduleLabel"class="badge shadow" style="background-color: gray;">
             </h1>
           </div>
 
           <!-- Refresh -->
           <div class="col d-flex align-items-center justify-content-end">
-            <button type="button"
+            <button id="refreshCalendar" type="button"
               class="btn btn-outline-primary shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
               <!-- <i class="bi bi-arrow-clockwise"></i> -->
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
@@ -87,77 +86,17 @@
                   d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z" />
               </svg>
             </button>
+
+            <button type="button" id="button-new-busy-event"
+              class="btn btn-outline-primary shadow btn-circle btn-lg d-flex align-items-center justify-content-center mx-2">
+              +
+            </button>
           </div>
         </div>
 
         <!-- Container for holding schedule edited dynamically -->
-        <div class="row v-100" style="overflow-y: scroll;">
-          <div class="col groupCol">
-            <!-- <div class="timetable-img text-center">
-              <img src="img/content/timetable.png" alt="">
-            </div> -->
-          </div>
-
-          <div class="row d-flex">
-            <div class="col m-2">
-              hours
-              <div class="row border" style="height: calc(100%/12);">12:00am</div>
-              <div class="row border" style="height: calc(100%/12);">1:00am</div>
-              <div class="row border" style="height: calc(100%/12);">2:00am</div>
-              <div class="row border" style="height: calc(100%/12);">3:00am</div>
-              <div class="row border" style="height: calc(100%/12);">4:00am</div>
-              <div class="row border" style="height: calc(100%/12);">5:00am</div>
-              <div class="row border" style="height: calc(100%/12);">6:00am</div>
-              <div class="row border" style="height: calc(100%/12);">7:00am</div>
-              <div class="row border" style="height: calc(100%/12);">8:00am</div>
-              <div class="row border" style="height: calc(100%/12);">9:00am</div>
-              <div class="row border" style="height: calc(100%/12);">10:00am</div>
-              <div class="row border" style="height: calc(100%/12);">11:00am</div>
-              <div class="row border" style="height: calc(100%/12);">12:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">1:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">2:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">3:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">4:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">5:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">6:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">7:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">8:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">9:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">10:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">11:00pm</div>
-              <div class="row border" style="height: calc(100%/12);">12:00am</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">sunday</div>
-              <div class="row calendar-no-event" style="height: calc((100%/12) * 6);">
-                no event 12am-6am
-              </div>
-              <div class="row calendar-event" style="height: 10%; height: calc((100%/12) * 2.5);">First event 6am-8:30am
-              </div>
-              <div class="row calendar-no-event" style="height: calc(100%/12 * 1.5);">no event 8:30am-10:00am</div>
-              <div class="row calendar-event" style="height: calc(100%/12 * 1.75);">second event 10am-11:45am</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">monday</div>
-              <div class="row calendar-no-event" style="height: calc(100%/12 * 10);">no event 12am-10am</div>
-              <div class="row calendar-event" style="height: calc(100%/12 * 2.5)">another event 10-12:30</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">tuesday</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">wednesday</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">thursday</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">friday</div>
-            </div>
-            <div class="col m-2">
-              <div class="sticky-top calendar-weekday-header">saturday</div>
-            </div>
-          </div>
+        <div class="row" style="overflow-y: scroll; height:80%">
+          <div id="calendar"></div>
         </div>
       </div>
 
@@ -166,30 +105,83 @@
       <div class="col-3 h-100 d-flex flex-column bg-light shadow">
         <!-- Some sort of label for what we are viewing -->
         <div class="d-flex">
-          <div class="col">
+          <div class="col d-flex flex-column">
             <div class="row d-flex">
               <div class="col d-flex">
-                <h1><span class="badge shadow" style="background-color: gray;">My Info</span></h1>
+                <h1><span id="infoLabel" class="badge shadow" style="background-color: gray;"></span></h1>
               </div>
-              <div class="col d-flex">
+              <div class="row d-flex">
+                <div class="col d-flex flex-column justify-content-start align-items-start">
+                  <img id="imageInput" style="width: 10vw; height: 10vw; object-fit: cover;"
+                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                    class="img-thumbnail rounded float-end mb-3" alt="...">
+                </div>
 
-                <h1> <button id="editProfileButton" class="btn btn-outline-secondary m-0" type="button"><i
-                      class="bi bi-pencil-square"></i></button>
-                </h1>
-
+                <div class="row d-flex">
+                  <div class="col d-flex flex-column justify-content-start align-items-start">
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                      <div class="btn-group mr-2" role="group" aria-label="Second group">
+                        <button id="editPhotoButton"type="button" class="btn btn-outline-primary btn-rounded shadow" data-bs-toggle="modal"
+                          data-bs-target="#staticBackdrop"><i class="bi bi-images"></i> </button>
+                        <button id="editProfileButton" class="btn btn-outline-secondary btn-rounded shadow"
+                          type="button"><i class="bi bi-pencil-square"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
+
+              <!-- Modal triggered to pop up when choosing new profile pics, will not be x'd out unless buttons pressed  -->
+
+              <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+                <!-- Scrollable content  -->
+                <div class="modal-dialog modal-dialog-scrollable">
+                  <div class="modal-content">
+
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="staticBackdropLabel">New Profile Picture</h5>
+                      <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-label="Close"></button> -->
+                    </div>
+
+                    <!-- Body holds a form  -->
+                    <div class="modal-body">
+                      <form>
+
+                        <div class="mb-3">
+                          <label for="profilePhotoUpload" class="form-label">Upload picture</label>
+                          <input class="form-control form-control-sm" id="profilePhotoUpload" type="file">
+                        </div>
+
+                        <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                      </form>
+
+                    </div>
+                    <div class="modal-footer">
+                      <button id="changedMindButton" type="button" class="btn btn-secondary"
+                        data-bs-dismiss="modal">Changed my
+                        mind.</button>
+                      <button id="savePhotoButton" type="button" class="btn btn-primary" data-bs-dismiss="modal">This is
+                        the photo
+                        I want!</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!-------------------------------------------------------------------------------------------------------->
+
             </div>
           </div>
         </div>
 
-        <!-- Container for holding groups added dynamically -->
-        <div class="row d-flex" style="height:40%">
+        <!-- Container for holding profile info added dynamically -->
+        <div id="infoRow" class="row d-flex" style="height:30%">
           <div class="col d-flex flex-column h-100 scrollIt">
             <div class="card my-3">
               <div class="card-body">
                 <div class="input-group">
                   <span class="input-group-text">Screen Name</span>
-                  <!-- <input type="text" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username with two button addons"> -->
                   <input id="screenNameInput" type="text" readonly class="form-control" value="">
 
                 </div>
@@ -200,11 +192,13 @@
               <div class="card-body">
                 <div class="input-group  mb-3">
                   <span class="input-group-text">First Name</span>
-                  <input id="firstNameInput" type="text" readonly class="form-control" value="" placeholder="Optional...">
+                  <input id="firstNameInput" type="text" readonly class="form-control" value=""
+                    placeholder="Optional...">
                 </div>
                 <div class="input-group">
                   <span class="input-group-text">Last Name</span>
-                  <input id="lastNameInput" type="text" readonly class="form-control"  value="" placeholder="Optional...">
+                  <input id="lastNameInput" type="text" readonly class="form-control" value=""
+                    placeholder="Optional...">
 
                 </div>
               </div>
@@ -240,12 +234,12 @@
 
         <!-- Requests label -->
         <div class="row d-flex">
-          <div class="col">
+          <div id="requestLabelCol" class="col d-flex flex-column">
             <h1><span class="badge shadow" style="background-color: gray;">Requests</span></h1>
           </div>
         </div>
         <!-- Row for holding scrollable requests -->
-        <div class="row d-flex" style="height:40%">
+        <div class="row d-flex" style="height:15%">
           <!-- Column of requests populated dynamically that scroll -->
           <div id="requestListCol" class="col d-flex flex-column h-100 scrollIt">
 

@@ -7,7 +7,7 @@ div.calendar-block {
     border-radius: 10px;
     cursor: pointer;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: clip;
 }
 
 div.calendar-free {
@@ -27,8 +27,18 @@ div.calendar-planned {
     background-color: skyblue;
 }
 
+div.calendar-busy {
+    background-color: maroon;
+    color: white;
+}
+
+
 div.calendar-filler {
+    width: 100%;
     background-color: #00000000;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    overflow-wrap: break-word;
 }
 
 #start-time-input:invalid {

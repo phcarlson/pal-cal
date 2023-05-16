@@ -1,11 +1,47 @@
-import { PlannedEvent } from "./datatypes.js";
+import * as crud from './crudclient.js';
 
 const days = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-// TODO: get username dynamically
-const username = "user1";
-let modalTime = {};
 
-function initializeCalendar(calendarDiv) {
+let username = null;
+let groupId = null;
+
+let newEventModalTime = {};
+let newPlannedEventModal;
+let newBusyEventModal;
+let editBusyEventModal;
+let plannedEventInfoModal;
+
+// Snag current group we are in and user in session
+try{
+    const queryString = window.location.search; // Returns:'?q=123'
+    const params = new URLSearchParams(queryString);
+
+    // In case we are in an individual group
+    groupId = params.get("groupId");
+
+    // To have, and in case we are on our profile
+    username = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("currUsername="))
+    ?.split("=")[1];
+
+    // In case we routed to someone else's profile
+    let profileUser = params.get("profileUser");
+    if(profileUser !== null){
+        username = profileUser;
+    }
+}
+catch(error){
+    // Create alert of issue
+    let calendarDiv = document.getElementById("calendar");
+    let child = document.createElement('div')
+    child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
+                    'Refresh page, possibly offline</div>';   
+    calendarDiv.before(child);
+}
+
+export async function initializeCalendar(calendarDiv, type) {
+    calendarDiv.classList.add("row", "d-flex");
     const hoursCol = document.createElement("div");
     hoursCol.innerText = "hours";
     hoursCol.classList.add("col", "m-2");
@@ -31,6 +67,270 @@ function initializeCalendar(calendarDiv) {
         dayDiv.appendChild(dayHeader);
         calendarDiv.appendChild(dayDiv);
     }
+
+    if (type === "group") {
+        const newPlannedEventModalHtml = /*html*/`
+            <div class="modal fade" id="modal-new-planned-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-planned-event-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-new-planned-event-label">Add event</h5>
+                            <button type="button" id="modal-new-planned-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="title-input" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="new-planned-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="start-time-input" class="form-label">Start time</label>
+                                    <input type="time" class="form-control" id="new-planned-event-start-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-planned-event-end-time-input" class="form-label">End time</label>
+                                    <input type="time" class="form-control" id="new-planned-event-end-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-planned-event-location-input" class="form-label">Location</label>
+                                    <input type="text" class="form-control" id="new-planned-event-location-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-planned-event-description-input" class="form-label">Description</label>
+                                    <textarea id="new-planned-event-description-input"></textarea>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modal-new-planned-event-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-new-planned-event-save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        const plannedEventInfoModalHTML = /*html*/`
+        <div class="modal fade" id="modal-planned-event-info" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-planned-event-info-label">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 id="modal-planned-event-title"  aria-labelledby="modal-planned-event-info-label">Event Title</h5>
+                    <button type="button" id="modal-planned-event-info-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="mb-3">
+                            <label for="planned-event-info-title-input" class="form-label">Title</label>
+                            <input type="text" class="form-control" id="planned-event-info-title-input">
+                        </div>
+                        <div class="mb-3">
+                            <label for="planned-event-info-day-input" class="form-label">Weekday</label>
+                            <select class="custom-select"  id="planned-event-info-day-input">
+                                <option value=0>Sunday</option>
+                                <option value=1 selected>Monday</option>
+                                <option value=2>Tuesday</option>
+                                <option value=3>Wednesday</option>
+                                <option value=4>Thursday</option>
+                                <option value=5>Friday</option>
+                                <option value=6>Saturday</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="planned-event-info-start-time-input" class="form-label">Start time</label>
+                            <input type="time" class="form-control" id="planned-event-info-start-time-input" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="planned-event-info-end-time-input" class="form-label">End time</label>
+                            <input type="time" class="form-control" id="planned-event-info-end-time-input" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="planned-event-info-location-input" class="form-label">Location</label>
+                            <input type="text" class="form-control" id="planned-event-info-location-input" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="planned-event-info-description-input" class="form-label">Description</label>
+                            <textarea id="planned-event-info-description-input"></textarea>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="modal-planned-event-info-close" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="planned-event-info-delete">Delete event</button>
+                    <button type="button" class="btn btn-primary" id="modal-planned-event-info-save">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+`;
+
+        // This modal is for us to see the information of any planned event in the group schedule
+        document.body.insertAdjacentHTML("afterbegin", plannedEventInfoModalHTML);
+        plannedEventInfoModal = new bootstrap.Modal(document.getElementById('modal-planned-event-info'));
+        document.getElementById("modal-planned-event-info-close").addEventListener("click", () => plannedEventInfoModal.hide());
+        document.getElementById("modal-planned-event-info-close-x").addEventListener("click", () => plannedEventInfoModal.hide());
+
+        // This modal is for us to create an entirely new planned event
+        document.body.insertAdjacentHTML("afterbegin", newPlannedEventModalHtml);
+        newPlannedEventModal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
+        document.getElementById("modal-new-planned-event-close").addEventListener("click", () => newPlannedEventModal.hide());
+        document.getElementById("modal-new-planned-event-save").addEventListener("click", async () => {
+            const newPlannedEventStartTimeInput = document.getElementById("new-planned-event-start-time-input");
+            // TODO: support spanning multiple days
+            let startDay = newEventModalTime.day;
+            let endDay = newEventModalTime.day;
+            let [startHour, startMinute] = newPlannedEventStartTimeInput.value.split(":");
+            startHour = Number(startHour);
+            startMinute = Number(startMinute);
+
+            const newPlannedEventEndTimeInput = document.getElementById("new-planned-event-end-time-input");
+            let [endHour, endMinute] = newPlannedEventEndTimeInput.value.split(":");
+            endHour = Number(endHour);
+            endMinute = Number(endMinute);
+
+            if (compareTimes(0, endHour, endMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0 ||
+                compareTimes(0, endHour, endMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
+                compareTimes(0, startHour, startMinute, 0, newEventModalTime.startHour, newEventModalTime.startMinute) < 0 ||
+                compareTimes(0, startHour, startMinute, 0, newEventModalTime.endHour, newEventModalTime.endMinute) > 0
+            ) {
+                // If the start and end time aren't within this block
+                alert(`Select a time between ${toTwelveHour(newEventModalTime.startHour, newEventModalTime.startMinute)} and ${toTwelveHour(newEventModalTime.endHour, newEventModalTime.endMinute)} or select another block of free time`);
+                return;
+            }
+
+            const title = document.getElementById("new-planned-event-title-input").value;
+            const description = document.getElementById("new-planned-event-description-input").value;
+            const location = document.getElementById("new-planned-event-location-input").value; // TODO
+
+            console.log(description);
+            console.log(location);
+            newPlannedEventModal.hide();
+            await addPlannedEvent({ title: title, startDay: startDay, startHour: startHour, startMinute: startMinute, endDay: endDay, endHour: endHour, endMinute: endMinute, creatorUsername: username, location: location, description: description, groupId: groupId});
+        });
+
+        document.getElementById("modal-new-planned-event-close-x").addEventListener("click", () => newPlannedEventModal.hide());
+
+    }
+    else {
+        const newBusyEventModalHtml = /*html*/ `
+            <div class="modal fade" id="modal-new-busy-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-new-busy-event-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-new-busy-event-label">Add event</h5>
+                            <button type="button" id="modal-new-busy-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="new-busy-event-title-input" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="new-busy-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-busy-event-day-input" class="form-label">Weekday</label>
+                                    <select class="custom-select"  id="new-busy-event-day-input">
+                                        <option value=0>Sunday</option>
+                                        <option value=1 selected>Monday</option>
+                                        <option value=2>Tuesday</option>
+                                        <option value=3>Wednesday</option>
+                                        <option value=4>Thursday</option>
+                                        <option value=5>Friday</option>
+                                        <option value=6>Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="start-time-input" class="form-label">Start time</label>
+                                    <input type="time" class="form-control" id="new-busy-event-start-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="new-busy-event-end-time-input" class="form-label">End time</label>
+                                    <input type="time" class="form-control" id="new-busy-event-end-time-input" required>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modal-new-busy-event-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary" id="modal-new-busy-event-save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML("afterbegin", newBusyEventModalHtml);
+        newBusyEventModal = new bootstrap.Modal(document.getElementById('modal-new-busy-event'));
+        document.getElementById("modal-new-busy-event-close").addEventListener("click", () => newBusyEventModal.hide());
+        document.getElementById("button-new-busy-event").addEventListener("click", () => newBusyEventModal.show());
+        document.getElementById("modal-new-busy-event-close-x").addEventListener("click", () => newBusyEventModal.hide());
+        document.getElementById("modal-new-busy-event-save").addEventListener("click", async () => {
+            await createBusyEventFromModal();
+            newBusyEventModal.hide();
+            await rerender(type);
+        });
+
+        const editBusyEventModalHtml = /*html*/ `
+            <div class="modal fade" id="modal-edit-busy-event" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modal-edit-busy-event-label">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modal-edit-busy-event-label">Add event</h5>
+                            <button type="button" id="modal-edit-busy-event-close-x" class="btn-close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-title-input" class="form-label">Title</label>
+                                    <input type="text" class="form-control" id="edit-busy-event-title-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-day-input" class="form-label">Weekday</label>
+                                    <select class="custom-select"  id="edit-busy-event-day-input">
+                                        <option value=0>Sunday</option>
+                                        <option value=1 selected>Monday</option>
+                                        <option value=2>Tuesday</option>
+                                        <option value=3>Wednesday</option>
+                                        <option value=4>Thursday</option>
+                                        <option value=5>Friday</option>
+                                        <option value=6>Saturday</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-start-time-input" class="form-label">Start time</label>
+                                    <input type="time" class="form-control" id="edit-busy-event-start-time-input" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="edit-busy-event-end-time-input" class="form-label">End time</label>
+                                    <input type="time" class="form-control" id="edit-busy-event-end-time-input" required>
+                                </div>
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="modal-edit-busy-event-close" data-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-danger" id="edit-busy-event-delete">Delete event</button>
+                            <button type="button" class="btn btn-primary" id="modal-edit-busy-event-save">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML("afterbegin", editBusyEventModalHtml);
+        editBusyEventModal = new bootstrap.Modal(document.getElementById('modal-edit-busy-event'));
+        document.getElementById("modal-edit-busy-event-close").addEventListener("click", () => editBusyEventModal.hide());
+        document.getElementById("modal-edit-busy-event-close-x").addEventListener("click", () => editBusyEventModal.hide());
+    }
 }
 
 /**
@@ -54,9 +354,10 @@ function toTwelveHour(hour, minute=0) {
  * @param {string} type One of "busy", "planned", or "filler"
  * @param {string} text Text to display on the event block
  */
-function renderEventBlock(day, duration, type, text="", startHour, startMinute, endHour, endMinute) {
-    const weekdayCol = document.getElementById(`column-${days[day]}`);
+function renderEventBlock(event, type, text="") {
+    const weekdayCol = document.getElementById(`column-${days[event.startDay]}`);
     const eventDiv = document.createElement("div");
+    const duration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
     eventDiv.classList.add("row", "calendar-element");
     switch (type) {
         case "filler":
@@ -64,22 +365,27 @@ function renderEventBlock(day, duration, type, text="", startHour, startMinute, 
             break;
         case "free":
             eventDiv.classList.add("calendar-block", "calendar-free");
+            eventDiv.dataset.day = event.startDay;
+            eventDiv.dataset.startHour = event.startHour;
+            eventDiv.dataset.startMinute = event.startMinute;
+            eventDiv.dataset.endHour = event.endHour;
+            eventDiv.dataset.endMinute = event.endMinute;
             break;
         case "planned":
             eventDiv.classList.add("calendar-block", "calendar-planned");
+            eventDiv.dataset.plannedEventId = event.plannedEventId;
+            break;
+        case "busy":
+            eventDiv.classList.add("calendar-block", "calendar-busy");
+            eventDiv.dataset.busyEventId = event.busyEventId;
             break;
     }
     eventDiv.style.height = `calc((100%/12) * ${duration})`;
-    eventDiv.dataset.day = day;
-    eventDiv.dataset.startHour = startHour;
-    eventDiv.dataset.startMinute = startMinute;
-    eventDiv.dataset.endHour = endHour;
-    eventDiv.dataset.endMinute = endMinute;
     eventDiv.innerText = text;
     weekdayCol.appendChild(eventDiv);
 }
 
-function renderEvents(events) {
+function renderEvents(events, type="group") {
     let prevEventEndDay = -1;
     let prevEventEndHour = -1;
     let prevEventEndMinute = -1;
@@ -92,50 +398,49 @@ function renderEvents(events) {
                 // the last event
                 const fillerDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
                 if (fillerDuration > 0.25) {
-                    renderEventBlock(event.startDay, fillerDuration, "free", "", prevEventEndHour, prevEventEndMinute, event.startHour, event.startMinute);
+                    const blockType = type === "group" ? "free" : "filler";
+                    renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
-                const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
-                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
-                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
-                renderEventBlock(event.startDay, eventDuration, event.type, label);
+                const label = `${event.title ? event.title : "event"}`;
+                renderEventBlock(event, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
             }
             else {
-                if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
-                    // Fill in free time at the end of the day
-                    const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-                    renderEventBlock(prevEventEndDay, eventDuration, "free", "", prevEventEndHour, prevEventEndMinute, 23, 59);
-                }
+                // Add padding between midnight and the first event of the day
                 if (!(event.startHour === 0 && event.startMinute === 0)) {
-                    const fillerDuration = getDurationHours(0, 0, event.startHour, event.startMinute);
-                    renderEventBlock(event.startDay, fillerDuration, "free", "", 0, 0, event.startHour, event.startMinute);
+                    const blockType = type === "group" ? "free" : "filler";
+                    renderEventBlock({startDay: event.startDay, startHour: 0, startMinute: 0, endDay: event.endDay, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
-                for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
-                    // Fill in free time on days in between
-                    renderEventBlock(day, 24, "free", "", 0, 0, 23, 59);
+                const label = `${event.title ? event.title : "event"}`;
+                renderEventBlock(event, event.type, label);
+                if (type === "group") {
+                    if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
+                        // Fill in free time at the end of the day
+                        renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: 23, endMinute: 59}, "free", "");
+                    }
+
+                    for (let day = prevEventEndDay + 1; day < event.startDay; ++day) {
+                        // Fill in free time on days in between
+                        renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endDay: day, endHour: 23, endMinute: 59}, "free");
+                    }
                 }
-                const eventDuration = getDurationHours(event.startHour, event.startMinute, event.endHour, event.endMinute);
-                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
-                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
-                renderEventBlock(event.startDay, eventDuration, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
                 prevEventEndMinute = event.endMinute;
             }
         }
     }
-    if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
-        // Fill in free time at the end of the day
-        const eventDuration = getDurationHours(prevEventEndHour, prevEventEndMinute, 23, 59);
-        renderEventBlock(prevEventEndDay, eventDuration, "free");
-    }
-    for (let day = prevEventEndDay + 1; day <= 6; ++day) {
-        // Fill in free time on days after the last busy time
-        renderEventBlock(day, 24, "free");
+    if (type === "group") {
+        if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
+            // Fill in free time at the end of the day
+            renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: 23, endMinute: 59}, "free");
+        }
+        for (let day = prevEventEndDay + 1; day <= 6; ++day) {
+            // Fill in free time on days after the last busy time
+            renderEventBlock({startDay: day, startHour: 0, startMinute: 0, endDay: day, endHour: 23, endMinute: 59}, "free");
+        }
     }
 
 }
@@ -186,9 +491,17 @@ function consolidateEvents(events) {
     const eventsSorted = events.slice(0);
     // Sort events by increasing start time
     eventsSorted.sort((a, b) => 
-        compareTimes(a.startDay, a.startHour, a.startMinute, b.startDay, b.startHour, b.startMinute)
+        {
+            if (a.startHour === b.startHour && a.startMinute === b.startMinute) {
+                return compareTimes(a.endDay, a.endHour, a.endMinute, b.endDay, b.endHour, b.endMinute)
+            }
+            else {
+                return compareTimes(a.startDay, a.startHour, a.startMinute, b.startDay, b.startHour, b.startMinute)
+            }
+        }
     );
 
+    let eventsCount = 1;
     for (let event of eventsSorted) {
         if (consolidated.length === 0) {
             consolidated.push(event);
@@ -202,38 +515,22 @@ function consolidateEvents(events) {
                 lastEvent.endDay = event.endDay;
                 lastEvent.endHour = event.endHour;
                 lastEvent.endMinute = event.endMinute;
+                eventsCount++;
+                lastEvent.title = `${eventsCount} people are busy`;
             }
             else {
                 consolidated.push(event);
+                eventsCount = 1;
             }
         }
     }
     return consolidated;
 }
 
-let plannedEvents = [
-    {startDay: 2, startHour: 13, startMinute: 30, endDay: 2, endHour: 16, endMinute: 0, title: "this is a planned event with a long title"}
-]
-
-function addPlannedEvent(event) {
-    // For now, just add to this list
-    // Once CRUD is working, will add to the group's planned events database
-    plannedEvents.push(event);
-    rerender();
+async function addPlannedEvent(event) {
+    await crud.createPlannedEvent(event);
+    await rerender();
 }
-
-
-initializeCalendar(document.getElementById("calendar"));
-
-// Some random test events
-let busyEvents = [
-    {startDay: 0, startHour: 5,  startMinute: 30, endDay: 0, endHour: 10, endMinute: 45},
-    {startDay: 0, startHour: 1,  startMinute: 0,  endDay: 0, endHour: 3,  endMinute:  0},
-    {startDay: 0, startHour: 7,  startMinute: 30, endDay: 0, endHour: 11, endMinute:  0},
-    {startDay: 2, startHour: 0,  startMinute: 0,  endDay: 2, endHour: 1,  endMinute: 30},
-    {startDay: 2, startHour: 10, startMinute: 0,  endDay: 2, endHour: 13, endMinute: 30},
-    {startDay: 5, startHour: 10, startMinute: 0,  endDay: 5, endHour: 11, endMinute: 30},
-];
 
 /**
  * Delete every element with the given classname
@@ -248,19 +545,44 @@ function removeElementsByClass(className){
 }
 
 
-function rerender() {
+export async function rerender(type="group") {
     removeElementsByClass("calendar-element");
-    let events = busyEvents.map(event => {
-        let newEvent = structuredClone(event);
-        newEvent.type = "filler";
-        return newEvent;
-    }).concat(plannedEvents.map(event => {
-        let newEvent = structuredClone(event);
-        newEvent.type = "planned";
-        return newEvent;
-    }));
+    let events;
+    if (type === "profile") {
+        const busyEventIds = await crud.getBusyEventIdsOfUser(username);
+        const busyEvents = await crud.getBusyEvents(busyEventIds);            
+        events = busyEvents.map(event => {
+            let newEvent = structuredClone(event);
+            newEvent.type = "busy";
+            return newEvent;
+        });
+    }
+    else {
+        const usernames = await crud.getGroupMemberUsernames(groupId);
+        const busyEventIds = [];
+        for (let username of usernames) {
+            const userEventIds = await crud.getBusyEventIdsOfUser(username);
+            busyEventIds.push(...userEventIds);
+        }
+        const busyEvents = await crud.getBusyEvents(busyEventIds);
+        const groupPlannedEventIds = await crud.getGroupPlannedEventIds(groupId);
+        const plannedEvents = await crud.getPlannedEvents(groupPlannedEventIds);
+        events = busyEvents.map(event => {
+            let newEvent = structuredClone(event);
+            newEvent.type = "filler";
+            newEvent.title = `${newEvent.creatorUsername} is busy`;
+            return newEvent;
+        }).concat(plannedEvents.map(event => {
+            let newEvent = structuredClone(event);
+            newEvent.type = "planned";
+            return newEvent;
+        }));
 
-    renderEvents(consolidateEvents(events));
+        console.log(events);
+
+    }
+
+    renderEvents(consolidateEvents(events), type);
 
     for (let element of document.getElementsByClassName("calendar-free")) {
         element.addEventListener("click", (event) => {
@@ -271,11 +593,11 @@ function rerender() {
             const blockEndHour = clickedBlock.dataset.endHour;
             const blockEndMinute = clickedBlock.dataset.endMinute;
 
-            modalTime = { day: Number(blockDay), startHour: Number(blockStartHour), startMinute: Number(blockStartMinute), endHour: Number(blockEndHour), endMinute: Number(blockEndMinute) };
+            newEventModalTime = { day: Number(blockDay), startHour: Number(blockStartHour), startMinute: Number(blockStartMinute), endHour: Number(blockEndHour), endMinute: Number(blockEndMinute) };
 
-            const startTimeInput = document.getElementById("start-time-input");
+            const startTimeInput = document.getElementById("new-planned-event-start-time-input");
             startTimeInput.value = `${String(blockStartHour).padStart(2, 0)}:${String(blockStartMinute).padStart(2, 0)}`
-            const endTimeInput = document.getElementById("end-time-input");
+            const endTimeInput = document.getElementById("new-planned-event-end-time-input");
             endTimeInput.value = `${String(blockEndHour).padStart(2, 0)}:${String(blockEndMinute).padStart(2, 0)}`
 
             startTimeInput.min = startTimeInput.value;
@@ -283,45 +605,231 @@ function rerender() {
             endTimeInput.min = startTimeInput.value;
             endTimeInput.max = endTimeInput.value;
 
-            modal.show();
+            newPlannedEventModal.show();
+        });
+    }
+
+    for (let element of document.getElementsByClassName("calendar-busy")) {
+        element.addEventListener("click", async (event) => {
+            const clickedBlock = event.target;
+            const busyEventId = clickedBlock.dataset.busyEventId;
+            await populateBusyEventModal(busyEventId);
+            editBusyEventModal.show();
+        });
+    }
+
+    
+    for (let element of document.getElementsByClassName("calendar-planned")) {
+        console.log(element);
+        element.addEventListener("click", async (event) => {
+            const clickedBlock = event.target;
+            const plannedEventId = clickedBlock.dataset.plannedEventId;
+            console.log(plannedEventId);
+            await populatePlannedEventInfoModal(plannedEventId);
+            plannedEventInfoModal.show();
         });
     }
 }
 
-rerender();
+async function populateBusyEventModal(busyEventId) {
+    const busyEvent = await crud.getBusyEvent(busyEventId);
+    const dayInput = document.getElementById("edit-busy-event-day-input");
+    dayInput.value = busyEvent.startDay;
 
-const modal = new bootstrap.Modal(document.getElementById('modal-new-planned-event'));
-document.getElementById("modal-close").addEventListener("click", () => modal.hide());
-document.getElementById("modal-save").addEventListener("click", () => {
-    const startTimeInput = document.getElementById("start-time-input");
-    // TODO: support spanning multiple days
-    let startDay = modalTime.day;
-    let endDay = modalTime.day;
-    let [ startHour, startMinute ] = startTimeInput.value.split(":");
+    const titleInput = document.getElementById("edit-busy-event-title-input");
+    titleInput.value = busyEvent.title;
+
+    const startTimeInput = document.getElementById("edit-busy-event-start-time-input");
+    const endTimeInput = document.getElementById("edit-busy-event-end-time-input");
+    startTimeInput.value = `${String(busyEvent.startHour).padStart(2, 0)}:${String(busyEvent.startMinute).padStart(2, 0)}`;
+    endTimeInput.value = `${String(busyEvent.endHour).padStart(2, 0)}:${String(busyEvent.endMinute).padStart(2, 0)}`;
+
+
+    let saveButton = document.getElementById("modal-edit-busy-event-save");
+    const handler = async function() {
+        await updateEventFromModal(busyEventId, 'busy');
+        await editBusyEventModal.hide();
+        await rerender("profile");
+
+    }
+    // Recreate save button to clear event listeners
+    // source: https://stackoverflow.com/a/73409567
+    saveButton.replaceWith(saveButton.cloneNode(true));
+
+    saveButton = document.getElementById("modal-edit-busy-event-save");
+    saveButton.addEventListener("click", handler);
+
+    let deleteButton = document.getElementById("edit-busy-event-delete");
+    deleteButton.replaceWith(deleteButton.cloneNode(true));
+    deleteButton = document.getElementById("edit-busy-event-delete");
+    deleteButton.addEventListener("click", async () => {
+        await crud.deleteBusyEvent(busyEventId);
+        await editBusyEventModal.hide();
+        await rerender("profile");
+    });
+}
+
+async function updateEventFromModal(eventId, type) {
+    if(type === 'planned'){
+        const dayInput = document.getElementById("planned-event-info-day-input");
+
+        const titleInput = document.getElementById("planned-event-info-title-input");
+    
+        const startTimeInput = document.getElementById("planned-event-info-start-time-input");
+        const endTimeInput = document.getElementById("planned-event-info-end-time-input");
+
+        const location = document.getElementById("planned-event-info-location-input");
+
+        const description = document.getElementById("planned-event-info-description-input");
+
+        let [startHour, startMinute] = startTimeInput.value.split(":");
+        startHour = Number(startHour);
+        startMinute = Number(startMinute);
+        let [endHour, endMinute] = endTimeInput.value.split(":");
+        endHour = Number(endHour);
+        endMinute = Number(endMinute);
+    
+        await crud.updatePlannedEvent(eventId, {
+            title: titleInput.value,
+            startDay: dayInput.value,
+            endDay: dayInput.value,
+            startHour: startHour,
+            startMinute: startMinute,
+            endHour: endHour, 
+            endMinute: endMinute,
+            location: location.value,
+            description:description.value
+        });
+    }
+    else if (type === 'busy'){
+        const dayInput = document.getElementById("edit-busy-event-day-input");
+
+        const titleInput = document.getElementById("edit-busy-event-title-input");
+    
+        const startTimeInput = document.getElementById("edit-busy-event-start-time-input");
+        const endTimeInput = document.getElementById("edit-busy-event-end-time-input");
+        let [startHour, startMinute] = startTimeInput.value.split(":");
+        startHour = Number(startHour);
+        startMinute = Number(startMinute);
+        let [endHour, endMinute] = endTimeInput.value.split(":");
+        endHour = Number(endHour);
+        endMinute = Number(endMinute);
+    
+        await crud.updateBusyEvent(eventId, {
+            title: titleInput.value,
+            startDay: dayInput.value,
+            endDay: dayInput.value,
+            startHour: startHour,
+            startMinute: startMinute,
+            endHour: endHour, 
+            endMinute: endMinute
+        });
+    }
+}
+
+async function createBusyEventFromModal() {
+    const startTimeInput = document.getElementById("new-busy-event-start-time-input");
+
+    let [startHour, startMinute] = startTimeInput.value.split(":");
     startHour = Number(startHour);
     startMinute = Number(startMinute);
 
-    const endTimeInput = document.getElementById("end-time-input");
-    let [ endHour, endMinute ] = endTimeInput.value.split(":");
+    const endTimeInput = document.getElementById("new-busy-event-end-time-input");
+    let [endHour, endMinute] = endTimeInput.value.split(":");
     endHour = Number(endHour);
     endMinute = Number(endMinute);
-    
-    if ( compareTimes(0, endHour, endMinute, 0, modalTime.endHour, modalTime.endMinute) > 0 ||
-         compareTimes(0, endHour, endMinute, 0, modalTime.startHour, modalTime.startMinute) < 0 ||
-         compareTimes(0, startHour, startMinute, 0, modalTime.startHour, modalTime.startMinute) < 0 ||
-         compareTimes(0, startHour, startMinute, 0, modalTime.endHour, modalTime.endMinute) > 0
-    ) {
-        // If the start and end time aren't within this block
-        alert(`Select a time between ${toTwelveHour(modalTime.startHour, modalTime.startMinute)} and ${toTwelveHour(modalTime.endHour, modalTime.endMinute)} or select another block of free time`);
-        return;
+
+    // TODO: support spanning multiple days
+    const startDay = Number(document.getElementById("new-busy-event-day-input").value);
+    const endDay = startDay;
+
+    const title = document.getElementById("new-busy-event-title-input").value;
+
+    const newEvent = {
+        title: title,
+        startDay: startDay,
+        startHour: startHour,
+        startMinute: startMinute,
+        endDay: endDay,
+        endHour: endHour,
+        endMinute: endMinute,
+        creatorUsername: username
+    };
+    await crud.createBusyEvent(username, newEvent);
+    await rerender("profile");
+}
+
+async function populatePlannedEventInfoModal(plannedEventId) {
+    const plannedEvent = await crud.getPlannedEvent(plannedEventId);
+
+    const modalTitle = document.getElementById("modal-planned-event-title");
+    modalTitle.innerHTML = plannedEvent.title;
+
+    const dayInput = document.getElementById("planned-event-info-day-input");
+    dayInput.value = plannedEvent.startDay;
+
+    const titleInput = document.getElementById("planned-event-info-title-input");
+    titleInput.value = plannedEvent.title;
+
+    const startTimeInput = document.getElementById("planned-event-info-start-time-input");
+    const endTimeInput = document.getElementById("planned-event-info-end-time-input");
+    startTimeInput.value = `${String(plannedEvent.startHour).padStart(2, 0)}:${String(plannedEvent.startMinute).padStart(2, 0)}`;
+    endTimeInput.value = `${String(plannedEvent.endHour).padStart(2, 0)}:${String(plannedEvent.endMinute).padStart(2, 0)}`;
+
+    const location = document.getElementById("planned-event-info-location-input");
+    const description = document.getElementById("planned-event-info-description-input");
+
+    location.value = plannedEvent.location;
+    description.value = plannedEvent.description;
+
+
+    // Only the creator should be able to modify or remove the event, so let's manipulate that access
+    let saveButton = document.getElementById("modal-planned-event-info-save");
+    let deleteButton = document.getElementById("planned-event-info-delete");
+
+    let toEdit = [
+        startTimeInput, 
+        endTimeInput,
+        titleInput,
+        location,
+        description];
+
+    // If you are not the creator, you can only read the info
+    if(plannedEvent.creatorUsername !== username){
+        toEdit.forEach((editElem) =>{
+            editElem.setAttribute("readonly", editElem.value);
+        });
+        deleteButton.setAttribute("disabled", true);
+        saveButton.setAttribute("disabled", true);
+        dayInput.setAttribute("disabled", true);
     }
+    else{
+        toEdit.forEach((editElem) =>{
+            editElem.removeAttribute("readonly");
+        });
+        deleteButton.removeAttribute("disabled");
+        saveButton.removeAttribute("disabled");
+        dayInput.removeAttribute("disabled");
 
-    const title = document.getElementById("title-input").value;
-    const description = document.getElementById("description-input").value;
-    const location = ""; // TODO
+        const handler = async function() {
+            await updateEventFromModal(plannedEventId, 'planned');
+            await plannedEventInfoModal.hide();
+            await rerender("group");
+    
+        }    
+        // Recreate save button to clear event listeners
+        // source: https://stackoverflow.com/a/73409567
+        saveButton.replaceWith(saveButton.cloneNode(true));
 
-    modal.hide();
-    addPlannedEvent(new PlannedEvent(title, startHour, endHour, startMinute, endMinute, startDay, endDay, username, location, description, {}, {}, {}));
-});
+        saveButton = document.getElementById("modal-planned-event-info-save");
+        saveButton.addEventListener("click", handler);
 
-document.getElementById("modal-close-x").addEventListener("click", () => modal.hide());
+        deleteButton.replaceWith(deleteButton.cloneNode(true));
+        deleteButton = document.getElementById("planned-event-info-delete");
+        deleteButton.addEventListener("click", async () => {
+            await crud.deletePlannedEvent(plannedEventId);
+            await plannedEventInfoModal.hide();
+            await rerender("group");
+        });
+    }
+}
