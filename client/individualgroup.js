@@ -11,6 +11,8 @@ const selectAllButton = document.getElementById("select-all-button");
 const deselectAllButton = document.getElementById("deselect-all-button");
 const searchMemberButton = document.getElementById("searchMemberButton");
 const logoutButton = document.getElementById('logout-button');
+const refreshCalendarButton = document.getElementById("refreshCalendar");
+const refreshEventsButton = document.getElementById("refreshEvents");
 
 // label above calendar for group name 
 const groupNameLabel = document.getElementById("groupNameLabel");
@@ -55,7 +57,14 @@ catch(error){
 }
 
 function addMember(userObj) {
-    
+    let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let image = 
+    userObj.image !== '' && 
+    userObj.image !== null && 
+    userObj.image !== undefined &&
+    userObj.image !== "\\x" ? 
+    userObj.image : defaultImage;
+
     let memberToInsert = `<div class="card my-3">
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -64,10 +73,10 @@ function addMember(userObj) {
 
                                     </div>
                                 </div>
-                                <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
-                                        alt="generic profile pic" class="img-fluid rounded-start">
-                                </div>
+                                <a class="col-md-2 d-flex"  href="/myprofile.html?profileUser=${userObj.username}">
+                                    <img src=${image} style="width: 100%; height: 5vw; object-fit: cover;
+                                        alt="generic profile pic" class="img-fluid">
+                                </a>
                                 <div class="col-md-8 d-flex align-items-center">
                                     <div class="card-body">
                                         <h5 class="card-title text-start">${userObj.username}</h5>
@@ -78,7 +87,7 @@ function addMember(userObj) {
 
     membersContainer.insertAdjacentHTML("afterbegin", memberToInsert);
 
-    //document.getElementById("flexCheckDefault").checked = true;
+    // document.getElementById("flexCheckDefault").checked = true;
 }
 
 async function addPlannedEvent(eventID, startTime, endTime, startDay, title, location, description) {
@@ -107,10 +116,10 @@ async function addPlannedEvent(eventID, startTime, endTime, startDay, title, loc
                                                                 aria-expanded="false">
                                                                 RSVP
                                                             </button>
-                                                            <div class="dropdown-menu opacity-75 " aria-labelledby="dropdownMenuButton-${eventsAdded}-0">
-                                                                <button id="yes-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">Yes</button>
-                                                                <button id="no-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">No</button>
-                                                                <button id="maybe-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#">Maybe</button>
+                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton-${eventsAdded}-0">
+                                                                <button id="yes-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#"><b>Yes</b></button>
+                                                                <button id="no-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#"><b>No</b></button>
+                                                                <button id="maybe-${eventsAdded}" class="dropdown-item event-${eventsAdded}" type="button" href="#"><b>Maybe</b></button>
                                                             </div>
                                                             <button class="btn btn-lg btn-flash-border-primary dropdown-toggle"
                                                                 type="button" id="dropdownMenuButton-${eventsAdded}-1" data-bs-toggle="dropdown"
@@ -334,10 +343,18 @@ searchMemberButton.addEventListener('click', async (event) => {
  * @param {Element} potentialMembers element to add card to
  */
 async function renderPotentialMember(userIDToAdd, currGroupId, potentialMembers){
-    // Temp image while we sort out image upload
-    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+
     // User that we know exists to be found in friend search
     let userToAdd = await crud.getUser(userIDToAdd);
+
+    let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let image = 
+    userToAdd.image !== '' && 
+    userToAdd.image !== null && 
+    userToAdd.image !== undefined &&
+    userToAdd.image !== "\\x" ? 
+    userToAdd.image : defaultImage;
+    
     // If already friends, then indicate that in the card result. Otherwise allow us to add them!
     let groupMembers = await crud.getGroupMemberUsernames(currGroupId);
 
@@ -347,11 +364,11 @@ async function renderPotentialMember(userIDToAdd, currGroupId, potentialMembers)
     // This is the card for each friend found by the username searched, dynamic to the userID's content in DB
     let potentialMember = '<div class="card my-3">' +
         '<div class="row g-0">' +
-            '<div class="col-md-2 d-flex">' +
+            '<div class="col-md-2 d-flex flex-column">' +
                 `<img src=${image}` +
                     'alt="generic profile pic" class="img-fluid rounded-start">'+
             '</div>' +
-            '<div class="col-md-8 d-flex align-items-center">'+
+            '<div class="col-md-8 d-flex flex-column align-items-center">'+
                 '<div class="card-body">'+
                     `<h5 class="card-title text-start">${userIDToAdd}</h5>`+
                 '</div>'+
@@ -417,6 +434,7 @@ async function renderGroupMembers() {
 }
 
 async function renderPlannedEvents() {
+    plannedEventsContainer.innerHTML = '';
     eventsAdded = 0;
     const plannedEventIDs = await crud.getGroupPlannedEventIds(currGroupId); // list of PlannedEvent IDs
 
@@ -461,6 +479,14 @@ logoutButton.addEventListener('click', () => {
     window.location.pathname = '/homepageloggedout.html'; // redirect to homepageloggedout.html
 });
 
+refreshCalendarButton.addEventListener('click', () => {
+    rerender("group");
+});
+
+refreshEventsButton.addEventListener('click', () => {
+    renderPlannedEvents();
+});
+
 
 // INITIAL RENDERING OF INDIVIDUAL GROUP:
 const calendarElement = document.getElementById("calendar");
@@ -468,5 +494,6 @@ await initializeCalendar(calendarElement, "group");
 await rerender("group");
 
 await renderGroupMembers();
-
 await renderPlannedEvents();
+
+selectAllMembers();
