@@ -328,9 +328,7 @@ function renderEvents(events, type="group") {
                     const blockType = type === "group" ? "free" : "filler";
                     renderEventBlock({startDay: prevEventEndDay, startHour: prevEventEndHour, startMinute: prevEventEndMinute, endDay: prevEventEndDay, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
-                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
-                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
+                const label = `${event.title ? event.title : "event"}`;
                 renderEventBlock(event, event.type, label);
                 prevEventEndDay = event.endDay;
                 prevEventEndHour = event.endHour;
@@ -342,9 +340,7 @@ function renderEvents(events, type="group") {
                     const blockType = type === "group" ? "free" : "filler";
                     renderEventBlock({startDay: event.startDay, startHour: 0, startMinute: 0, endDay: event.endDay, endHour: event.startHour, endMinute: event.startMinute}, blockType, "");
                 }
-                const eventStartTime = toTwelveHour(event.startHour, event.startMinute);
-                const eventEndTime = toTwelveHour(event.endHour, event.endMinute);
-                const label = `${event.title ? event.title : "event"} ${eventStartTime}-${eventEndTime}`;
+                const label = `${event.title ? event.title : "event"}`;
                 renderEventBlock(event, event.type, label);
                 if (type === "group") {
                     if (prevEventEndDay !== -1 && compareTimes(prevEventEndDay, prevEventEndHour, prevEventEndMinute, prevEventEndDay, 23, 59) < 0) {
@@ -432,6 +428,7 @@ function consolidateEvents(events) {
         }
     );
 
+    let eventsCount = 1;
     for (let event of eventsSorted) {
         if (consolidated.length === 0) {
             consolidated.push(event);
@@ -445,9 +442,12 @@ function consolidateEvents(events) {
                 lastEvent.endDay = event.endDay;
                 lastEvent.endHour = event.endHour;
                 lastEvent.endMinute = event.endMinute;
+                eventsCount++;
+                lastEvent.title = `${eventsCount} people are busy`;
             }
             else {
                 consolidated.push(event);
+                eventsCount = 1;
             }
         }
     }
@@ -497,6 +497,7 @@ export async function rerender(type="group") {
         events = busyEvents.map(event => {
             let newEvent = structuredClone(event);
             newEvent.type = "filler";
+            newEvent.title = `${newEvent.creatorUsername} is busy`;
             return newEvent;
         }).concat(plannedEvents.map(event => {
             let newEvent = structuredClone(event);
