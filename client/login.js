@@ -20,7 +20,7 @@ submitButton.addEventListener('click', async () => {
         }
     } catch (error) {
         userNotFoundWarning.hidden = true; // hide "user not found" warning
-        databaseErrorWarning.innerText = error;
+        databaseErrorWarning.innerHTML = "<span style='color: red;'>Refresh or try again later, possibly offline!</span>";
         databaseErrorWarning.hidden = false; // show "database error" warning
     }
 });
