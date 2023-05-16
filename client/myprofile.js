@@ -119,6 +119,7 @@ let imageInput = document.getElementById("imageInput");
 let editProfileButton = document.getElementById("editProfileButton");
 let savePhotoButton = document.getElementById("savePhotoButton");
 let editPhotoButton =  document.getElementById("editPhotoButton");
+let busyEventbutton = document.getElementById("button-new-busy-event");
 //fill user's profile with their information
 async function renderProfile(profileUser){
   let user = await crud.getUser(profileUser);
@@ -165,6 +166,8 @@ async function renderProfile(profileUser){
     editPhotoButton.classList.add('d-none');
     editPhotoButton.setAttribute("disabled", true);
     editProfileButton.classList.add('d-none');
+    busyEventbutton.setAttribute("disabled", true);
+    busyEventbutton.classList.add('d-none');
 
     // Remove view of requests and expand person's info
     requestListCol.classList.add('d-none');
@@ -172,11 +175,12 @@ async function renderProfile(profileUser){
     requestLabelCol.classList.add('d-none');
     let infoRow = document.getElementById("infoRow");
     infoRow.style.height = "75%";
-  }
-
-  // Also determine if you can see their schedule based on friendship status
-  if(await crud.areFriends(profileUser, currUsername) === false){
-    calendarDiv.innerHTML = "<h1>Can't see their calendar? Shoot them a friend request first!</h1>";
+    
+      // Also determine if you can see their schedule based on friendship status
+      if(await crud.areFriends(profileUser, currUsername) === false){
+        calendarDiv.innerHTML = "<h1>Can't see their calendar? Shoot them a friend request first!</h1>";
+        calendarDiv.style.backgroundColor = "gray";
+      }
   }
 }
 
@@ -276,8 +280,9 @@ async function saveProfile(profileUser){
         college: collegeInput.value, bio: bioInput.value, major: majorInput.value});    
 }
 
+await initializeCalendar(document.getElementById("calendar"), "profile");
+await rerender("profile");
+
 await renderRequests(profileUser);
 await renderProfile(profileUser);
 
-await initializeCalendar(document.getElementById("calendar"), "profile");
-await rerender("profile");
