@@ -20,6 +20,12 @@ const currUsername = document.cookie
   .find((row) => row.startsWith("currUsername="))
   ?.split("=")[1];
 
+// Set up log out mech from home page
+const logoutButton = document.getElementById('logout-button');
+logoutButton.addEventListener('click', () => {
+    document.cookie = "currUsername=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+    window.location.pathname = '/homepageloggedout.html'; // redirect to homepageloggedout.html
+});
 
 // FRIEND COLUMN RELATED FUNCTIONS:
 
