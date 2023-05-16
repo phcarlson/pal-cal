@@ -2,6 +2,8 @@ import * as crud from './crudclient.js';
 import { initializeCalendar, rerender } from './calendar.js';
 let requestListCol = document.getElementById("requestListCol");
 let calendarDiv = document.getElementById("calendar");
+let scheduleLabel = document.getElementById("scheduleLabel");
+let infoLabel = document.getElementById("infoLabel");
 
 let currUsername = null;
 let profileUserObj = null;
@@ -21,7 +23,7 @@ try{
       profileUserObj = await crud.getUser(currUsername);
     }
     else{
-      profileUserObj = await crud.getUser(params.get("profileUser"));
+      profileUserObj = await crud.getUser(profileUser);
     }
 }
 catch(error){
@@ -33,9 +35,8 @@ catch(error){
 }
 
 //rendering friend requests
-async function renderRequests(currUsername){
-    let user = await crud.getUser(currUsername);
-    let requestsList = await crud.getRequestsTo(user.username);
+async function renderRequests(profileUser){
+    let requestsList = await crud.getRequestsTo(profileUser);
 
     requestsList.forEach(async (requestUsername) => {
       let friendRequestedUser = await crud.getUser(requestUsername);
@@ -89,13 +90,13 @@ async function renderRequests(currUsername){
         button.addEventListener("click", async (event)=>{
             button.className = `btn ${buttonClass} shadow btn-circle btn-lg d-flex align-items-center justify-content-center`;
             if(buttonClass === 'btn-success'){
-              await crud.addFriend(user.username, requestUsername);
+              await crud.addFriend(profileUser, requestUsername);
               //buttonType = 'class="btn btn-outline-danger disabled">Already added';
             }
             setTimeout(function() {   //  call a momentary setTimeout when the loop is called
                 requestListCol.removeChild(requestCard);
               }, 600);
-              await crud.removeFriendRequest(requestUsername, user.username);
+              await crud.removeFriendRequest(requestUsername, profileUser);
           });
       }
 
@@ -117,11 +118,12 @@ let imageInput = document.getElementById("imageInput");
 //collect edit button
 let editProfileButton = document.getElementById("editProfileButton");
 let savePhotoButton = document.getElementById("savePhotoButton");
-
+let editPhotoButton =  document.getElementById("editPhotoButton");
 //fill user's profile with their information
-async function renderProfile(currUsername){
-  let user = await crud.getUser(currUsername);
+async function renderProfile(profileUser){
+  let user = await crud.getUser(profileUser);
 
+  // Grab info from DB for each info card
   screenNameInput.value = user.username;
   firstNameInput.value = user.firstName;
   lastNameInput.value = user.lastName;
@@ -129,6 +131,7 @@ async function renderProfile(currUsername){
   majorInput.value = user.major;
   bioInput.value = user.bio;
 
+  // Check if image exists otherwise use default
   let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
   let image = 
   profileUserObj.image !== '' && 
@@ -138,22 +141,43 @@ async function renderProfile(currUsername){
   profileUserObj.image : defaultImage;
   imageInput.src = image;
 
+  scheduleLabel.innerText = currUsername === profileUser ? "My Schedule" : `${profileUser}'s Schedule`;
+  infoLabel.innerText = currUsername === profileUser ? "My Info" : `${profileUser}'s Info`;
+
   // Determine inactive input or active based on whether this is your profile
   if(currUsername !== profileUser){
+      let toEdit = [
+        screenNameInput, 
+        firstNameInput,
+        lastNameInput,
+        collegeInput,
+        majorInput,
+        bioInput
+      ];
+    
+    // Disable input from being edited
+    toEdit.forEach((editElem) =>{
+        editElem.setAttribute("readonly", true);
+    });
 
+    // Disable buttons 
+    editProfileButton.setAttribute("disabled", true);
+    editPhotoButton.classList.add('d-none');
+    editPhotoButton.setAttribute("disabled", true);
+    editProfileButton.classList.add('d-none');
+
+    // Remove view of requests and expand person's info
+    requestListCol.classList.add('d-none');
+    let requestLabelCol = document.getElementById("requestLabelCol");
+    requestLabelCol.classList.add('d-none');
+    let infoRow = document.getElementById("infoRow");
+    infoRow.style.height = "75%";
   }
-  let toEdit = [
-    screenNameInput, 
-    firstNameInput,
-    lastNameInput,
-    collegeInput,
-    majorInput,
-    bioInput
-  ];
 
-toEdit.forEach((editElem) =>{
-    editElem.removeAttribute("readonly");
-});
+  // Also determine if you can see their schedule based on friendship status
+  if(await crud.areFriends(profileUser, currUsername) === false){
+    calendarDiv.innerHTML = "<h1>Can't see their calendar? Shoot them a friend request first!</h1>";
+  }
 }
 
 // Allows us to convert uploaded group image to string
@@ -202,15 +226,15 @@ savePhotoButton.addEventListener("click", async (event)=>{
 //click edit button, turns into save button when editing to then save info
 editProfileButton.addEventListener("click", async (event)=>{
     if(editProfileButton.innerHTML === '<i class="bi bi-pencil-square"></i>'){
-        editProfile(currUsername);
+        editProfileMode();
     }
     else{
-        await saveProfile(currUsername);
+        await saveProfile(profileUser);
     }
 });
 
 //makes input areas edit-able
-function editProfile(currUsername){
+function editProfileMode(){
     let toEdit = [
         screenNameInput, 
         firstNameInput,
@@ -229,7 +253,7 @@ function editProfile(currUsername){
 }
 
 //makes input areas readonly
-async function saveProfile(currUsername){
+async function saveProfile(profileUser){
     let toSave = [
         screenNameInput, 
         firstNameInput,
@@ -247,8 +271,7 @@ async function saveProfile(currUsername){
     editProfileButton.innerHTML = '<i class="bi bi-pencil-square"></i>';
  
     // Once values are set in stone, perform CRUD updates:
-    let user = await crud.getUser(currUsername);
-    await crud.updateUser(user.username, 
+    await crud.updateUser(profileUser, 
       {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, 
         college: collegeInput.value, bio: bioInput.value, major: majorInput.value});    
 }

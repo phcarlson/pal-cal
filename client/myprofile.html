@@ -70,8 +70,7 @@
         <div class="row d-flex" style="height:10%">
           <div class="col d-flex flex-column justify-content-start">
 
-            <h1 class="display-2"><span class="badge shadow" style="background-color: gray;">My Schedule
-                <div class="dropdown">
+            <h1 class="display-2"><span  id="scheduleLabel"class="badge shadow" style="background-color: gray;">
             </h1>
           </div>
 
@@ -109,7 +108,7 @@
           <div class="col d-flex flex-column">
             <div class="row d-flex">
               <div class="col d-flex">
-                <h1><span class="badge shadow" style="background-color: gray;">My Info</span></h1>
+                <h1><span id="infoLabel" class="badge shadow" style="background-color: gray;"></span></h1>
               </div>
               <div class="row d-flex">
                 <div class="col d-flex flex-column justify-content-start align-items-start">
@@ -122,7 +121,7 @@
                   <div class="col d-flex flex-column justify-content-start align-items-start">
                     <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                       <div class="btn-group mr-2" role="group" aria-label="Second group">
-                        <button type="button" class="btn btn-outline-primary btn-rounded shadow" data-bs-toggle="modal"
+                        <button id="editPhotoButton"type="button" class="btn btn-outline-primary btn-rounded shadow" data-bs-toggle="modal"
                           data-bs-target="#staticBackdrop"><i class="bi bi-images"></i> </button>
                         <button id="editProfileButton" class="btn btn-outline-secondary btn-rounded shadow"
                           type="button"><i class="bi bi-pencil-square"></i></button>
@@ -177,7 +176,7 @@
         </div>
 
         <!-- Container for holding profile info added dynamically -->
-        <div class="row d-flex" style="height:30%">
+        <div id="infoRow" class="row d-flex" style="height:30%">
           <div class="col d-flex flex-column h-100 scrollIt">
             <div class="card my-3">
               <div class="card-body">
@@ -235,7 +234,7 @@
 
         <!-- Requests label -->
         <div class="row d-flex">
-          <div class="col">
+          <div id="requestLabelCol" class="col">
             <h1><span class="badge shadow" style="background-color: gray;">Requests</span></h1>
           </div>
         </div>
