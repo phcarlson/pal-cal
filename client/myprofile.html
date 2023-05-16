@@ -45,15 +45,17 @@
         <!--Navbar-->
         <ul class="navbar-nav">
 
-          <!--Login Button-->
+          <!--Home page Button-->
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-success me-1">Profile</button>
+            <a type="button" class="btn btn-outline-success me-1" href="/homeloggedin.html"
+                role="button">Home</a>
           </li>
 
-          <!--Sign Up Button-->
+          <!--Log out Button-->
           <li class="nav-item">
-            <button type="button" class="btn btn-outline-primary">Log Out</button>
-          </li>
+            <a type="button" class="btn btn-outline-primary" href="/homepageloggedout.html"
+                role="button">Log Out</a>
+        </li>
         </ul>
       </div>
     </div>
@@ -110,6 +112,63 @@
               <div class="col d-flex">
                 <h1><span class="badge shadow" style="background-color: gray;">My Info</span></h1>
               </div>
+              <div class="row d-flex">
+                <div class="col d-flex">
+                  <img id="imageInput" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU" class="img-fluid img-thumbnail rounded float-end" alt="..."> 
+                </div>
+              </div>
+<!-------------------------------------------------------------------------------------------------------->
+              <div class="row d-flex">
+                <div class="col d-flex flex-row justify-content-start">
+
+                    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                        <button type="button" class="btn btn-outline-primary btn-rounded btn-sm shadow mb-1"
+                            data-bs-toggle="modal" data-bs-target="#staticBackdrop">Edit Picture <i
+                                class="bi bi-plus-circle"></i> </button>
+
+                    </div>
+                </div>
+            </div>
+<!-------------------------------------------------------------------------------------------------------->
+            <!-- Modal triggered to pop up when choosing new profile pics, will not be x'd out unless buttons pressed  -->
+
+            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+                aria-labelledby="staticBackdropLabel" aria-hidden="true">
+
+                <!-- Scrollable content  -->
+                <div class="modal-dialog modal-dialog-scrollable">
+                    <div class="modal-content">
+
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="staticBackdropLabel">New Profile Picture</h5>
+                            <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-label="Close"></button> -->
+                        </div>
+
+                        <!-- Body holds a form  -->
+                        <div class="modal-body">
+                            <form>
+
+                                <div class="mb-3">
+                                    <label for="profilePhotoUpload" class="form-label">Upload picture</label>
+                                    <input class="form-control form-control-sm" id="profilePhotoUpload" type="file">
+                                </div>
+
+                                <!-- <button type="submit" class="btn btn-primary">Submit</button> -->
+                            </form>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button id="changedMindButton" type="button" class="btn btn-secondary"
+                                data-bs-dismiss="modal">Changed my
+                                mind.</button>
+                            <button id="savePhotoButton" type="button" class="btn btn-primary"
+                                data-bs-dismiss="modal">This is the photo
+                                I want!</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+<!-------------------------------------------------------------------------------------------------------->
               <div class="col d-flex">
 
                 <h1> <button id="editProfileButton" class="btn btn-outline-secondary m-0" type="button"><i
