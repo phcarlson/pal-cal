@@ -1,24 +1,24 @@
 import * as crud from './crudclient.js';
 import { initializeCalendar, rerender } from './calendar.js';
 let requestListCol = document.getElementById("requestListCol");
-
-let mockCurrUsername = "ananya";
-let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
-let profileUserObj = null;
 let calendarDiv = document.getElementById("calendar");
 
+let currUsername = null;
+let profileUserObj = null;
+let profileUser = null;
 
 const queryString = window.location.search; // Returns:'?q=123'
 const params = new URLSearchParams(queryString);
 try{
-    mockCurrUsername = document.cookie
+    currUsername = document.cookie
     .split("; ")
     .find((row) => row.startsWith("currUsername="))
     ?.split("=")[1];
 
-    let profileUser = params.get("profileUser");
+    profileUser = params.get("profileUser");
     if(profileUser === null){
-      profileUserObj = await crud.getUser(mockCurrUsername);
+      profileUser = currUsername;
+      profileUserObj = await crud.getUser(currUsername);
     }
     else{
       profileUserObj = await crud.getUser(params.get("profileUser"));
@@ -33,14 +33,19 @@ catch(error){
 }
 
 //rendering friend requests
-async function renderRequests(mockCurrUsername){
-    let user = await crud.getUser(mockCurrUsername);
+async function renderRequests(currUsername){
+    let user = await crud.getUser(currUsername);
     let requestsList = await crud.getRequestsTo(user.username);
 
     requestsList.forEach(async (requestUsername) => {
       let friendRequestedUser = await crud.getUser(requestUsername);
       let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
-      let image = friendRequestedUser.image !== '' ? friendRequestedUser.image : defaultImage;
+      let image = 
+      friendRequestedUser.image !== '' && 
+      friendRequestedUser.image !== null && 
+      friendRequestedUser.image !== undefined &&
+      friendRequestedUser.image !== "/x" ? 
+      friendRequestedUser.image : defaultImage;
 
         let requestCardToInsert =  `<div id="${requestUsername}RequestCard" class="card my-3">`+
         '<div class="row g-0">'+
@@ -107,23 +112,48 @@ let lastNameInput = document.getElementById("lastNameInput");
 let collegeInput = document.getElementById("collegeInput");
 let majorInput = document.getElementById("majorInput");
 let bioInput = document.getElementById("bioInput");
-//let imageInput = document.getElementbyId("imageInput");
+let imageInput = document.getElementById("imageInput");
 
 //collect edit button
 let editProfileButton = document.getElementById("editProfileButton");
+let savePhotoButton = document.getElementById("savePhotoButton");
 
 //fill user's profile with their information
-async function renderProfile(mockCurrUsername){
-    let user = await crud.getUser(mockCurrUsername);
-    
-    screenNameInput.value = user.username;
-    firstNameInput.value = user.firstName;
-    lastNameInput.value = user.lastName;
-    collegeInput.value = user.college;
-    majorInput.value = user.major;
-    bioInput.value = user.bio;
-    imageInput.src = user.image;
+async function renderProfile(currUsername){
+  let user = await crud.getUser(currUsername);
 
+  screenNameInput.value = user.username;
+  firstNameInput.value = user.firstName;
+  lastNameInput.value = user.lastName;
+  collegeInput.value = user.college;
+  majorInput.value = user.major;
+  bioInput.value = user.bio;
+
+  let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+  let image = 
+  profileUserObj.image !== '' && 
+  profileUserObj.image !== null && 
+  profileUserObj.image !== undefined &&
+  profileUserObj.image !== "/x" ? 
+  profileUserObj.image : defaultImage;
+  imageInput.src = image;
+
+  // Determine inactive input or active based on whether this is your profile
+  if(currUsername !== profileUser){
+
+  }
+  let toEdit = [
+    screenNameInput, 
+    firstNameInput,
+    lastNameInput,
+    collegeInput,
+    majorInput,
+    bioInput
+  ];
+
+toEdit.forEach((editElem) =>{
+    editElem.removeAttribute("readonly");
+});
 }
 
 // Allows us to convert uploaded group image to string
@@ -134,7 +164,6 @@ const toBase64 = file => new Promise((resolve, reject) => {
   reader.onerror = reject;
 });
 
-let savePhotoButton = document.getElementById("savePhotoButton");
 savePhotoButton.addEventListener("click", async (event)=>{
   try {
     let uploadedImage = document.getElementById("profilePhotoUpload");
@@ -146,7 +175,7 @@ savePhotoButton.addEventListener("click", async (event)=>{
       image = '';
     }
 
-    let user = await crud.getUser(mockCurrUsername);
+    let user = await crud.getUser(currUsername);
     await crud.updateUser(user.username, {image: image}); 
     imageInput.src = image;
   } catch (error) {
@@ -173,15 +202,15 @@ savePhotoButton.addEventListener("click", async (event)=>{
 //click edit button, turns into save button when editing to then save info
 editProfileButton.addEventListener("click", async (event)=>{
     if(editProfileButton.innerHTML === '<i class="bi bi-pencil-square"></i>'){
-        editProfile(mockCurrUsername);
+        editProfile(currUsername);
     }
     else{
-        await saveProfile(mockCurrUsername);
+        await saveProfile(currUsername);
     }
 });
 
 //makes input areas edit-able
-function editProfile(mockCurrUsername){
+function editProfile(currUsername){
     let toEdit = [
         screenNameInput, 
         firstNameInput,
@@ -200,7 +229,7 @@ function editProfile(mockCurrUsername){
 }
 
 //makes input areas readonly
-async function saveProfile(mockCurrUsername){
+async function saveProfile(currUsername){
     let toSave = [
         screenNameInput, 
         firstNameInput,
@@ -218,14 +247,14 @@ async function saveProfile(mockCurrUsername){
     editProfileButton.innerHTML = '<i class="bi bi-pencil-square"></i>';
  
     // Once values are set in stone, perform CRUD updates:
-    let user = await crud.getUser(mockCurrUsername);
+    let user = await crud.getUser(currUsername);
     await crud.updateUser(user.username, 
       {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, 
         college: collegeInput.value, bio: bioInput.value, major: majorInput.value});    
 }
 
-await renderRequests(mockCurrUsername);
-await renderProfile(mockCurrUsername);
+await renderRequests(profileUser);
+await renderProfile(profileUser);
 
 await initializeCalendar(document.getElementById("calendar"), "profile");
 await rerender("profile");
