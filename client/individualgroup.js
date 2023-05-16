@@ -434,6 +434,7 @@ async function renderGroupMembers() {
 }
 
 async function renderPlannedEvents() {
+    plannedEventsContainer.innerHTML = '';
     eventsAdded = 0;
     const plannedEventIDs = await crud.getGroupPlannedEventIds(currGroupId); // list of PlannedEvent IDs
 
