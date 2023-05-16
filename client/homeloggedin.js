@@ -388,8 +388,8 @@ async function renderPotentialMember(usernameToAdd, potentialMembers){
                 '</div>'+
             '</div>'+
             '<div class="col-md-2 d-flex">' +
-                `<img src=${image} ` +
-                    'alt="generic profile pic" class="img-fluid rounded-start">'+
+                `<img src=${image} style="width: 100%; height: 5vw; object-fit: cover;` +
+                    'alt="generic profile pic" class="img-fluid">'+
             '</div>' +
             '<div class="col-md-8 d-flex align-items-center">'+
                 '<div class="card-body">'+

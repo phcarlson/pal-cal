@@ -52,7 +52,7 @@
 
           <!--Log out Button-->
           <li class="nav-item">
-            <a type="button" class="btn btn-outline-primary" href="/homepageloggedout.html" role="button">Log Out</a>
+            <a id="logout-button" type="button" class="btn btn-outline-primary" role="button">Log Out</a>
           </li>
         </ul>
       </div>
@@ -76,7 +76,7 @@
 
           <!-- Refresh -->
           <div class="col d-flex align-items-center justify-content-end">
-            <button type="button"
+            <button id="refreshCalendar" type="button"
               class="btn btn-outline-primary shadow btn-circle btn-lg d-flex align-items-center justify-content-center">
               <!-- <i class="bi bi-arrow-clockwise"></i> -->
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor"
@@ -234,7 +234,7 @@
 
         <!-- Requests label -->
         <div class="row d-flex">
-          <div id="requestLabelCol" class="col">
+          <div id="requestLabelCol" class="col d-flex flex-column">
             <h1><span class="badge shadow" style="background-color: gray;">Requests</span></h1>
           </div>
         </div>

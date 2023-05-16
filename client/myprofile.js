@@ -5,6 +5,10 @@ let calendarDiv = document.getElementById("calendar");
 let scheduleLabel = document.getElementById("scheduleLabel");
 let infoLabel = document.getElementById("infoLabel");
 
+let refreshCalendarButton = document.getElementById("refreshCalendar");
+
+const logoutButton = document.getElementById('logout-button');
+
 let currUsername = null;
 let profileUserObj = null;
 let profileUser = null;
@@ -279,6 +283,16 @@ async function saveProfile(profileUser){
       {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, 
         college: collegeInput.value, bio: bioInput.value, major: majorInput.value});    
 }
+
+
+logoutButton.addEventListener('click', () => {
+  document.cookie = "currUsername=;expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/";
+  window.location.pathname = '/homepageloggedout.html'; // redirect to homepageloggedout.html
+});
+
+refreshCalendarButton.addEventListener('click', () => {
+  rerender("profile");
+});
 
 await initializeCalendar(document.getElementById("calendar"), "profile");
 await rerender("profile");
