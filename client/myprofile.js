@@ -32,13 +32,6 @@ catch(error){
     calendarDiv.after(child);
 }
 
-// collect column of friend request lists to render in
-let requestListCol = document.getElementById("requestListCol");
-
-let mockCurrUsername = "username1";
-
-// let mockCurrUser = {username: "ananya", friendsList:[], requestsList:[{username:"paige"}, {username:"amey"}, {username:"adin"}, {username:"other"}, {username:"other2"}]};
-
 //rendering friend requests
 async function renderRequests(mockCurrUsername){
     let user = await crud.getUser(mockCurrUsername);
@@ -163,7 +156,7 @@ savePhotoButton.addEventListener("click", async (event)=>{
         // Create temp alert of issue
         child.innerHTML = '<div id="deleteAlert" class="alert alert-danger" role="alert">'+
                             'Image too large, failed to upload</div>';     
-        image.after(child);
+        imageInput.after(child);
         setTimeout(function(){
             child.remove();
             },2500); 
@@ -226,9 +219,9 @@ async function saveProfile(mockCurrUsername){
  
     // Once values are set in stone, perform CRUD updates:
     let user = await crud.getUser(mockCurrUsername);
-    await crud.updateUser(user.username, {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, college: collegeInput.value, bio: bioInput.value});
-    await crud.updateUser(user.username, {major: majorInput}); 
-    
+    await crud.updateUser(user.username, 
+      {username: screenNameInput.value, firstName: firstNameInput.value, lastName: lastNameInput.value, 
+        college: collegeInput.value, bio: bioInput.value, major: majorInput.value});    
 }
 
 await renderRequests(mockCurrUsername);
