@@ -52,7 +52,7 @@ async function renderRequests(profileUser){
         '<div class="row g-0">'+
           '<div class="col-md-2 d-flex">'+
             '<img'+
-                `src=${image}`+
+                ` src=${image} `+
               'alt="generic profile pic" class="img-fluid rounded-start">'+
           '</div>'+
           '<div class="col-md-4 d-flex align-items-center">'+
@@ -283,6 +283,7 @@ async function saveProfile(profileUser){
 await initializeCalendar(document.getElementById("calendar"), "profile");
 await rerender("profile");
 
-await renderRequests(profileUser);
 await renderProfile(profileUser);
+await renderRequests(profileUser);
+
 

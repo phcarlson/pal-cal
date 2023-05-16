@@ -55,7 +55,14 @@ catch(error){
 }
 
 function addMember(userObj) {
-    
+    let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let image = 
+    userObj.image !== '' && 
+    userObj.image !== null && 
+    userObj.image !== undefined &&
+    userObj.image !== "\\x" ? 
+    userObj.image : defaultImage;
+
     let memberToInsert = `<div class="card my-3">
                             <div class="row g-0">
                                 <div class="col-md-2 d-flex justify-content-center align-items-center">
@@ -65,7 +72,7 @@ function addMember(userObj) {
                                     </div>
                                 </div>
                                 <div class="col-md-2 d-flex">
-                                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU"
+                                    <img src=${image}
                                         alt="generic profile pic" class="img-fluid rounded-start">
                                 </div>
                                 <div class="col-md-8 d-flex align-items-center">
@@ -334,10 +341,18 @@ searchMemberButton.addEventListener('click', async (event) => {
  * @param {Element} potentialMembers element to add card to
  */
 async function renderPotentialMember(userIDToAdd, currGroupId, potentialMembers){
-    // Temp image while we sort out image upload
-    let image = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+
     // User that we know exists to be found in friend search
     let userToAdd = await crud.getUser(userIDToAdd);
+
+    let defaultImage = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaIOsrWSBcmzWt30slQn0bplk5h92cKZSn84TfE4j6sI-rsxNLKWGWRbTpdP_LB9B8fEs&usqp=CAU";
+    let image = 
+    userToAdd.image !== '' && 
+    userToAdd.image !== null && 
+    userToAdd.image !== undefined &&
+    userToAdd.image !== "\\x" ? 
+    userToAdd.image : defaultImage;
+    
     // If already friends, then indicate that in the card result. Otherwise allow us to add them!
     let groupMembers = await crud.getGroupMemberUsernames(currGroupId);
 
